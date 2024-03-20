@@ -11,24 +11,22 @@ on:
  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-env:
-  GITHUB_TOKEN: ${{ github.token }}
+on:
+  push:
+    paths:
+      - 'doc/**'
 
 jobs:
-  publish:
+  makepdfs:
     runs-on: ubuntu-latest
-    name: Publish Document
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Publish PDF Document
-        uses: shrink/actions-document-publish@v1
-        id: publish-document
-        with:
-          sources: 'README.md'
-      - name: Upload Document
-        uses: actions/upload-artifact@v2
-        id: upload-document
-        with:
-          name: 'document.pdf'
-          path: ${{ steps.publish-document.outputs.pdf }}
+    - uses: actions/checkout@v1
+    - uses: mkrakowitzer/actions-makepdfs@master
+      if: github.ref == 'refs/heads/master'
+      with:
+        markdown_dir: ./
+        output_dir: pdfs
+    - uses: actions/upload-artifact@v1
+      with:
+        name: platform-architecture-docs
+        path: pdfs
