@@ -6,8 +6,8 @@ on:
       - master
     # Paths can be used only to trigger actions when you have edited certain files, such as a file within the /docs directory
     paths:
-      - './**.md'
-     # - '/images/**'
+      - '*.md'
+     # - 'images/**'
 
 jobs:
   converttopdf:
