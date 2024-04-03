@@ -8,7 +8,7 @@ Students: BENOIT Romain, CHONÉ Théo, CHORYNSKI Ewan, DELHON Florian, GAIGÉ Th
 
 ## Abstract
 
-Les outils de collaboration sont aujourd'hui omniprésents surtout dans le monde de la bureautique. Des outils comme Google Docs ou Office360 sont de plus en plus utilisés pour permettre un meilleur travail d'équipe en temps réel. Dans le milieu de la programmation, des outils similaires ce sont développés afin de permettre de meilleures sessions de "pair programming". On peut par exemple citer Live Share sur VSCode.
+Les outils de collaboration sont aujourd'hui omniprésents surtout dans le monde de la bureautique. Des outils comme Google Docs ou Office360 sont de plus en plus utilisés pour permettre un meilleur travail d'équipe en temps réel. Dans le milieu de la programmation, des outils similaires se sont développés afin de permettre de meilleures sessions de "pair programming". On peut par exemple citer Live Share sur VSCode.
 
 Cependant, ces outils sont actuellement spécifiques à un IDE, ce qui rend les utilisateurs dépendants et empêche la collaboration entre plusieurs environnements. De plus, les solutions existantes comme Live Share ne sont pas open source, et pourrait donc devenir payantes au gré de la volonté des entreprises qui les possèdent. C'est pourquoi notre projet vise à proposer un outil open source de collaboration pour l'édition de fichiers textes qui permettrait à chacun d'utiliser l'outil avec lequel il est le plus à l'aise.
 
@@ -22,7 +22,7 @@ Le LSP permet d'avoir une seule implémentation pour tous les éditeurs. Nous no
 
 ### Synchronisation
 
-Un des gros enjeux du projet sera donc de gérer tous les cas possibles de synchronisation des fichiers. Que se passe-t-il si deux personnes écrivent en même temps sur la même ligne ? Comment rattraper l'évolution d'un fichier en cas de déconnexion momentanée ?
+Un des gros enjeux du projet sera donc de gérer tous les cas possibles de synchronisation des fichiers. Que se passe-t-il si deux personnes écrivent en même temps sur la même ligne ? Comment savoir où appliquer une modification si un autre utilisateur a réordonné les lignes en même temps ? Comment rattraper l'évolution d'un fichier en cas de déconnexion momentanée ? Comment garantir que les fichiers ne divergent pas, ou a minima le vérifier sans les renvoyer dans leur totalité ?
 
 ### Pair à pair
 
@@ -31,7 +31,7 @@ Le protocole de synchronisation devra fonctionner de façon pair-à-pair entre l
 ### Technologies
 
 Le programme de synchronisation sera écrit en Rust pour plusieurs raisons :
-- Par son système de typage, le langage permet d'éviter beaucoup de comportements indéfinis à la compilation.
+- Par son système de typage, le langage permet d'éviter beaucoup de comportements indéfinis (nous obligeant à traiter tous les cas de désynchronisation).
 - C'est un langage bas niveau, qui se prête bien aux opérations de traitement de flux de texte et de communication réseau.
 - Les membres de notre groupe sont unanimement motivés pour utiliser ce langage.
 
