@@ -1,10 +1,10 @@
-# SMART 2024 Template Repository
+# SMART 2024 Glaciers evolution
 
 ![Insalogo](./images/logo-insa_0.png)
 
 Project [SMART(PLD)](riccardotommasini.com/teaching/smart) is provided by [INSA Lyon](https://www.insa-lyon.fr/).
 
-Students: **[To be assigned]**
+Students: **Lina Borg, Léa Durand, Billy Villeroy et Kaiming Zhu**
 
 ### Abstract
 
