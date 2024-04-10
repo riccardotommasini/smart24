@@ -1,0 +1,15 @@
+# Javascript
+node_modules
+build
+dist
+coverage
+
+# DB
+data/**
+!data/.gitkeep
+
+# VSCode
+.vscode
+
+# Others
+.DS_Store

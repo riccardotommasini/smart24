@@ -1,0 +1,44 @@
+version: '3.10'
+
+services:
+  server:
+    image: node:20
+    command: npm run dev
+    working_dir: /src/www/apps/server
+    environment:
+      - DB_URI=mongodb://root:root@db:27017/smart?authSource=admin
+    ports:
+      - ${SERVER_PORT:-3000}:3000
+    volumes:
+      - ./apps/server:/src/www/apps/server
+      - ./packages:/src/www/packages
+
+  common:
+    image: node:20
+    command: npm run dev
+    working_dir: /src/www/packages/common
+    volumes:
+      - ./packages/common:/src/www/packages/common
+
+  db:
+    image: mongo:7.0
+    ports:
+      - ${DB_PORT:-27017}:27017
+    volumes:
+      - ./data/db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: smart
+
+  
+  db-web:
+    image: mongo-express
+    depends_on:
+      - db
+    ports:
+      - ${DB_WEB:-8081}:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_URL: mongodb://root:root@db:27017/
