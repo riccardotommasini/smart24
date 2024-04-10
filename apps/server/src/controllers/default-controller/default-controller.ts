@@ -2,6 +2,7 @@ import { singleton } from 'tsyringe';
 import { AbstractController } from '../abstract-controller';
 import { Router } from 'express';
 import { DefaultService } from '../../services/default-service/default-service';
+import { StatusCodes } from 'http-status-codes';
 
 @singleton()
 export class DefaultController extends AbstractController {
@@ -17,7 +18,7 @@ export class DefaultController extends AbstractController {
         router.get('/db', async (req, res, next) => {
             try {
                 await this.defaultService.pingDb();
-                res.send('Connected to db!');
+                res.status(StatusCodes.OK).send('Connected to db!');
             } catch (e) {
                 next(e);
             }

@@ -20,6 +20,12 @@ describe('DefaultController', () => {
         });
     });
 
+    describe('GET /db', () => {
+        it('should ping', async () => {
+            return request(app).get('/db').expect(StatusCodes.OK);
+        });
+    });
+
     describe('GET /not-found', () => {
         it('should return a 404 error', async () => {
             return request(app).get('/not-found').expect(StatusCodes.NOT_FOUND);
