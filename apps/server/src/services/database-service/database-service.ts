@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { Db, DbOptions, MongoClient } from 'mongodb';
 import { env } from '../../utils/env';
 import { singleton } from 'tsyringe';
 
@@ -12,7 +12,11 @@ export class DatabaseService implements IDatabaseService {
     readonly client: MongoClient;
 
     constructor() {
-        this.client = new MongoClient(env.DB_URI, {});
+        this.client = new MongoClient(env.MONGO_URL, {});
+    }
+
+    db(name?: string, options?: DbOptions): Db {
+        return this.client.db(name, options);
     }
 
     async connect() {

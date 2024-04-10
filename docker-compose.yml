@@ -6,7 +6,7 @@ services:
     command: npm run dev
     working_dir: /src/www/apps/server
     environment:
-      - DB_URI=mongodb://root:root@db:27017/smart?authSource=admin
+      MONGO_URL: mongodb://root:root@db:27017/smart?authSource=admin
     ports:
       - ${SERVER_PORT:-3000}:3000
     volumes:
