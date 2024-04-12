@@ -8,6 +8,10 @@ coverage
 data/**
 !data/.gitkeep
 
+# Environment
+.env
+!.env.template
+
 # VSCode
 .vscode
 

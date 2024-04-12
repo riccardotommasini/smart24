@@ -1,5 +1,38 @@
 # Server
 
+## Installation and execution
+
+1. Install dependencies
+
+    ```bash
+    npm ci
+    ```
+
+2. Setup environment:
+
+    - Using Docker: No setup required. Refer to root README for more information.
+
+    - Using local environment:
+        1. Copy the `.env` template file.
+
+            ```bash
+            cp .env.example .env
+            ```
+        
+        2. Update the `.env` file with the required values.
+
+        3. Start the dependencies:
+        
+            3.1. Go to each packages in the `packages` directory.
+
+            3.2. Follow the instructions.
+
+        3. Start the server.
+
+            ```bash
+            npm run dev
+            ```
+
 ## File Structure
 
 ```

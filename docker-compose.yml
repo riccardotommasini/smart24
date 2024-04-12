@@ -31,7 +31,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
       MONGO_INITDB_DATABASE: smart
 
-  
   db-web:
     image: mongo-express
     depends_on:
