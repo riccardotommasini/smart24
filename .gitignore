@@ -4,3 +4,9 @@ target/
 .idea/
 .vscode/
 
+# Plugin VS Code
+out
+node_modules
+.vscode-test/
+*.vsix
+!plugins/vscode/smartshare/.vscode/
