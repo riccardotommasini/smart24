@@ -1,4 +1,6 @@
 .envrc
+.direnv
+
 target/
 
 .idea/

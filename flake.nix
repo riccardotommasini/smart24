@@ -10,7 +10,7 @@
   in rec {
 
     devShell = pkgs.mkShell {
-      nativeBuildInputs = with pkgs; [ cargo rustc rust-analyzer rustfmt];
+      nativeBuildInputs = with pkgs; [ cargo rustc rust-analyzer rustfmt clippy];
     };
   });
 }
