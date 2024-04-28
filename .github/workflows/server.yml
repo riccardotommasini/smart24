@@ -69,9 +69,9 @@ jobs:
             # Test results: ${{ steps.report.outputs.conclusion }}
             | Status  | Count |
             |---------|-------|
-            | Passed  | ${{ steps.report.outputs.passed }}  |
-            | Failed  | ${{ steps.report.outputs.failed }}  |
-            | Skipped | ${{ steps.report.outputs.skipped }} |
+            | ✅ Passed  | ${{ steps.report.outputs.passed }}  |
+            | ❌ Failed  | ${{ steps.report.outputs.failed }}  |
+            | ⚠️ Skipped | ${{ steps.report.outputs.skipped }} |
 
-            [Test Report](${{ steps.report.outputs.url }})
+            [🚀 See complete test Report](${{ steps.report.outputs.url_html }})
           comment_tag: test-results
