@@ -8,6 +8,12 @@ on:
       - .github/workflows/server.yml
   workflow_dispatch:
 
+permissions:
+  contents: read
+  issues: read
+  checks: write
+  pull-requests: write
+
 defaults:
   run:
     shell: bash
