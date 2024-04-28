@@ -44,8 +44,10 @@ jobs:
         run: npm ci
         working-directory: ./apps/${{env.APP}}
       - name: Test
-        run: npm test
-        working-directory: ./apps/${{env.APP}}
+        run: |
+          cd ./apps/${{env.APP}}
+          npm test
+        # working-directory: ./apps/${{env.APP}}
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           working-directory: ./apps/${{env.APP}}
