@@ -56,7 +56,19 @@ jobs:
         uses: dorny/test-reporter@v1
         if: always()
         with:
-          name: Tests            # Name of the check run which will be created
+          name: Tests results
           path: junit.xml
           reporter: jest-junit
           working-directory: ./apps/${{env.APP}}
+      - name: Add comment to PR
+        if: always()
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            # Test results: ${{ steps.test.outputs.conclusion }}
+            Passed: ${{ steps.test.outputs.passed }}
+            Failed: ${{ steps.test.outputs.failed }}
+            Skipped: ${{ steps.test.outputs.skipped }}
+
+            [Test Report](${{ steps.test.outputs.url }})
+          comment_tag: test-results
