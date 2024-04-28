@@ -49,8 +49,7 @@ jobs:
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: always()
-        working-directory: ./apps/${{env.APP}}
         with:
           name: Tests            # Name of the check run which will be created
-          path: junit.xml
+          path: ./apps/${{env.APP}}/junit.xml
           reporter: jest-junit
