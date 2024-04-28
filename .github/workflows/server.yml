@@ -42,14 +42,12 @@ jobs:
           cache-dependency-path: ./apps/${{env.APP}}/package-lock.json
       - name: Install dependencies
         run: |
-          cd ./apps/${{env.APP}}
           npm ci
-        # working-directory: ./apps/${{env.APP}}
+          ls ../../packages/common
+        working-directory: ./apps/${{env.APP}}
       - name: Test
-        run: |
-          cd ./apps/${{env.APP}}
-          npm test
-        # working-directory: ./apps/${{env.APP}}
+        run: npm test
+        working-directory: ./apps/${{env.APP}}
       - uses: ArtiomTr/jest-coverage-report-action@v2
         if: always()
         with:
