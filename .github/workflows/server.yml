@@ -54,6 +54,7 @@ jobs:
         working-directory: ./apps/${{env.APP}}
       - name: Test Report
         uses: dorny/test-reporter@v1
+        id: report
         if: always()
         with:
           name: Tests results
@@ -65,10 +66,12 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            # Test results: ${{ steps.test.outputs.conclusion }}
-            Passed: ${{ steps.test.outputs.passed }}
-            Failed: ${{ steps.test.outputs.failed }}
-            Skipped: ${{ steps.test.outputs.skipped }}
+            # Test results: ${{ steps.report.outputs.conclusion }}
+            | Status  | Count |
+            |---------|-------|
+            | Passed  | ${{ steps.report.outputs.passed }}  |
+            | Failed  | ${{ steps.report.outputs.failed }}  |
+            | Skipped | ${{ steps.report.outputs.skipped }} |
 
-            [Test Report](${{ steps.test.outputs.url }})
+            [Test Report](${{ steps.report.outputs.url }})
           comment_tag: test-results
