@@ -53,5 +53,6 @@ jobs:
         uses: dorny/test-reporter@v1
         if: always()
         with:
+          name: Tests            # Name of the check run which will be created
           path: junit.xml
           reporter: jest-junit
