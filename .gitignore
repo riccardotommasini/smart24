@@ -3,7 +3,8 @@ node_modules
 build
 dist
 coverage
-coverage.json
+junit.xml
+globalConfig.json
 
 # DB
 data/**

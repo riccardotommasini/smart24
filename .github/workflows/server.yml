@@ -49,8 +49,9 @@ jobs:
       - name: Test
         run: npm test
         working-directory: ./apps/${{env.APP}}
-      - uses: ArtiomTr/jest-coverage-report-action@v2
+      - name: Test Report
+        uses: dorny/test-reporter@v1
         if: always()
         with:
-          working-directory: ./apps/${{env.APP}}
-          coverage-file: ./coverage.json
+          path: junit.xml
+          reporter: jest-junit
