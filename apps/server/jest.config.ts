@@ -34,12 +34,7 @@ module.exports = {
     coverageProvider: 'v8',
 
     // A list of reporter names that Jest uses when writing coverage reports
-    // coverageReporters: [
-    //   "json",
-    //   "text",
-    //   "lcov",
-    //   "clover"
-    // ],
+    coverageReporters: ['json'],
 
     // An object that configures minimum threshold enforcement for coverage results
     // coverageThreshold: undefined,
@@ -88,7 +83,9 @@ module.exports = {
     // ],
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-    // moduleNameMapper: {},
+    moduleNameMapper: {
+        '^common$': '<rootDir>/../../packages/common/src',
+    },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
     // modulePathIgnorePatterns: [],
@@ -106,7 +103,7 @@ module.exports = {
     // projects: undefined,
 
     // Use this configuration option to add custom reporters to Jest
-    // reporters: undefined,
+    reporters: ['default', 'jest-junit'],
 
     // Automatically reset mock state before every test
     // resetMocks: false,
@@ -124,9 +121,7 @@ module.exports = {
     // rootDir: undefined,
 
     // A list of paths to directories that Jest should use to search for files in
-    // roots: [
-    //   "<rootDir>"
-    // ],
+    roots: ['<rootDir>/src'],
 
     // Allows you to use a custom runner instead of Jest's default test runner
     // runner: "jest-runner",
@@ -150,7 +145,7 @@ module.exports = {
     // testEnvironmentOptions: {},
 
     // Adds a location field to test results
-    // testLocationInResults: false,
+    testLocationInResults: true,
 
     // The glob patterns Jest uses to detect test files
     // testMatch: [

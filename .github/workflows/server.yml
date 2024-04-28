@@ -1,0 +1,77 @@
+name: Server
+
+on:
+  pull_request:
+    paths:
+      - apps/server/**
+      - packages/common/**
+      - .github/workflows/server.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+  checks: write
+  pull-requests: write
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  APP: server
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: ./apps/${{env.APP}}/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./apps/${{env.APP}}
+      - name: Lint
+        run: npm run lint
+        working-directory: ./apps/${{env.APP}}
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: ./apps/${{env.APP}}/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./apps/${{env.APP}}
+      - name: Test
+        run: npm test
+        working-directory: ./apps/${{env.APP}}
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        id: report
+        if: always()
+        with:
+          name: Tests results
+          path: junit.xml
+          reporter: jest-junit
+          working-directory: ./apps/${{env.APP}}
+      - name: Add comment to PR
+        if: always()
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            ## Test results: ${{ steps.report.outputs.conclusion }}
+            | Status  | Count |
+            |---------|-------|
+            | ✅ Passed  | ${{ steps.report.outputs.passed }}  |
+            | ❌ Failed  | ${{ steps.report.outputs.failed }}  |
+            | ⚠️ Skipped | ${{ steps.report.outputs.skipped }} |
+
+            [🚀 See complete test Report](${{ steps.report.outputs.url_html }})
+          comment_tag: test-results
