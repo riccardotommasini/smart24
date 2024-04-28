@@ -6,6 +6,7 @@
   "types": "./src/typings/global.d.ts",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon",
+    "build": "tsc",
     "test": "cross-env NODE_ENV=test jest --forceExit --ci --json --coverage --testLocationInResults --outputFile=./coverage.json",
     "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
     "lint:fix": "npm run lint -- --fix"
