@@ -57,5 +57,6 @@ jobs:
         if: always()
         with:
           name: Tests            # Name of the check run which will be created
-          path: ./apps/${{env.APP}}/junit.xml
+          path: junit.xml
           reporter: jest-junit
+          working-directory: ./apps/${{env.APP}}
