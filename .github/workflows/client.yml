@@ -1,0 +1,48 @@
+name: Client
+
+on:
+  pull_request:
+    paths:
+      - apps/client/**
+      - packages/common/**
+      - .github/workflows/client.yml
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  APP: client
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: ./apps/${{env.APP}}/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./apps/${{env.APP}}
+      - name: Lint
+        run: npm run lint
+        working-directory: ./apps/${{env.APP}}
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: ./apps/${{env.APP}}/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./apps/${{env.APP}}
+      - name: Test
+        run: npm run test:unit
+        working-directory: ./apps/${{env.APP}}

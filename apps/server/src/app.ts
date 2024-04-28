@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { injectAll, singleton } from 'tsyringe';
 import { HttpException } from './models/http-exception';
 import { SYMBOLS } from './constants/symbols';
@@ -16,6 +17,9 @@ export class Application {
         private readonly databaseService: DatabaseService,
     ) {
         this.app = express();
+
+        this.app.use(express.json());
+        this.app.use(cors({ origin: '*' }));
 
         this.configureRoutes();
     }
