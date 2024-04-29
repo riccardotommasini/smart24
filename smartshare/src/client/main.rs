@@ -41,5 +41,6 @@ async fn main() {
         tcp_sink.send_all(&mut stdin_stream)
     ) {
         error!("{err}");
+        panic!("{err}");
     }
 }

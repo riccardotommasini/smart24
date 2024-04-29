@@ -6,22 +6,29 @@ use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::info;
+use tracing::instrument::WithSubscriber;
+use tracing::level_filters::LevelFilter;
+use tracing::trace;
+use tracing_subscriber::fmt;
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::prelude::*;
+use tracing_subscriber::EnvFilter;
 
 use crate::client::Client;
 use crate::server::Server;
-
 
 pub mod client;
 pub mod server;
 
 #[tokio::main]
 async fn main() {
-    let subscriber = tracing_subscriber::fmt()
-        .with_writer(std::io::stderr)
-        .finish();
-
-    tracing::subscriber::set_global_default(subscriber).unwrap();
-
+    let env_filter = EnvFilter::builder()
+        .with_default_directive(LevelFilter::INFO.into())
+        .from_env_lossy();
+    tracing_subscriber::registry()
+        .with(fmt::layer().with_writer(std::io::stderr))
+        .with(env_filter)
+        .init();
     info!("Creating socket");
     let socket = TcpSocket::new_v4().unwrap();
     info!("Binding socket");

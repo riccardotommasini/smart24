@@ -1,6 +1,6 @@
 use smartshare::protocol::msg::Message;
 use tokio::sync::mpsc;
-use tracing::{error, info, warn};
+use tracing::{error, info, trace, warn};
 
 use crate::client::Client;
 
@@ -44,6 +44,7 @@ impl Server {
     }
 
     async fn on_message(&mut self, source_id: usize, message: Message) {
+        trace!("User message: {:?}", message);
         for client in self
             .clients
             .iter()
