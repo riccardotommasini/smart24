@@ -13,6 +13,7 @@ pip install SQLAlchemy
 
 Pour lancer l'application :
 ./exe
+# aller à http://127.0.0.1:5000/vulgarisation/
 
 Pour lancer les tests :
 ./tests
