@@ -30,7 +30,6 @@ export class DefaultService {
         asyncHandler(async (req: Request, res: Response) => {
             // Extract the validation errors from a request.
             const errors = validationResult(req);
-            console.log("hello");
 
             const passwordHash = crypto.createHash('sha256').update(req.body.password).digest('hex');
             // http://localhost:8888/user/create?username=momo&mail=a@gmail.com&password=azerty
@@ -45,9 +44,13 @@ export class DefaultService {
                 // There are errors. Render form again with sanitized values/error messages.
             } else {
                 // Data from form is valid. Save book.
-                await user.save();
-                res.status(StatusCodes.OK).send('user saved !!!');
-                //res.redirect(user.url);
+                try {
+                    await user.save();
+                    res.status(StatusCodes.OK).send('user saved !!!');
+                } catch (error) {
+                    console.error(error);
+                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Error saving user');
+                }
             }
         }),
     ];

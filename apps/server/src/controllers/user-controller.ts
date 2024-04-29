@@ -11,11 +11,11 @@ import { DefaultService } from '../services/user-service';
 @singleton()
 export class UserController extends AbstractController {
     constructor(private readonly defaultService: DefaultService) {
-        super({ basePath: '/user' });
+        super();
     }
 
     protected configureRoutes(router: Router) {
-        router.post('/create', (req, res, next) => {
+        router.post('/user/create', (req, res, next) => {
             this.defaultService.user_create_post.forEach((handler) => handler(req, res, next));
         });
     }
