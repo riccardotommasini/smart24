@@ -505,6 +505,7 @@ dependencies = [
  "futures-sink",
  "kyte",
  "serde",
+ "serde_json",
  "tokio",
  "tokio-serde",
  "tokio-stream",

@@ -1,16 +1,18 @@
 use serde::{Deserialize, Serialize};
-
+use kyte::Delta;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "action", rename_all = "snake_case")]
 pub enum Message {
-    TextUpdate(TextModification),
+    IDEUpdate(TextModification),
+    ServerUpdate(Delta<String, ()>),
     Ack,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "update_type", rename_all = "snake_case")]
-pub enum TextModification {
-    Insert {line: usize, col: usize, text: Vec<String>},
-    Delete {start_line: usize, start_col: usize, end_line: usize, end_col: usize},
+pub struct TextModification {
+    pub offset : usize,
+    pub delete : usize,
+    pub text : String,
 }

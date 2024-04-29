@@ -17,6 +17,7 @@ serde = { version = "1.0.198", features = ["derive"] }
 tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
 kyte = "0.1.0"
+serde_json = "1.0.116"
 
 [[bin]]
 name = "client"
