@@ -5,7 +5,7 @@ use kyte::Delta;
 #[serde(tag = "action", rename_all = "snake_case")]
 pub enum Message {
     IDEUpdate(TextModification),
-    ServerUpdate(Delta<String, ()>),
+    ServerUpdate(ModifRequest),
     Ack,
 }
 
@@ -15,4 +15,11 @@ pub struct TextModification {
     pub offset : usize,
     pub delete : usize,
     pub text : String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "modifrequest", rename_all = "snake_case")]
+pub struct ModifRequest {
+    pub delta : Delta<String, ()>,
+    pub rev_num : usize,
 }

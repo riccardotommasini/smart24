@@ -1,12 +1,14 @@
-use smartshare::protocol::msg::Message;
+use smartshare::protocol::msg::{Message, ModifRequest};
 use tokio::sync::mpsc;
 use tracing::{error, info, trace, warn};
+use kyte::{Compose, Delta, Transform};
 
 use crate::client::Client;
 
 pub struct Server {
     clients: Vec<Client>,
     receiver: mpsc::Receiver<ServerMessage>,
+    deltas: Vec<Delta<String, ()>>,
 }
 
 impl Server {
@@ -14,6 +16,7 @@ impl Server {
         let (tx, rx) = mpsc::channel(16);
         (
             Self {
+                deltas: vec![Delta::new()],
                 clients: vec![],
                 receiver: rx,
             },
@@ -45,17 +48,41 @@ impl Server {
 
     async fn on_message(&mut self, source_id: usize, message: Message) {
         trace!("User message: {:?}", message);
-        for client in self
-            .clients
-            .iter()
-            .filter(|client| client.id() != source_id)
-        {
-            if client.send(message.clone()).await.is_err() {
-                warn!(
-                    "Could not send message to client {}. Maybe it is disconnected ?",
-                    client.id()
-                );
+
+        match message {
+            Message::ServerUpdate(req) => {
+                if req.rev_num >= self.deltas.len() {
+                    todo!("gestion d'un revision number invalide");
+                } else {
+                    let mut delta_p = req.delta;
+                    for i in req.rev_num + 1..self.deltas.len() {
+                        delta_p = self.deltas[i].clone().transform(delta_p.clone(), true);
+                    }
+                    self.deltas.push(delta_p.clone());
+                    for client in self
+                        .clients
+                        .iter()
+                        //.filter(|client| client.id() != source_id)
+                    {
+                        let notif: Message;
+                        if client.id() == source_id {
+                            notif = Message::Ack;
+                        } else {
+                            notif = Message::ServerUpdate(ModifRequest {
+                                delta: delta_p.clone(),
+                                rev_num: self.deltas.len() - 1,
+                            })
+                        }
+                        if client.send(notif).await.is_err() {
+                            warn!(
+                                "Could not send message to client {}. Maybe it is disconnected ?",
+                                client.id()
+                            );
+                        }
+                    }
+                }
             }
+            _ => todo!(),
         }
     }
 }
