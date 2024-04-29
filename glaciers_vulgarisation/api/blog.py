@@ -40,13 +40,12 @@ def create_blog_ns(engine: Engine) -> Namespace:
     )
 
     @api.route('/')
-    class PostList(Resource):
+    class MainPage(Resource):
 
         # ------------------ GET ------------------
-        @api.doc('list_posts')
+        @api.doc('web-page')
         def get(self):
-            posts = getPosts(engine)
-            html_content = render_template('index.html', posts=posts)
+            html_content = render_template('index.html')
             response = make_response(html_content)
             response.headers['Content-Type'] = 'text/html'
             return response

@@ -17,7 +17,7 @@ def create_api(engine: Engine) -> Api:
         description='Apis pour gérer le blog',
     )
 
-    api.add_namespace(create_blog_ns(engine), path='/blog')
+    api.add_namespace(create_blog_ns(engine), path='/vulgarisation')
     return api
 
 

@@ -1,112 +1,83 @@
-html {
-    font-family: sans-serif;
-    background: #eee;
-    padding: 1rem;
-}
 body {
-    max-width: 960px;
+    background-color: #160f29;
+    color: #f7f7f2;
+    font-family: "Montserrat", sans-serif;
+    margin: 20px;
+}
+
+.container {
+    max-width: 64%;
     margin: 0 auto;
-    background: white;
-}
-h1 {
-    font-family: serif;
-    color: #377ba8;
-    margin: 1rem 0;
-}
-a {
-    color: #377ba8;
-}
-hr {
-    border: none;
-    border-top: 1px solid lightgray;
-}
-nav {
-    background: lightgray;
-    display: flex;
-    align-items: center;
-    padding: 0 0.5rem;
-}
-nav h1 {
-    flex: auto;
-    margin: 0;
-}
-nav h1 a {
-    text-decoration: none;
-    padding: 0.25rem 0.5rem;
-}
-nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-nav ul li a,
-nav ul li span,
-header .action {
-    display: block;
-    padding: 0.5rem;
-}
-.content {
-    padding: 0 1rem 1rem;
-}
-.content > header {
-    border-bottom: 1px solid lightgray;
-    display: flex;
-    align-items: flex-end;
-}
-.content > header h1 {
-    flex: auto;
-    margin: 1rem 0 0.25rem 0;
-}
-.flash {
-    margin: 1em 0;
-    padding: 1em;
-    background: #cae6f6;
-    border: 1px solid #377ba8;
-}
-.post > header {
-    display: flex;
-    align-items: flex-end;
-    font-size: 0.85em;
-}
-.post > header > div:first-of-type {
-    flex: auto;
-}
-.post > header h1 {
-    font-size: 1.5em;
-    margin-bottom: 0;
-}
-.post .about {
-    color: slategray;
-    font-style: italic;
-}
-.post .body {
-    white-space: pre-line;
-}
-.content:last-child {
-    margin-bottom: 0;
-}
-.content form {
-    margin: 1em 0;
+    text-align: center;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    transition: left 0.3s ease-in-out;
 }
-.content label {
+.menu-open {
+    margin-left: 12%;
+}
+
+h1 {
+    font-size: 64px;
+    margin: 48px 0;
     font-weight: bold;
-    margin-bottom: 0.5em;
 }
-.content input,
-.content textarea {
-    margin-bottom: 1em;
+h2 {
+    font-size: 48px;
+    margin: 24px 0;
+    font-weight: 650;
 }
-.content textarea {
-    min-height: 12em;
-    resize: vertical;
+h3 {
+    font-size: 32px;
+    margin: 24px 0;
+    font-weight: 650;
 }
-input.danger {
-    color: #cc2f2e;
+h4 {
+    font-size: 24px;
+    color: #160f29;
+    margin: 24px 0;
+    font-weight: normal;
 }
-input[type="submit"] {
-    align-self: start;
-    min-width: 10em;
+p {
+    margin: 8px 0;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+}
+
+.menu {
+    position: fixed;
+    top: 20%;
+    left: -12%;
+    width: 12%;
+    height: 100%;
+    background-color: #f6e7cf;
+    transition: left 0.3s ease-in-out;
+    border-top-right-radius: 20px;
+    backdrop-filter: blur(20%);
+}
+.menu.active {
+    left: 0;
+}
+.menu-icon {
+    position: fixed;
+    top: 3%;
+    left: 3%;
+    color: #fff;
+    font-size: 48px;
+    cursor: pointer;
+    z-index: 999;
+}
+#animation-container-1,
+#animation-container-2 {
+    width: 80%;
+    margin: 0 auto; /* Centrage horizontal */
 }

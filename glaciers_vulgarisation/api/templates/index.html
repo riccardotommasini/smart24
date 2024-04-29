@@ -1,25 +1,83 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="fr">
 
-{% block header %}
-<h1>{% block title %}Posts{% endblock %}</h1>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vulgarisation sur la fonte des glaciers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 
-<a class="action" href="{{ url_for('post_post_list') }}">New</a>
+<body>
+  <div class="container">
+    <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+    <h1>Titre de la page</h1>
 
-{% endblock %}
-
-{% block content %}
-{% for post in posts %}
-<article class="post">
-  <header>
-    <div>
-      <h1>{{ post.title }}</h1>
-      <div class="about">post {{ post.created.strftime('%Y-%m-%d') }}</div>
+    <div id=menu class="menu">
+      <h4>Partie I</h4>
+      <h4>Partie II</h4>
+      <h4>Partie III</h4>
+      <h4>Partie IV</h4>
+      <h4>Partie V</h4>
     </div>
-  </header>
-  <p class="body">{{ post.body }}</p>
-</article>
-{% if not loop.last %}
-<hr>
-{% endif %}
-{% endfor %}
-{% endblock %}
+
+    <div id="parts-container">
+      <h2>Partie I</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
+        malesuada
+        libero massa, id mattis ligula aliquet non. Maecenas luctus quis erat at pulvinar. Mauris lacinia libero a felis
+        semper, condimentum pharetra nunc vehicula. Mauris vehicula imperdiet augue, in vestibulum orci pellentesque
+        eget.
+        Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
+        tincidunt
+        ut. </p>
+      <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+      <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
+        ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur id
+        nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
+        maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
+        Integer
+        tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+        non
+        rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
+      </p>
+
+      <div id="animation-container-1" class="container">
+        <h3>Titre de l'illustration</h3>
+        {% include 'animation1.html' %}
+      </div>
+
+      <br>
+
+      <h2>Partie II</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
+        malesuada
+        libero massa, id mattis ligula aliquet non. Maecenas luctus quis erat at pulvinar. Mauris lacinia libero a felis
+        semper, condimentum pharetra nunc vehicula. Mauris vehicula imperdiet augue, in vestibulum orci pellentesque
+        eget.
+        Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
+        tincidunt
+        ut. </p>
+      <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+      <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
+        ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur id
+        nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
+        maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
+        Integer
+        tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+        non
+        rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
+      </p>
+
+      <div id="animation-container-2" class="container">
+        <h3>Titre de l'illustration</h3>
+        {% include 'animation2.html' %}
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
