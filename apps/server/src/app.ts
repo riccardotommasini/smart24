@@ -1,19 +1,22 @@
 import express from 'express';
 import cors from 'cors';
-import { injectAll, singleton } from 'tsyringe';
+import { injectAll, singleton, inject } from 'tsyringe';
 import { HttpException } from './models/http-exception';
 import { SYMBOLS } from './constants/symbols';
 import { AbstractController } from './controllers/abstract-controller';
 import './config/registry';
 import { errorHandler } from './middleware/error-handler';
 import { DatabaseService } from './services/database-service/database-service';
+import { DefaultController } from './controllers/default-controller/default-controller';
+import { UserController } from './controllers/user-controller';
 
 @singleton()
 export class Application {
     private app: express.Application;
 
     constructor(
-        @injectAll(SYMBOLS.controllers) private readonly controllers: AbstractController[],
+        @inject(SYMBOLS.defaultController) private defaultController: DefaultController,
+        @inject(SYMBOLS.userController) private userController: UserController,
         private readonly databaseService: DatabaseService,
     ) {
         this.app = express();
@@ -38,9 +41,8 @@ export class Application {
     }
 
     private configureRoutes(): void {
-        for (const controller of this.controllers) {
-            controller.use(this.app);
-        }
+        this.defaultController.use(this.app);
+        this.userController.use(this.app);
 
         this.app.use('**', (req, res, next) => {
             next(new HttpException(404, `${req.method} ${req.url} not found`));

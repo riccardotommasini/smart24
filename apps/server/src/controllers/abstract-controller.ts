@@ -10,7 +10,7 @@ const DEFAULT_CONFIG: ControllerConfig = {
 
 export abstract class AbstractController {
     private router: Router;
-    private config: ControllerConfig;
+    public config: ControllerConfig;
 
     constructor(config: Partial<ControllerConfig> = {}) {
         this.router = Router();

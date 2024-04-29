@@ -15,6 +15,10 @@ export class DefaultController extends AbstractController {
             res.send(this.defaultService.getMessage());
         });
 
+        router.get('/test', (req, res) => {
+            res.status(StatusCodes.OK).send('Test route is working');
+        });
+
         router.get('/db', async (req, res, next) => {
             try {
                 await this.defaultService.pingDb();
