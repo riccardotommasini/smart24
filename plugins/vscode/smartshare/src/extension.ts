@@ -1,9 +1,28 @@
 import * as vscode from 'vscode';
+import {spawn} from 'child_process';
 
 
 export function activate(context: vscode.ExtensionContext) {
 
     let event_sent = new Array();
+
+	var childProcess = spawn('python', ['test.py']);
+
+	childProcess.stdout.setEncoding('utf8')
+
+	var data_line = '';
+
+	childProcess.stdout.on("data", function(data) {
+		const lines = data.split("\n");
+		for (let line of lines) {
+			data_line += line;
+			if(data_line.length>0) {
+				console.log(data_line);
+			}
+			data_line = ''
+		}
+		data_line = lines[lines.length-1];
+	});
 
 	let disposable = vscode.workspace.onDidChangeTextDocument(event => {
 
