@@ -9,6 +9,7 @@ use tokio::net::TcpSocket;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
 use tokio_stream::StreamExt;
+use tracing::info;
 
 use crate::client::Client;
 
@@ -16,10 +17,21 @@ pub mod client;
 
 #[tokio::main]
 async fn main() {
-    println!("Hello from server");
+    let subscriber = tracing_subscriber::fmt()
+        .with_writer(std::io::stderr)
+        .finish();
+
+    tracing::subscriber::set_global_default(subscriber).unwrap();
+
+    info!("Creating socket");
     let socket = TcpSocket::new_v4().unwrap();
-    socket.bind("0.0.0.0:4903".parse().unwrap()).unwrap();
+    info!("Binding socket");
+    socket.set_reuseport(true).unwrap();
+    let addr = "0.0.0.0:4903".parse().unwrap();
+    socket.bind(addr).unwrap();
+
     let listener = socket.listen(8).unwrap();
+    info!("Listening on {}", addr);
 
     let (message_sender, mut message_receiver) = mpsc::channel::<(usize, Message)>(8);
 
@@ -36,8 +48,8 @@ async fn main() {
         }
     });
 
+    let mut id = 0;
     loop {
-        let mut id = 0;
         let (socket, _peer_addr) = listener.accept().await.unwrap();
 
         let (tx, rx) = mpsc::channel(8);
@@ -48,6 +60,7 @@ async fn main() {
         id += 1;
 
         let client = Client::new(current_id, tx);
+        info!("New connection: {current_id}");
 
         clients.lock().unwrap().push(client);
 
@@ -55,7 +68,7 @@ async fn main() {
         tokio::spawn(async move {
             let mut stream = message_stream(read);
             while let Some(Ok(message)) = stream.next().await {
-                let _ = sender.send((id, message)).await;
+                let _ = sender.send((current_id, message)).await;
             }
         });
 
