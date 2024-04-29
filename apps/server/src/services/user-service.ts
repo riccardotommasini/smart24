@@ -2,7 +2,7 @@ import { singleton } from 'tsyringe';
 import { DatabaseService } from './database-service/database-service';
 import { Document } from 'mongodb';
 import crypto from 'crypto';
-import { Request, Response, Router, RequestHandler } from 'express';
+import { Request, Response, RequestHandler } from 'express';
 import asyncHandler from 'express-async-handler';
 import { body, validationResult } from 'express-validator';
 import User from '../models/user';
@@ -13,14 +13,14 @@ export class DefaultService {
     constructor(private readonly databaseService: DatabaseService) {}
 
     getMessage() {
-        return 'Hello world! ' ;
+        return 'Hello world! ';
     }
 
     pingDb(): Promise<Document> {
         return this.databaseService.client.db('admin').command({ ping: 1 });
     }
 
-    user_create_post = [
+    public user_create_post: RequestHandler[] = [
         // Validate and sanitize fields.
         body('username', 'Title must not be empty.').trim().isLength({ min: 1 }).escape(),
         body('mail', 'Author must not be empty.').trim().isLength({ min: 1 }).escape(),
@@ -30,6 +30,7 @@ export class DefaultService {
         asyncHandler(async (req: Request, res: Response) => {
             // Extract the validation errors from a request.
             const errors = validationResult(req);
+            console.log("hello");
 
             const passwordHash = crypto.createHash('sha256').update(req.body.password).digest('hex');
             // http://localhost:8888/user/create?username=momo&mail=a@gmail.com&password=azerty
