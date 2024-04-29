@@ -72,39 +72,21 @@ pub struct ServerHandle {
 
 impl ServerHandle {
     pub async fn on_connect(&self, client: Client) {
-        if self
-            .sender
-            .send(ServerMessage::Connect(client))
-            .await
-            .is_err()
-        {
-            error!("Server receiver has been drop");
-            panic!("Server receiver has been drop");
-        }
+        self.send(ServerMessage::Connect(client)).await;
     }
 
     pub async fn on_disconnect(&self, client_id: usize) {
-        if self
-            .sender
-            .send(ServerMessage::Disctonnect(client_id))
-            .await
-            .is_err()
-        {
-            error!("Server receiver has been drop");
-            panic!("Server receiver has been drop");
-        }
+        self.send(ServerMessage::Disctonnect(client_id)).await;
     }
 
     pub async fn on_message(&self, source_id: usize, message: Message) {
-        if self
-            .sender
-            .send(ServerMessage::Message(source_id, message))
-            .await
-            .is_err()
-        {
+        self.send(ServerMessage::Message(source_id, message)).await;
+    }
+
+    async fn send(&self, message: ServerMessage) {
+        if self.sender.send(message).await.is_err() {
             error!("Server receiver has been drop");
             panic!("Server receiver has been drop");
         }
     }
 }
-
