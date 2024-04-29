@@ -5,19 +5,24 @@ import {spawn} from 'child_process';
 class Change {
 
     offset: number;
-    deleted: number;
-    inserted: string;
+    delete: number;
+    text: string;
+    action = 'i_d_e_update';
 
     constructor(offset: number, deleted: number, inserted: string) {
         this.offset = offset;
-        this.deleted = deleted;
-        this.inserted = inserted;
+        this.delete = deleted;
+        this.text = inserted;
     }
 
     range() {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            throw new Error('No active text editor');
+        }
         return new vscode.Range(
-            new vscode.Position(0, this.offset),
-            new vscode.Position(0, this.offset + this.deleted)
+            editor.document.positionAt(this.offset),
+            editor.document.positionAt(this.offset + this.delete)
         );
     }
 
@@ -27,7 +32,7 @@ function write_change(change: Change) {
     const editor = vscode.window.activeTextEditor;
     if (editor) {
         editor.edit((editBuilder: vscode.TextEditorEdit) => {
-            editBuilder.replace(change.range(), change.inserted);
+            editBuilder.replace(change.range(), change.text);
         }).then(success => {
             if (success) {
                 vscode.window.showInformationMessage('Text inserted');
@@ -41,7 +46,9 @@ function write_change(change: Change) {
 
 export function activate(context: vscode.ExtensionContext) {
 
-    var childProcess = spawn('python', [__dirname + '/../src/test.py']);
+    const client_executable = __dirname + '/../../../../smartshare/target/debug/client';
+    var childProcess = spawn(client_executable, ['127.0.0.1:4903']);
+    console.log(client_executable);
 	childProcess.stdout.setEncoding('utf8')
     
     var changes_to_discard = new Array();
@@ -63,6 +70,10 @@ export function activate(context: vscode.ExtensionContext) {
 			data_line = ''
 		}
 		data_line = lines[lines.length-1];
+	});
+
+    childProcess.stderr.on("data", function(data) {
+        console.log(data + "");
 	});
 
     
