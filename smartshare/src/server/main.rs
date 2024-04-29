@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 use futures::SinkExt;
 use smartshare::protocol::message_sink;
 use smartshare::protocol::message_stream;
@@ -68,22 +67,4 @@ async fn main() {
             let _ = sink.send_all(&mut rx_stream).await;
         });
     }
-=======
-use smartshare::protocol::msg::TextModification;
-use serde_json::Result;
-
-#[tokio::main]
-async fn main() {
-    println!("Hello from server");
-    
-    let modif = TextModification{
-        offset: 4,
-        delete: 0,
-        text: "Bonjour".to_owned(),
-    };
-
-    if let Ok(final_json) = serde_json::to_string(&modif) {
-        println!("{}", final_json);
-    }    
->>>>>>> 2ade9a4 (Started conversion pt2)
 }
