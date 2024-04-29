@@ -1,10 +1,6 @@
-use std::sync::Arc;
-
 use futures::SinkExt;
 use smartshare::protocol::message_sink;
 use smartshare::protocol::message_stream;
-use smartshare::protocol::msg::Message;
-use std::sync::Mutex;
 use tokio::net::TcpSocket;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
@@ -12,8 +8,11 @@ use tokio_stream::StreamExt;
 use tracing::info;
 
 use crate::client::Client;
+use crate::server::Server;
+
 
 pub mod client;
+pub mod server;
 
 #[tokio::main]
 async fn main() {
@@ -33,19 +32,9 @@ async fn main() {
     let listener = socket.listen(8).unwrap();
     info!("Listening on {}", addr);
 
-    let (message_sender, mut message_receiver) = mpsc::channel::<(usize, Message)>(8);
-
-    let clients = Arc::new(Mutex::new(Vec::<Client>::new()));
-
-    let clients_clone = clients.clone();
+    let (mut server, server_handle) = Server::new();
     tokio::spawn(async move {
-        let clients = clients_clone;
-        while let Some((id, message)) = message_receiver.recv().await {
-            let clients = clients.lock().unwrap().clone();
-            for client in clients.iter().filter(|client| client.id() != id) {
-                let _ = client.send(message.clone()).await;
-            }
-        }
+        server.run().await;
     });
 
     let mut id = 0;
@@ -60,16 +49,16 @@ async fn main() {
         id += 1;
 
         let client = Client::new(current_id, tx);
-        info!("New connection: {current_id}");
+        server_handle.on_connect(client).await;
 
-        clients.lock().unwrap().push(client);
+        let handle = server_handle.clone();
 
-        let sender = message_sender.clone();
         tokio::spawn(async move {
             let mut stream = message_stream(read);
             while let Some(Ok(message)) = stream.next().await {
-                let _ = sender.send((current_id, message)).await;
+                handle.on_message(current_id, message).await;
             }
+            handle.on_disconnect(current_id).await;
         });
 
         tokio::spawn(async move {
