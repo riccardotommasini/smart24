@@ -1,11 +1,8 @@
 from flask import (
-    make_response, request, Response
+    make_response, request, Response, render_template
 )
 from flask_restx import (  # type: ignore
     Namespace, fields, Resource
-)
-from flask_jwt_extended import (
-    get_jwt_identity, jwt_required
 )
 from sqlalchemy import Engine
 
@@ -38,7 +35,6 @@ def create_blog_ns(engine: Engine) -> Namespace:
             'id': fields.Integer(required=True, description='The post identifier'),
             'title': fields.String(required=True, description='The post title'),
             'body': fields.String(required=True, description='The post body'),
-            'author_id': fields.Integer(required=True, description='The author identifier'),
             'created': fields.String(required=True, description='The post creation date'),
         }
     )
@@ -48,24 +44,23 @@ def create_blog_ns(engine: Engine) -> Namespace:
 
         # ------------------ GET ------------------
         @api.doc('list_posts')
-        @api.marshal_list_with(postComplete)
-        def get(self) -> list[DbPost]:
+        def get(self):
             posts = getPosts(engine)
-            return posts
+            html_content = render_template('index.html', posts=posts)
+            response = make_response(html_content)
+            response.headers['Content-Type'] = 'text/html'
+            return response
 
         # ------------------ POST ------------------
 
         @api.doc('add_post')
         @api.expect(postModel, validate=True)
-        @api.doc(security="jsonWebToken")
-        @jwt_required()
         def post(self) -> Response:
             jsondata = request.get_json()
             title_data = jsondata['title']
             body_data = jsondata['body']
-            authorid_data = get_jwt_identity()
             try:
-                newPost(engine, title_data, body_data, authorid_data)
+                newPost(engine, title_data, body_data)
                 response = make_response("", 204)
             except Exception as ex:
                 response = make_response(ex.args)
@@ -78,8 +73,6 @@ def create_blog_ns(engine: Engine) -> Namespace:
         # ------------------ PATCH ------------------
         @api.doc('patch_post')
         @api.expect(postModel, validate=True)
-        @api.doc(security="jsonWebToken")
-        @jwt_required()
         def patch(self, post_id: int) -> Response:
             jsondata = request.get_json()
             title_data = jsondata['title']
@@ -95,8 +88,6 @@ def create_blog_ns(engine: Engine) -> Namespace:
 
         @api.doc('delete_post')
         @api.response(204, "Post Deleted")
-        @api.doc(security="jsonWebToken")
-        @jwt_required()
         def delete(self, post_id: int) -> Response:
             removePost(engine, post_id)
             return make_response("", 204)
