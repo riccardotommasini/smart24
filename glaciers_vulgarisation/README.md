@@ -7,8 +7,6 @@ Pour lancer l'environnement virtuel :
 pip install Flask
 pip install flask-cors
 pip install flask-restx
-pip install Flask-JWT-Extended
-pip install Bcrypt-Flask
 pip install SQLAlchemy
 
 # Se mettre dans le dossier glaciers_vulgarisation
