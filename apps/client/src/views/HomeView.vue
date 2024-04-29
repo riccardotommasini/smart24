@@ -1,5 +1,23 @@
+
+<script setup lang="ts">
+
+import slogan from '../components/slogan.vue';
+import '../assets/HomeView.css'
+
+</script>
+
 <template>
-  <main>
-    <h1>Home</h1>
-  </main>
+  
+  <slogan/>
+
+  
+  
+
+
+
 </template>
+
+
+
+
+
