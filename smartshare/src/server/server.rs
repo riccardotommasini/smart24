@@ -1,4 +1,4 @@
-use smartshare::protocol::msg::{Message, ModifRequest};
+use smartshare::protocol::msg::{MessageServer, ModifRequest};
 use tokio::sync::mpsc;
 use tracing::{error, info, trace, warn};
 use kyte::{Compose, Delta, Transform};
@@ -46,11 +46,11 @@ impl Server {
         self.clients.retain(|client| client.id() != client_id);
     }
 
-    async fn on_message(&mut self, source_id: usize, message: Message) {
+    async fn on_message(&mut self, source_id: usize, message: MessageServer) {
         trace!("User message: {:?}", message);
 
         match message {
-            Message::ServerUpdate(req) => {
+            MessageServer::ServerUpdate(req) => {
                 if req.rev_num >= self.deltas.len() {
                     todo!("gestion d'un revision number invalide");
                 } else {
@@ -64,11 +64,11 @@ impl Server {
                         .iter()
                         //.filter(|client| client.id() != source_id)
                     {
-                        let notif: Message;
+                        let notif: MessageServer;
                         if client.id() == source_id {
-                            notif = Message::Ack;
+                            notif = MessageServer::Ack;
                         } else {
-                            notif = Message::ServerUpdate(ModifRequest {
+                            notif = MessageServer::ServerUpdate(ModifRequest {
                                 delta: delta_p.clone(),
                                 rev_num: self.deltas.len() - 1,
                             })
@@ -88,7 +88,7 @@ impl Server {
 }
 
 enum ServerMessage {
-    Message(usize, Message),
+    Message(usize, MessageServer),
     Connect(Client),
     Disctonnect(usize),
 }
@@ -107,7 +107,7 @@ impl ServerHandle {
         self.send(ServerMessage::Disctonnect(client_id)).await;
     }
 
-    pub async fn on_message(&self, source_id: usize, message: Message) {
+    pub async fn on_message(&self, source_id: usize, message: MessageServer) {
         self.send(ServerMessage::Message(source_id, message)).await;
     }
 
