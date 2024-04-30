@@ -11,7 +11,7 @@ export interface IUser extends Document {
     factChecker: boolean;
     totalPosts: number;
     nbFactChecked: number;
-    organisation: string;
+    organization: string;
     posts: [{ type: Schema.Types.ObjectId; ref: 'Post' }];
     follows: [{ type: Schema.Types.ObjectId; ref: 'User' }];
     trustedUsers: [{ type: Schema.Types.ObjectId; ref: 'User' }];
@@ -26,10 +26,10 @@ const UserSchema: Schema<IUser> = new Schema<IUser>({
     mail: { type: String, required: true, maxLength: 100, unique: true },
     username: { type: String, required: true, maxLength: 100, unique: true },
     passwordHash: { type: String, required: true, maxLength: 256 },
-    factChecker: { type: Boolean, default: false },
+    factChecker: { type: Boolean, required: false, default: false },
     totalPosts: { type: Number, required: false, default: 0 },
     nbFactChecked: { type: Number, required: false, default: 0 },
-    organisation: { type: String, required: false, maxLength: 100 },
+    organization: { type: String, required: false, maxLength: 100 },
     posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
     follows: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     trustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
