@@ -22,7 +22,7 @@ export class PostController extends AbstractController {
             async (req: AuthRequest<object, ICreatePost>, res: Response, next: NextFunction) => {
                 try {
                     res.status(StatusCodes.CREATED).send(
-                        await this.postService.publishPost(req.user?.username ?? '', req.body),
+                        await this.postService.publishPost(req.user?._id ?? '', req.body),
                     );
                 } catch (e) {
                     next(e);
