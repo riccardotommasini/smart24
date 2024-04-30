@@ -20,7 +20,7 @@ export class UserService {
         return this.databaseService.client.db('admin').command({ ping: 1 });
     }
 
-    public user_create_post: RequestHandler[] = [
+    public createUser: RequestHandler[] = [
         // Validate and sanitize fields.
         body('username', 'Title must not be empty.').trim().isLength({ min: 1 }).escape(),
         body('mail', 'Author must not be empty.').trim().isLength({ min: 1 }).escape(),

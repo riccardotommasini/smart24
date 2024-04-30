@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 const MetricsSchema = new Schema({
+    postId: { type: Schema.Types.ObjectId },
     metricsId: { type: Schema.Types.ObjectId },
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     dislikes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
@@ -11,4 +12,5 @@ const MetricsSchema = new Schema({
 });
 
 // Export model
-module.exports = mongoose.model('Metrics', MetricsSchema);
+const Metrics = mongoose.model('Metrics', MetricsSchema);
+export default Metrics;
