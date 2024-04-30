@@ -68,9 +68,15 @@ body {
     background-color: black;
 }
 
-.or {
-    margin: 0 10px;
+.circle {
+    width: 3vh;
+    height: 3vh;
+    margin-right:1vh;
+    margin-left: 1vh;
+    background-color: black;
+    border-radius: 50%; /* Rend le div en forme de cercle */
 }
+
 
 .forgot-password {
     font-family: 'inter', sans-serif;
