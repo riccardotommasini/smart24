@@ -7,10 +7,15 @@ import asyncHandler from 'express-async-handler';
 import { body, validationResult } from 'express-validator';
 import User from '../models/user';
 import { StatusCodes } from 'http-status-codes';
+import { DocumentDefinition } from 'mongoose';
+import UserSchema, { IUser } from '../models/user';
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { env } from '../utils/env';
 
 @singleton()
 export class UserService {
-    constructor(private readonly databaseService: DatabaseService) {}
+    constructor(private readonly databaseService: DatabaseService) { }
 
     getMessage() {
         return 'Hello world! ';
@@ -31,13 +36,13 @@ export class UserService {
             // Extract the validation errors from a request.
             const errors = validationResult(req);
 
-            const passwordHash = crypto.createHash('sha256').update(req.body.password).digest('hex');
+            // const passwordHash = crypto.createHash('sha256').update(req.body.password).digest('hex');
             // http://localhost:8888/user/create?username=momo&mail=a@gmail.com&password=azerty
             // Create a Book object with escaped and trimmed data.
             const user = new User({
                 username: req.body.username,
                 mail: req.body.mail,
-                passwordHash: passwordHash,
+                passwordHash: req.body.password,
             });
 
             if (!errors.isEmpty()) {
@@ -54,4 +59,29 @@ export class UserService {
             }
         }),
     ];
+
+    public async login(user: DocumentDefinition<IUser>) {
+        try {
+            const foundUser = await UserSchema.findOne({ username: user.username });
+
+            if (!foundUser) {
+                throw new Error('UserName of user is not correct');
+            }
+
+            console.log(user.passwordHash + 'vs' + foundUser.passwordHash);
+            const isMatch = bcrypt.compareSync(user.passwordHash, foundUser.passwordHash);
+
+            if (isMatch) {
+                const token = jwt.sign({ _id: foundUser._id?.toString(), name: foundUser.name }, env.SECRET_KEY, {
+                    expiresIn: '2 days',
+                });
+
+                return { user: {id: foundUser.userId, username: foundUser.username}, token: token };
+            } else {
+                throw new Error('Password is not correct');
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 }
