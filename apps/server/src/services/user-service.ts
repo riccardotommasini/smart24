@@ -5,9 +5,9 @@ import { body, validationResult } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
 import { Document } from 'mongodb';
 import { singleton } from 'tsyringe';
+import { HttpException } from '../models/http-exception';
 import User from '../models/user';
 import { DatabaseService } from './database-service/database-service';
-import { HttpException } from '../models/http-exception';
 
 @singleton()
 export class UserService {
@@ -19,14 +19,39 @@ export class UserService {
         body('password', 'Password must not be empty.').trim().isLength({ min: 1 }).escape(),
     ];
 
-    async saveUser(username: string, mail: string, password: string) {
+    async saveUser(
+        username: string,
+        mail: string,
+        password: string,
+        name: string,
+        surname: string,
+        birthday: string,
+        factChecker: boolean,
+        organization: string,
+    ) {
+        if (!factChecker && organization) {
+            throw new HttpException(StatusCodes.BAD_REQUEST, 'organization must be empty for non-fact-checkers');
+        } else if (factChecker && !organization) {
+            throw new HttpException(StatusCodes.BAD_REQUEST, 'organization must be provided for fact-checker');
+        }
+
+        const existingUser = await User.findOne({ $or: [{ username: username }, { mail: mail }] });
+        if (existingUser) {
+            throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or email already exists');
+        }
+
         const passwordHash = crypto.createHash('sha256').update(password).digest('hex');
-        // http://localhost:8888/user/create?username=momo&mail=a@gmail.com&password=azerty
-        // Create a Book object with escaped and trimmed data.
+        const [day, month, year] = birthday.split('/');
+        const birthdayDate = new Date(Number(year), Number(month) - 1, Number(day));
         const user = new User({
             username: username,
             mail: mail,
             passwordHash: passwordHash,
+            name: name,
+            surname: surname,
+            birthday: birthdayDate,
+            factChecker: factChecker,
+            organization: organization,
         });
 
         try {
@@ -36,43 +61,4 @@ export class UserService {
             throw new HttpException(StatusCodes.INTERNAL_SERVER_ERROR, 'Error saving user');
         }
     }
-
-    public user_create_post: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
-        // Define the validation chains
-        const validationChains = [
-            body('username', 'Username must not be empty.').trim().isLength({ min: 1 }).escape(),
-            body('mail', 'Email must not be empty.').trim().isLength({ min: 1 }).escape(),
-            body('password', 'Password must not be empty.').trim().isLength({ min: 1 }).escape(),
-        ];
-
-        // Run the validations
-        for (const validation of validationChains) {
-            await validation.run(req);
-        }
-
-        const errors = validationResult(req);
-
-        const passwordHash = crypto.createHash('sha256').update(req.body.password).digest('hex');
-        // http://localhost:8888/user/create?username=momo&mail=a@gmail.com&password=azerty
-        // Create a Book object with escaped and trimmed data.
-        const user = new User({
-            username: req.body.username,
-            mail: req.body.mail,
-            passwordHash: passwordHash,
-        });
-
-        if (!errors.isEmpty()) {
-            // There are errors. Render form again with sanitized values/error messages.
-            res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
-        } else {
-            // Data from form is valid. Save user.
-            try {
-                await user.save();
-                res.status(StatusCodes.OK).send('user saved !!!');
-            } catch (error) {
-                console.error(error);
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Error saving user');
-            }
-        }
-    });
 }
