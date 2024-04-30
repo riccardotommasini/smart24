@@ -6,6 +6,6 @@ export const env = cleanEnv(process.env, {
     }),
     MONGO_URL: str(),
     SECRET_KEY: str({
-        default : '1'
+        default: '1',
     }),
 });
