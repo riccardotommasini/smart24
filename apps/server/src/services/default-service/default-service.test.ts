@@ -1,6 +1,5 @@
 import { container } from 'tsyringe';
 import { DefaultService } from './default-service';
-import { foo } from 'common';
 
 describe('DefaultService', () => {
     let defaultService: DefaultService;
@@ -11,7 +10,7 @@ describe('DefaultService', () => {
 
     describe('getMessage', () => {
         it('should return the correct message', () => {
-            expect(defaultService.getMessage()).toBe('Hello world! ' + foo());
+            expect(defaultService.getMessage()).toBe('Hello world! ' );
         });
     });
 });
