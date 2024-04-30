@@ -1,0 +1,8 @@
+notebook
+pandas
+tqdm
+faker
+unidecode
+black[jupyter]
+transformers>=4.39.1
+torch
