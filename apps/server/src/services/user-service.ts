@@ -4,7 +4,7 @@ import User from '../models/user';
 import { StatusCodes } from 'http-status-codes';
 import { DocumentDefinition } from 'mongoose';
 import UserSchema, { IUser } from '../models/user';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { env } from '../utils/env';
 import { HttpException } from '../models/http-exception';
