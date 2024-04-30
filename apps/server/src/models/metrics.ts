@@ -1,6 +1,20 @@
 import mongoose, { Schema } from 'mongoose';
 
-const MetricsSchema = new Schema({
+export interface IMetrics {
+    nbLikes: number;
+    nbDislikes: number;
+    nbTrusts: number;
+    nbUntrusts: number;
+    nbComments: number;
+    likedBy: Schema.Types.ObjectId[];
+    dislikedBy: Schema.Types.ObjectId[];
+    trustedBy: Schema.Types.ObjectId[];
+    untrustedBy: Schema.Types.ObjectId[];
+    sharedBy: Schema.Types.ObjectId[];
+    factCheckedBy: Schema.Types.ObjectId[];
+}
+
+const MetricsSchema = new Schema<IMetrics>({
     nbLikes: { type: Number, required: false, default: 0 },
     nbDislikes: { type: Number, required: false, default: 0 },
     nbTrusts: { type: Number, required: false, default: 0 },
@@ -14,6 +28,4 @@ const MetricsSchema = new Schema({
     factCheckedBy: [{ type: Schema.Types.ObjectId, ref: 'FactCheck' }],
 });
 
-// Export model
-const Metrics = mongoose.model('Metrics', MetricsSchema);
-export default Metrics;
+export const Metrics = mongoose.model<IMetrics>('Metrics', MetricsSchema);
