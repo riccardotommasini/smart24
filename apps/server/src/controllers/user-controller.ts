@@ -22,5 +22,9 @@ export class UserController extends AbstractController {
         router.post('/user/trustUser', (req, res, next) => {
             this.userService.user_trustUser_post.forEach((handler) => handler(req, res, next));
         })
+
+        router.post('/user/untrustUser', (req, res, next) => {
+            this.userService.user_untrustUser_post.forEach((handler) => handler(req, res, next));
+        })
     }
 }

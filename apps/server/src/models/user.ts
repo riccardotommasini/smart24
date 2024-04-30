@@ -13,7 +13,7 @@ interface IUser extends Document {
     follows: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     subscribers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     trustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    distrustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    untrustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     parameters: {globalTrust: boolean, rateFactChecked: number, diversification: number}
 }
 
@@ -30,7 +30,7 @@ const UserSchema: Schema = new Schema<IUser>({
     follows: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     subscribers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     trustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    distrustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    untrustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     parameters: {globalTrust: {type: Boolean, required: false, default: false}, rateFactChecked: {type: Number, required: false}}
 });
 

@@ -7,6 +7,7 @@ import asyncHandler from 'express-async-handler';
 import { body, validationResult } from 'express-validator';
 import User from '../models/user';
 import { StatusCodes } from 'http-status-codes';
+import mongoose, { Schema, trusted } from 'mongoose';
 
 @singleton()
 export class UserService {
@@ -61,7 +62,7 @@ export class UserService {
      - otherUserId : id of th user that the current one wants to mark as 'trusted'
 
     Test :
-    curl -X POST -H "Content-Type: application/json" -d '{"username":"momo","mail":"a@gmail.com","password":"azerty"}' http://localhost:3000/user/create?username=momo&mail=
+    curl -X POST -H "Content-Type: application/json" -d '{"username":"momo","mail":"a@gmail.com","password":"azerty"}' http://localhost:3000/user/create
     curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/trustUser
     */
     public user_trustUser_post : RequestHandler[] = [
@@ -69,32 +70,47 @@ export class UserService {
         ((req: Request, res: Response) => {
             //unfold parameters
             // const token = (req as CustomRequest).token;
-            const userId = '6630be9d130907c60efc462c';
+            const userId = '6630e0e5bac7e6786d92af14';
             const otherUserId = req.body.otherUserId;
+            const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
 
-            //objects
-            let user;
+            User.updateOne(
+                { _id : userId, trustedUsers : { $ne : otherUserIdObject}},
+                { $push : { trustedUsers : otherUserIdObject}}
+            ).then( res => console.log(res))
+            User.updateOne(
+                { _id : userId},
+                { $pull : { untrustedUsers : { $in : [otherUserIdObject]}}}
+            ).then( res => console.log(res))
+        })
+    ];
 
-            //find user that is connected on the session
-            User.findById(userId)
-                .then(user => {
-                    if (!user) {
-                        console.log('User not found');
-                        return;
-                    }
-                    //add the other user to the list of trusted users
-                    user.trustedUsers.push(otherUserId);
-                    console.log('Retrieved user : ' + user);
+    /*
+    Params :
+     - token : token of the user cuttently logged on the session
+     - otherUserId : id of th user that the current one wants to mark as 'trusted'
 
-                    //save updates
-                    return user.save();
-                })
-                .then(savedUser => {
-                    console.log('User saved : ' + savedUser);
-                })
-                .catch(error => {
-                    console.error('Error :', error);
-                });
+    Test :
+    curl -X POST -H "Content-Type: application/json" -d '{"username":"momo","mail":"a@gmail.com","password":"azerty"}' http://localhost:3000/user/create
+    curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/untrustUser
+    */
+    public user_untrustUser_post : RequestHandler[] = [
+
+        ((req: Request, res: Response) => {
+            //unfold parameters
+            // const token = (req as CustomRequest).token;
+            const userId = '6630e0e5bac7e6786d92af14';
+            const otherUserId = req.body.otherUserId;
+            const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
+
+            User.updateOne(
+                { _id : userId, untrustedUsers : { $ne : otherUserIdObject}},
+                { $push : { untrustedUsers : otherUserIdObject}}
+            ).then( res => console.log(res))
+            User.updateOne(
+                { _id : userId},
+                { $pull : { trustedUsers : { $in : [otherUserIdObject]}}}
+            ).then( res => console.log(res))
         })
     ];
 }
