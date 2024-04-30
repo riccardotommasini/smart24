@@ -1,5 +1,5 @@
 use kyte::{Compose, Delta, Transform};
-use smartshare::protocol::msg::{toDelta, MessageIde, MessageServer, ModifRequest};
+use smartshare::protocol::msg::{toDelta, toIdeChanges, MessageIde, MessageServer, ModifRequest};
 
 use crate::ide::Ide;
 use crate::server::Server;
@@ -51,7 +51,10 @@ impl Client {
         self.sent_delta = server_change
             .clone()
             .transform(self.sent_delta.clone(), false);
-        todo!("send 'ide_delta' to the ide");
+        let ide_modifs = toIdeChanges(&ide_delta);
+        for modif in ide_modifs {
+            self.ide.send(MessageIde::IDEUpdate(modif));
+        }
     }
 
     pub async fn on_message_server(&mut self, message: MessageServer) {
