@@ -35,6 +35,8 @@ pub fn toOperationSeq(modif: &TextModification) -> OperationSeq {
     seq.retain(modif.offset);
     seq.delete(modif.delete);
     seq.insert(modif.text.as_str());
+    todo!("rajouter un retain jusqu'à la fin du fichier");
+    //seq.retain(...);
     seq
 }
 
