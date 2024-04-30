@@ -6,6 +6,7 @@ import { Request, Response, RequestHandler } from 'express';
 import asyncHandler from 'express-async-handler';
 import { body, validationResult } from 'express-validator';
 import User from '../models/user';
+import Post from '../models/post';
 import { StatusCodes } from 'http-status-codes';
 import mongoose, { Schema, trusted } from 'mongoose';
 
@@ -63,7 +64,7 @@ export class UserService {
     */
 
     async user_trustUser_post(userId : string, otherUserId: string) {
-        //unfold parameters
+        
         const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
 
         await Promise.all([
@@ -84,7 +85,7 @@ export class UserService {
     curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/untrustUser
     */
     async user_untrustUser_post(userId : string, otherUserId: string) {
-        //unfold parameters
+        
         const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
 
         await Promise.all([
@@ -97,5 +98,54 @@ export class UserService {
                 { $pull : { trustedUsers : { $in : [otherUserIdObject]}}}
             )
         ])
+    }
+
+    /*
+    Test :
+    curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/visitUserProfile
+    */
+    async user_visitUserProfile_post(otherUserId: string) {
+
+        console.log("enter visitUserProfile");
+
+        let otherUserInfo = new User();
+        let lastPostsByUser = [];
+        const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
+
+        //retrieve data of other user
+        User.findById(otherUserId)
+            .then(foundUser => {
+                if (!foundUser) {
+                    return;
+                }
+
+                console.log("user found");
+                otherUserInfo = foundUser;
+
+                const pipeline : mongoose.PipelineStage[] = [
+                    { $match : { createdBy : otherUserIdObject }},
+                    { $sort : { date : -1 }},
+                    { $limit : 50 }
+                ];
+
+                return Post.aggregate(pipeline);
+            })
+            .then( res => {
+                    console.log("posts found : " + res);
+                    if (!res) {
+                        return;
+                    }
+                    lastPostsByUser = res;
+
+                    //send response
+                    let response = {
+                        userData : otherUserInfo,
+                        lastPosts : lastPostsByUser
+                    };
+            
+                    console.log(response)
+            
+                    return response;
+            });
     }
 }

@@ -27,7 +27,7 @@ export class UserController extends AbstractController {
 
             try {
                 this.userService.user_trustUser_post(userId, otherUserId);
-                res.status(200).send();
+                res.status(StatusCodes.OK).send();
             } catch(error) {
                 next();
             }
@@ -39,7 +39,19 @@ export class UserController extends AbstractController {
             const otherUserId = '6630be9d130907c60efc4aaa';
             try {
                 this.userService.user_untrustUser_post(userId, otherUserId)
-                res.status(200).send()
+                res.status(StatusCodes.OK).send()
+            } catch(error) {
+                next();
+            }
+            
+        })
+
+        router.post('/user/visitUserProfile', (req, res, next) => {
+
+            const otherUserId = '6630f07c080932226bb2612a'
+            try {
+                this.userService.user_visitUserProfile_post(otherUserId)
+                res.status(StatusCodes.OK).send()
             } catch(error) {
                 next();
             }
