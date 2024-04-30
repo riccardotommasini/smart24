@@ -1,20 +1,30 @@
+use kyte::{Compose, Delta, Transform};
+use smartshare::protocol::msg::{toDelta, MessageIde, MessageServer};
+
+use crate::ide::Ide;
+use crate::server::Server;
+
 pub struct Client {
-    server_state : Delta<String, ()>,
-    sent_delta : Delta<String, ()>,
-    unsent_delta : Delta<String, ()>,
+    server_state: Delta<String, ()>,
+    sent_delta: Delta<String, ()>,
+    unsent_delta: Delta<String, ()>,
+    server: Server,
+    ide: Ide,
 }
 
 impl Client {
-    pub fn new() -> Self {
+    pub fn new(server: Server, ide: Ide) -> Self {
         Self {
             server_state: Delta::new(),
             sent_delta: Delta::new(),
             unsent_delta: Delta::new(),
+            server,
+            ide,
         }
     }
 
     async fn on_ack(&mut self) {
-        self.server_state = self.server_state.clone().compose(sent_delta);
+        self.server_state = self.server_state.clone().compose(self.sent_delta.clone());
         self.sent_delta = Delta::new();
     }
 
@@ -24,17 +34,33 @@ impl Client {
         self.unsent_delta = Delta::new();
     }
 
-    async fn on_server_change(&mut self, server_change : &Delta<String, ()>) {
+    async fn on_server_change(&mut self, server_change: &Delta<String, ()>) {
         self.server_state = self.server_state.clone().compose(server_change.clone());
-        self.unsent_delta = self.sent_delta.clone().transform(server_change.clone()).transform(self.unsent_delta.clone());
-        let ide_delta = self.unsent_delta.clone().transform(self.sent_delta.clone().transform(server_change.clone()));
-        self.sent_delta = server_change.clone().transform(self.sent_delta.clone());
+        self.unsent_delta = self
+            .sent_delta
+            .clone()
+            .transform(server_change.clone(), true)
+            .transform(self.unsent_delta.clone(), true);
+        let ide_delta = self.unsent_delta.clone().transform(
+            self.sent_delta
+                .clone()
+                .transform(server_change.clone(), false),
+            false,
+        );
+        self.sent_delta = server_change
+            .clone()
+            .transform(self.sent_delta.clone(), false);
         todo!("send 'ide_delta' to the ide");
     }
 
-    async fn on_message_ide(&mut self, message_ide : MessageIde) {
+    pub async fn on_message_server(&mut self, message: MessageServer) {
+        todo!()
+    }
+
+    pub async fn on_message_ide(&mut self, message_ide: MessageIde) {
         if let MessageIde::IDEUpdate(change) = message_ide {
-            self.unsent_delta = self.unsent_delta.clone().compose(toDelta(change));
+            self.unsent_delta = self.unsent_delta.clone().compose(toDelta(&change));
         }
     }
 }
+
