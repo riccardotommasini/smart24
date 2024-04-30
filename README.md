@@ -1,7 +1,7 @@
 # Lancer oggm sur votre machine avec un venv (bash sous windows)
 
 1. Dans vscode, ouvrez un terminal, passez sur bash
-2. tapez ``code .`
+2. tapez `code .`
 3. lancer le venv dans le terminal si vous voulez lancer des scripts `source oggm_env/bin/activate`
 4. si vous voulez utiliser des notebooks, ctrl maj P et cliquez sur `oggm_env`
     => POUR LE CREER
