@@ -1,9 +1,5 @@
 import crypto from 'crypto';
-import { Request, RequestHandler, Response } from 'express';
-import asyncHandler from 'express-async-handler';
-import { body, validationResult } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
-import { Document } from 'mongodb';
 import { singleton } from 'tsyringe';
 import { HttpException } from '../models/http-exception';
 import User from '../models/user';
@@ -12,12 +8,6 @@ import { DatabaseService } from './database-service/database-service';
 @singleton()
 export class UserService {
     constructor(private readonly databaseService: DatabaseService) {}
-
-    validators = [
-        body('username', 'Username must not be empty.').trim().isLength({ min: 1 }).escape(),
-        body('mail', 'Email must not be empty.').trim().isLength({ min: 1 }).escape(),
-        body('password', 'Password must not be empty.').trim().isLength({ min: 1 }).escape(),
-    ];
 
     async saveUser(
         username: string,
