@@ -1,9 +1,13 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
+import { DateTime } from 'luxon'
 
 interface IUser extends Document {
     userId: Schema.Types.ObjectId,
-    username: string,
+    name: string,
+    surname: string,
+    birthday: DateTime,
     mail: string,
+    username: string,
     passwordHash: string,
     globalTrust: boolean,
     factChecker: boolean,
@@ -12,6 +16,7 @@ interface IUser extends Document {
     subscribers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     trustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     distrustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    parameters: []
 }
 
 const UserSchema: Schema = new Schema<IUser>({
