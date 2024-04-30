@@ -1,16 +1,14 @@
 import express from 'express';
 import cors from 'cors';
-import { injectAll, singleton, inject } from 'tsyringe';
+import { singleton, inject } from 'tsyringe';
 import { HttpException } from './models/http-exception';
 import { SYMBOLS } from './constants/symbols';
-import { AbstractController } from './controllers/abstract-controller';
 import './config/registry';
 import { errorHandler } from './middleware/error-handler';
 import { DatabaseService } from './services/database-service/database-service';
 import { DefaultController } from './controllers/default-controller/default-controller';
 import { UserController } from './controllers/user-controller';
-import { env } from './utils/env';
-import mongoose from 'mongoose';
+import { PostController } from './controllers/post-controller/post-controller';
 
 @singleton()
 export class Application {
@@ -19,6 +17,7 @@ export class Application {
     constructor(
         @inject(SYMBOLS.defaultController) private defaultController: DefaultController,
         @inject(SYMBOLS.userController) private userController: UserController,
+        private postController: PostController,
         private readonly databaseService: DatabaseService,
     ) {
         this.app = express();
@@ -37,9 +36,9 @@ export class Application {
     }
 
     async init() {
-        //await this.databaseService.connect();
+        await this.databaseService.connect();
         try {
-            await mongoose.connect(env.MONGO_URL, {});
+            // eslint-disable-next-line no-console
             console.log('🗃️ Connected to database');
         } catch (error) {
             console.error('Error connecting to database: ', error);
@@ -49,6 +48,7 @@ export class Application {
     private configureRoutes(): void {
         this.defaultController.use(this.app);
         this.userController.use(this.app);
+        this.postController.use(this.app);
 
         this.app.use('**', (req, res, next) => {
             next(new HttpException(404, `${req.method} ${req.url} not found`));
