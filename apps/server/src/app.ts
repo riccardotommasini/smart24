@@ -1,9 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import { injectAll, singleton, inject } from 'tsyringe';
+import { singleton, inject } from 'tsyringe';
 import { HttpException } from './models/http-exception';
 import { SYMBOLS } from './constants/symbols';
-import { AbstractController } from './controllers/abstract-controller';
 import './config/registry';
 import { errorHandler } from './middleware/error-handler';
 import { DatabaseService } from './services/database-service/database-service';
@@ -40,7 +39,6 @@ export class Application {
         //await this.databaseService.connect();
         try {
             await mongoose.connect(env.MONGO_URL, {});
-            console.log('🗃️ Connected to database');
         } catch (error) {
             console.error('Error connecting to database: ', error);
         }
