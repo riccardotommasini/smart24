@@ -1,6 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+import bcrypt from 'bcrypt';
 
-interface IUser extends Document {
+export interface IUser extends Document {
     name: string;
     surname: string;
     birthday: Date;
@@ -18,7 +19,7 @@ interface IUser extends Document {
     parameters: { globalTrust: boolean; rateFactChecked: number; diversification: number };
 }
 
-const UserSchema: Schema = new Schema<IUser>({
+const UserSchema: Schema<IUser> = new Schema<IUser>({
     name: { type: String, required: false, maxlength: 100 },
     surname: { type: String, required: false, maxlength: 100 },
     birthday: { type: Date, required: false },
@@ -38,6 +39,13 @@ const UserSchema: Schema = new Schema<IUser>({
         rateFactChecked: { type: Number, required: false },
         diversification: { type: Number, required: false },
     },
+});
+
+const saltRounds = 8;
+
+UserSchema.pre('save', async function (next) {
+    this.passwordHash = await bcrypt.hash(this.passwordHash, saltRounds);
+    next();
 });
 
 // Export model

@@ -1,13 +1,37 @@
-import crypto from 'crypto';
-import { StatusCodes } from 'http-status-codes';
 import { singleton } from 'tsyringe';
-import { HttpException } from '../models/http-exception';
-import User from '../models/user';
 import { DatabaseService } from './database-service/database-service';
+import User from '../models/user';
+import { StatusCodes } from 'http-status-codes';
+import { DocumentDefinition } from 'mongoose';
+import UserSchema, { IUser } from '../models/user';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { env } from '../utils/env';
+import { HttpException } from '../models/http-exception';
 
 @singleton()
 export class UserService {
     constructor(private readonly databaseService: DatabaseService) {}
+
+    public async login(user: DocumentDefinition<IUser>) {
+        const foundUser = await UserSchema.findOne({ username: user.username });
+
+        if (!foundUser) {
+            throw new Error('UserName of user is not correct');
+        }
+
+        const isMatch = bcrypt.compareSync(user.passwordHash, foundUser.passwordHash);
+
+        if (isMatch) {
+            const token = jwt.sign({ _id: foundUser._id?.toString(), name: foundUser.name }, env.SECRET_KEY, {
+                expiresIn: '2 days',
+            });
+
+            return { user: { mail: foundUser.mail, username: foundUser.username }, token: token };
+        } else {
+            throw new Error('Password is not correct');
+        }
+    }
 
     async saveUser(
         username: string,
@@ -30,16 +54,19 @@ export class UserService {
             throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or email already exists');
         }
 
-        const passwordHash = crypto.createHash('sha256').update(password).digest('hex');
-        const [day, month, year] = birthday.split('/');
-        const birthdayDate = new Date(Number(year), Number(month) - 1, Number(day));
+        // const passwordHash = crypto.createHash('sha256').update(password).digest('hex');
+        let birthdayDate: Date;
+        if (birthday) {
+            const [day, month, year] = birthday.split('/');
+            birthdayDate = new Date(Number(year), Number(month) - 1, Number(day));
+        }
         const user = new User({
             username: username,
             mail: mail,
-            passwordHash: passwordHash,
+            passwordHash: password,
             name: name,
             surname: surname,
-            birthday: birthdayDate,
+            birthday: birthdayDate!,
             factChecker: factChecker,
             organization: organization,
         });

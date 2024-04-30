@@ -12,6 +12,14 @@ export class UserController extends AbstractController {
     }
 
     protected configureRoutes(router: Router) {
+        router.post('/login', async (req, res, next) => {
+            try {
+                const foundUser = await this.userService.login(req.body);
+                res.status(200).send(foundUser);
+            } catch (error) {
+                next(error);
+            }
+        });
         router.post(
             '/user/create',
             body('username').trim().notEmpty().withMessage('Username is required'),
