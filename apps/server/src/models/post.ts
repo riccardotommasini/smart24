@@ -4,16 +4,29 @@ import { DateTime } from 'luxon';
 
 const options = { discriminatorKey: 'kind' };
 
-const PostSchema = new Schema({
-    postId: { type: Schema.Types.ObjectId },
-    text: { type: String, required: true },
-    date: { type: Date, required: true, default: DateTime.now() },
-    image: { type: String, required: false },
-    publisher: { type: Schema.Types.ObjectId, ref: "User" },
-    metrics: { type: Schema.Types.ObjectId, ref: "Metrics" },
-}, options);
+export interface ICreatePost {
+    text: string;
+    image?: string;
+}
+
+export interface IPost extends ICreatePost {
+    text: string;
+    date: DateTime;
+    image?: string;
+    createdBy: Schema.Types.ObjectId;
+    metrics: Schema.Types.ObjectId;
+}
+
+const PostSchema = new Schema<IPost>(
+    {
+        text: { type: String, required: true },
+        date: { type: Date, required: true, default: DateTime.now() },
+        image: { type: String, required: false },
+        createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
+        metrics: { type: Schema.Types.ObjectId, ref: 'Metrics' },
+    },
+    options,
+);
 
 // Export model
-// const Post = mongoose.model("Post", PostSchema);
-
-export default mongoose.model("Post", PostSchema);
+export const Post = mongoose.model<IPost>('Post', PostSchema);

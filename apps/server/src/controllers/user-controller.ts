@@ -14,7 +14,7 @@ export class UserController extends AbstractController {
     protected configureRoutes(router: Router) {
         router.post('/login', async (req, res, next) => {
             try {
-                const foundUser = await this.userService.login(req.body);
+                const foundUser = await this.userService.login(req.body.username, req.body.password);
                 res.status(200).send(foundUser);
             } catch (error) {
                 next(error);
