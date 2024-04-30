@@ -22,7 +22,6 @@ export class UserController extends AbstractController {
         });
 
         router.post('/user/trustUser', (req, res, next) => {
-
             //unfold parameters
             const userId = '6630e8211bad35dff50ccc85';
             const otherUserId = '6630be9d130907c60efc4aaa';
@@ -30,36 +29,32 @@ export class UserController extends AbstractController {
             try {
                 this.userService.user_trustUser_post(userId, otherUserId);
                 res.status(StatusCodes.OK).send();
-            } catch(error) {
+            } catch (error) {
                 next();
             }
-        })
+        });
 
         router.post('/user/untrustUser', (req, res, next) => {
-
             const userId = '6630e8211bad35dff50ccc85';
             const otherUserId = '6630be9d130907c60efc4aaa';
             try {
-                this.userService.user_untrustUser_post(userId, otherUserId)
-                res.status(StatusCodes.OK).send()
-            } catch(error) {
+                this.userService.user_untrustUser_post(userId, otherUserId);
+                res.status(StatusCodes.OK).send();
+            } catch (error) {
                 next();
             }
-            
-        })
+        });
 
         router.post('/user/visitUserProfile', (req, res, next) => {
-
-            const otherUserId = '6630f07c080932226bb2612a'
+            const otherUserId = '6630f07c080932226bb2612a';
             try {
-                this.userService.user_visitUserProfile_post(otherUserId)
-                res.status(StatusCodes.OK).send()
-            } catch(error) {
+                this.userService.user_visitUserProfile_post(otherUserId);
+                res.status(StatusCodes.OK).send();
+            } catch (error) {
                 next();
             }
-            
-        })
-      
+        });
+
         router.post(
             '/user/create',
             body('username').trim().notEmpty().withMessage('Username is required'),
