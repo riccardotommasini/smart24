@@ -6,17 +6,17 @@ import { singleton } from 'tsyringe';
 import User from '../models/user';
 import { AbstractController } from './abstract-controller';
 import { StatusCodes } from 'http-status-codes';
-import { DefaultService } from '../services/user-service';
+import { UserService } from '../services/user-service';
 
 @singleton()
 export class UserController extends AbstractController {
-    constructor(private readonly defaultService: DefaultService) {
+    constructor(private readonly userService: UserService) {
         super();
     }
 
     protected configureRoutes(router: Router) {
         router.post('/user/create', (req, res, next) => {
-            this.defaultService.user_create_post.forEach((handler) => handler(req, res, next));
+            this.userService.user_create_post.forEach((handler) => handler(req, res, next));
         });
     }
 }
