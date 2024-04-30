@@ -1,4 +1,3 @@
-import { foo } from 'common';
 import { singleton } from 'tsyringe';
 import { DatabaseService } from '../database-service/database-service';
 import { Document } from 'mongodb';
@@ -8,7 +7,7 @@ export class DefaultService {
     constructor(private readonly databaseService: DatabaseService) {}
 
     getMessage() {
-        return 'Hello world! ' + foo();
+        return 'Hello world! ';
     }
 
     pingDb(): Promise<Document> {
