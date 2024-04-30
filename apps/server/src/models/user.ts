@@ -2,7 +2,6 @@ import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 
 export interface IUser extends Document {
-    userId: Schema.Types.ObjectId;
     name: string;
     surname: string;
     birthday: Date;
@@ -10,16 +9,17 @@ export interface IUser extends Document {
     username: string;
     passwordHash: string;
     factChecker: boolean;
+    totalPosts: number;
+    nbFactChecked: number;
+    organisation: string;
     posts: [{ type: Schema.Types.ObjectId; ref: 'Post' }];
     follows: [{ type: Schema.Types.ObjectId; ref: 'User' }];
-    subscribers: [{ type: Schema.Types.ObjectId; ref: 'User' }];
     trustedUsers: [{ type: Schema.Types.ObjectId; ref: 'User' }];
-    distrustedUsers: [{ type: Schema.Types.ObjectId; ref: 'User' }];
+    untrustedUsers: [{ type: Schema.Types.ObjectId; ref: 'User' }];
     parameters: { globalTrust: boolean; rateFactChecked: number; diversification: number };
 }
 
 const UserSchema: Schema<IUser> = new Schema<IUser>({
-    userId: { type: Schema.Types.ObjectId },
     name: { type: String, required: false, maxlength: 100 },
     surname: { type: String, required: false, maxlength: 100 },
     birthday: { type: Date, required: false },
@@ -27,14 +27,17 @@ const UserSchema: Schema<IUser> = new Schema<IUser>({
     username: { type: String, required: true, maxLength: 100, unique: true },
     passwordHash: { type: String, required: true, maxLength: 256 },
     factChecker: { type: Boolean, default: false },
+    totalPosts: { type: Number, required: false, default: 0 },
+    nbFactChecked: { type: Number, required: false, default: 0 },
+    organisation: { type: String, required: false, maxLength: 100 },
     posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
     follows: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    subscribers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     trustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    distrustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    untrustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     parameters: {
         globalTrust: { type: Boolean, required: false, default: false },
         rateFactChecked: { type: Number, required: false },
+        diversification: { type: Number, required: false },
     },
 });
 
