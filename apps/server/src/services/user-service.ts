@@ -22,9 +22,9 @@ export class UserService {
 
     public user_create_post: RequestHandler[] = [
         // Validate and sanitize fields.
-        body('username', 'Title must not be empty.').trim().isLength({ min: 1 }).escape(),
-        body('mail', 'Author must not be empty.').trim().isLength({ min: 1 }).escape(),
-        body('password', 'Summary must not be empty.').trim().isLength({ min: 1 }).escape(),
+        body('username', 'Username required').trim().isLength({ min: 1 }).escape(),
+        body('mail', 'E-mail required').trim().isLength({ min: 1 }).escape(),
+        body('password', 'Password required').trim().isLength({ min: 1 }).escape(),
         // Process request after validation and sanitization.
 
         asyncHandler(async (req: Request, res: Response) => {
@@ -32,7 +32,7 @@ export class UserService {
             const errors = validationResult(req);
 
             const passwordHash = crypto.createHash('sha256').update(req.body.password).digest('hex');
-            // http://localhost:8888/user/create?username=momo&mail=a@gmail.com&password=azerty
+            
             // Create a Book object with escaped and trimmed data.
             const user = new User({
                 username: req.body.username,
@@ -53,5 +53,48 @@ export class UserService {
                 }
             }
         }),
+    ];
+
+    /*
+    Params :
+     - token : token of the user cuttently logged on the session
+     - otherUserId : id of th user that the current one wants to mark as 'trusted'
+
+    Test :
+    curl -X POST -H "Content-Type: application/json" -d '{"username":"momo","mail":"a@gmail.com","password":"azerty"}' http://localhost:3000/user/create?username=momo&mail=
+    curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/trustUser
+    */
+    public user_trustUser_post : RequestHandler[] = [
+
+        ((req: Request, res: Response) => {
+            //unfold parameters
+            // const token = (req as CustomRequest).token;
+            const userId = '6630be9d130907c60efc462c';
+            const otherUserId = req.body.otherUserId;
+
+            //objects
+            let user;
+
+            //find user that is connected on the session
+            User.findById(userId)
+                .then(user => {
+                    if (!user) {
+                        console.log('User not found');
+                        return;
+                    }
+                    //add the other user to the list of trusted users
+                    user.trustedUsers.push(otherUserId);
+                    console.log('Retrieved user : ' + user);
+
+                    //save updates
+                    return user.save();
+                })
+                .then(savedUser => {
+                    console.log('User saved : ' + savedUser);
+                })
+                .catch(error => {
+                    console.error('Error :', error);
+                });
+        })
     ];
 }
