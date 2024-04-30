@@ -10,7 +10,7 @@ describe('DefaultService', () => {
 
     describe('getMessage', () => {
         it('should return the correct message', () => {
-            expect(defaultService.getMessage()).toBe('Hello world! ' );
+            expect(defaultService.getMessage()).toBe('Hello world! ');
         });
     });
 });
