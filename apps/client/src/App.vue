@@ -13,29 +13,19 @@ axios.get('/').then((response) => {
 </script>
 
 <template>
-  <header>
-    <header>
-      <HelloWorld :msg="serverMessage" />
+  <head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="./assets/main.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </header>
-  </header>
-
-  <RouterView />
+  <body>
+    <div class="main ">
+      <RouterView />
+    </div>
+  </body>
 </template>
 
-<style scoped>
-  header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  a:not(.router-link-active) {
-    color: white;
-  }
-</style>
