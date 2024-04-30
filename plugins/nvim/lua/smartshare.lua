@@ -18,20 +18,7 @@ function M.set_text(offset, deleted, text)
     vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col, text)
 end
 
-function string:split(delimiter)
-    local result               = {}
-    local from                 = 1
-    local delim_from, delim_to = string.find(self, delimiter, from)
-    while delim_from do
-        table.insert(result, string.sub(self, from, delim_from - 1))
-        from                 = delim_to + 1
-        delim_from, delim_to = string.find(self, delimiter, from)
-    end
-    table.insert(result, string.sub(self, from))
-    return result
-end
-
-local handle = vim.fn.jobstart("./client 192.168.83.193:4903", {
+local handle = vim.fn.jobstart("./client 127.0.0.1:4903", {
     on_stdout = function(_job_id, data, event)
         for _, json_object in ipairs(data) do
             if json_object ~= nil and json_object ~= '' then
@@ -40,7 +27,7 @@ local handle = vim.fn.jobstart("./client 192.168.83.193:4903", {
                 if change.action == "i_d_e_update" and change.update_type == "TextModification" then
                     is_user_input = false
 
-                    M.set_text(change.offset, change.delete, change.text:split("\n"))
+                    M.set_text(change.offset, change.delete, vim.fn.split(change.text, "\n", 1))
                 end
             end
         end
@@ -49,7 +36,6 @@ local handle = vim.fn.jobstart("./client 192.168.83.193:4903", {
         print(vim.inspect(data))
     end
 })
-
 
 vim.api.nvim_buf_attach(0, false, {
     on_bytes = function(
@@ -78,7 +64,6 @@ vim.api.nvim_buf_attach(0, false, {
             return
         end
 
-
         if new_row > old_row or (new_row == old_row and new_column >= old_column) then
             local column_end
             if new_row == 0 then
@@ -106,8 +91,7 @@ vim.api.nvim_buf_attach(0, false, {
                 action = "i_d_e_update",
                 offset = byte_offset,
                 delete = replaced,
-                text = table.concat(
-                    vim.api.nvim_buf_get_text(buf, startrow, startcolumn, row_end, column_end, {}), '\n')
+                text = table.concat(vim.api.nvim_buf_get_text(buf, startrow, startcolumn, row_end, column_end, {}), '\n')
             }
 
             local json = vim.json.encode(message)
