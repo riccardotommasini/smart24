@@ -3,12 +3,11 @@ import { Request, RequestHandler, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { body, validationResult } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
-import { Document } from 'mongodb';
 import { singleton } from 'tsyringe';
 import User, { IUser } from '../models/user';
 import { DatabaseService } from './database-service/database-service';
 import { HttpException } from '../models/http-exception';
-import { Types } from 'mongoose'
+import { Types } from 'mongoose';
 
 @singleton()
 export class UserService {
