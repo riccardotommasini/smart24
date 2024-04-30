@@ -1,5 +1,15 @@
+<script setup lang="ts">
+import slogan from '../components/slogan.vue';
+import connexionForm from '../components/connexionForm.vue';
+import '../assets/HomeView.css'
+</script>
+
 <template>
-  <main>
-    <h1>Home</h1>
-  </main>
+
+  <slogan/>
+  <connexionForm/>
+
 </template>
+
+<style scoped>
+</style>
