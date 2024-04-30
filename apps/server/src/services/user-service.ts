@@ -1,57 +1,81 @@
 import { singleton } from 'tsyringe';
 import { DatabaseService } from './database-service/database-service';
-import { Document } from 'mongodb';
-import crypto from 'crypto';
-import { Request, Response, RequestHandler } from 'express';
-import asyncHandler from 'express-async-handler';
-import { body, validationResult } from 'express-validator';
 import User from '../models/user';
 import { StatusCodes } from 'http-status-codes';
+import { DocumentDefinition } from 'mongoose';
+import UserSchema, { IUser } from '../models/user';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { env } from '../utils/env';
+import { HttpException } from '../models/http-exception';
 
 @singleton()
 export class UserService {
     constructor(private readonly databaseService: DatabaseService) {}
 
-    getMessage() {
-        return 'Hello world! ';
-    }
+    public async login(user: DocumentDefinition<IUser>) {
+        const foundUser = await UserSchema.findOne({ username: user.username });
 
-    pingDb(): Promise<Document> {
-        return this.databaseService.client.db('admin').command({ ping: 1 });
-    }
+        if (!foundUser) {
+            throw new Error('UserName of user is not correct');
+        }
 
-    public createUser: RequestHandler[] = [
-        // Validate and sanitize fields.
-        body('username', 'Title must not be empty.').trim().isLength({ min: 1 }).escape(),
-        body('mail', 'Author must not be empty.').trim().isLength({ min: 1 }).escape(),
-        body('password', 'Summary must not be empty.').trim().isLength({ min: 1 }).escape(),
-        // Process request after validation and sanitization.
+        const isMatch = bcrypt.compareSync(user.passwordHash, foundUser.passwordHash);
 
-        asyncHandler(async (req: Request, res: Response) => {
-            // Extract the validation errors from a request.
-            const errors = validationResult(req);
-
-            const passwordHash = crypto.createHash('sha256').update(req.body.password).digest('hex');
-            // http://localhost:8888/user/create?username=momo&mail=a@gmail.com&password=azerty
-            // Create a Book object with escaped and trimmed data.
-            const user = new User({
-                username: req.body.username,
-                mail: req.body.mail,
-                passwordHash: passwordHash,
+        if (isMatch) {
+            const token = jwt.sign({ _id: foundUser._id?.toString(), name: foundUser.name }, env.SECRET_KEY, {
+                expiresIn: '2 days',
             });
 
-            if (!errors.isEmpty()) {
-                // There are errors. Render form again with sanitized values/error messages.
-            } else {
-                // Data from form is valid. Save book.
-                try {
-                    await user.save();
-                    res.status(StatusCodes.OK).send('user saved !!!');
-                } catch (error) {
-                    console.error(error);
-                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Error saving user');
-                }
-            }
-        }),
-    ];
+            return { user: { mail: foundUser.mail, username: foundUser.username }, token: token };
+        } else {
+            throw new Error('Password is not correct');
+        }
+    }
+
+    async saveUser(
+        username: string,
+        mail: string,
+        password: string,
+        name: string,
+        surname: string,
+        birthday: string,
+        factChecker: boolean,
+        organization: string,
+    ) {
+        if (!factChecker && organization) {
+            throw new HttpException(StatusCodes.BAD_REQUEST, 'organization must be empty for non-fact-checkers');
+        } else if (factChecker && !organization) {
+            throw new HttpException(StatusCodes.BAD_REQUEST, 'organization must be provided for fact-checker');
+        }
+
+        const existingUser = await User.findOne({ $or: [{ username: username }, { mail: mail }] });
+        if (existingUser) {
+            throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or email already exists');
+        }
+
+        // const passwordHash = crypto.createHash('sha256').update(password).digest('hex');
+        let birthdayDate: Date;
+        if (birthday) {
+            const [day, month, year] = birthday.split('/');
+            birthdayDate = new Date(Number(year), Number(month) - 1, Number(day));
+        }
+        const user = new User({
+            username: username,
+            mail: mail,
+            passwordHash: password,
+            name: name,
+            surname: surname,
+            birthday: birthdayDate!,
+            factChecker: factChecker,
+            organization: organization,
+        });
+
+        try {
+            await user.save();
+        } catch (error) {
+            console.error(error);
+            throw new HttpException(StatusCodes.INTERNAL_SERVER_ERROR, 'Error saving user');
+        }
+    }
 }
