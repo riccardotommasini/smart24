@@ -7,7 +7,7 @@ export class DefaultService {
     constructor(private readonly databaseService: DatabaseService) {}
 
     getMessage() {
-        return 'Hello world! ';
+        return 'Hello world!';
     }
 
     async pingDb(): Promise<boolean> {
