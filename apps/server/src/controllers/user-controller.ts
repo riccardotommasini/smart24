@@ -20,11 +20,30 @@ export class UserController extends AbstractController {
         });
 
         router.post('/user/trustUser', (req, res, next) => {
-            this.userService.user_trustUser_post.forEach((handler) => handler(req, res, next));
+
+            //unfold parameters
+            const userId = '6630e8211bad35dff50ccc85';
+            const otherUserId = '6630be9d130907c60efc4aaa';
+
+            try {
+                this.userService.user_trustUser_post(userId, otherUserId);
+                res.status(200).send();
+            } catch(error) {
+                next();
+            }
         })
 
         router.post('/user/untrustUser', (req, res, next) => {
-            this.userService.user_untrustUser_post.forEach((handler) => handler(req, res, next));
+
+            const userId = '6630e8211bad35dff50ccc85';
+            const otherUserId = '6630be9d130907c60efc4aaa';
+            try {
+                this.userService.user_untrustUser_post(userId, otherUserId)
+                res.status(200).send()
+            } catch(error) {
+                next();
+            }
+            
         })
     }
 }

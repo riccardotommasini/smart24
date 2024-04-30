@@ -57,60 +57,45 @@ export class UserService {
     ];
 
     /*
-    Params :
-     - token : token of the user cuttently logged on the session
-     - otherUserId : id of th user that the current one wants to mark as 'trusted'
-
     Test :
     curl -X POST -H "Content-Type: application/json" -d '{"username":"momo","mail":"a@gmail.com","password":"azerty"}' http://localhost:3000/user/create
     curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/trustUser
     */
-    public user_trustUser_post : RequestHandler[] = [
 
-        ((req: Request, res: Response) => {
-            //unfold parameters
-            // const token = (req as CustomRequest).token;
-            const userId = '6630e0e5bac7e6786d92af14';
-            const otherUserId = req.body.otherUserId;
-            const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
+    async user_trustUser_post(userId : string, otherUserId: string) {
+        //unfold parameters
+        const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
 
+        await Promise.all([
             User.updateOne(
                 { _id : userId, trustedUsers : { $ne : otherUserIdObject}},
                 { $push : { trustedUsers : otherUserIdObject}}
-            ).then( res => console.log(res))
+            ),
             User.updateOne(
                 { _id : userId},
                 { $pull : { untrustedUsers : { $in : [otherUserIdObject]}}}
-            ).then( res => console.log(res))
-        })
-    ];
+            )
+        ])
+    }
 
     /*
-    Params :
-     - token : token of the user cuttently logged on the session
-     - otherUserId : id of th user that the current one wants to mark as 'trusted'
-
     Test :
     curl -X POST -H "Content-Type: application/json" -d '{"username":"momo","mail":"a@gmail.com","password":"azerty"}' http://localhost:3000/user/create
     curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/untrustUser
     */
-    public user_untrustUser_post : RequestHandler[] = [
+    async user_untrustUser_post(userId : string, otherUserId: string) {
+        //unfold parameters
+        const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
 
-        ((req: Request, res: Response) => {
-            //unfold parameters
-            // const token = (req as CustomRequest).token;
-            const userId = '6630e0e5bac7e6786d92af14';
-            const otherUserId = req.body.otherUserId;
-            const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
-
+        await Promise.all([
             User.updateOne(
                 { _id : userId, untrustedUsers : { $ne : otherUserIdObject}},
                 { $push : { untrustedUsers : otherUserIdObject}}
-            ).then( res => console.log(res))
+            ),
             User.updateOne(
                 { _id : userId},
                 { $pull : { trustedUsers : { $in : [otherUserIdObject]}}}
-            ).then( res => console.log(res))
-        })
-    ];
+            )
+        ])
+    }
 }
