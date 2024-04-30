@@ -9,7 +9,7 @@ import User from '../models/user';
 import { StatusCodes } from 'http-status-codes';
 
 @singleton()
-export class DefaultService {
+export class UserService {
     constructor(private readonly databaseService: DatabaseService) {}
 
     getMessage() {
