@@ -1,0 +1,92 @@
+.menu-icon {
+      position: fixed;
+      top: 3%;
+      left: 3%;
+      color: #fff;
+      font-size: 48px;
+      cursor: pointer;
+      z-index: 999;
+}
+
+.menu {
+      position: fixed;
+      top: 16%;
+      left: -132px;
+      width: 132px;
+      height: 100%;
+      background-color: #f6e7cf;
+      transition: left 0.4s ease-in-out;
+      border-top-right-radius: 20px;
+      backdrop-filter: blur(20%);
+}
+.menu.active {
+      left: 0;
+}
+
+
+.options input[type="radio"] {
+      display: none;    
+}
+
+.options {
+      flex-direction: column;
+}
+
+.options label {
+      display: flex;
+      cursor: pointer;
+}
+
+.temperature-option {
+      align-items: center;
+}  
+
+.circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      margin: 0 8% 0 16%; 
+}
+
+.temperature-option h4 {
+      margin: 8% 0%; 
+}
+
+.green {
+      background-color: green;
+}
+.yellow {
+      background-color: yellow;
+}
+.orange {
+      background-color: orange;
+}
+.red {
+      background-color: red;
+}
+
+.options input[type="radio"]:checked + .circle {
+      border: 2px solid #160f29; /* Ajouter un bord noir de 5px autour du cercle */
+}
+  
+
+@media only screen and (max-width: 1200px) {
+}
+
+@media only screen and (max-width: 992px) {
+
+}
+
+@media only screen and (max-width: 768px) {
+      .menu {
+            top: 14%;
+      }
+      .menu-icon {
+            top: 0%;
+            left: 2%;
+      }
+}
+
+@media only screen and (max-width: 576px) {
+
+}

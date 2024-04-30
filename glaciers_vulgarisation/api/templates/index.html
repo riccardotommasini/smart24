@@ -6,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vulgarisation sur la fonte des glaciers</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/menu.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/font.css') }}">
 </head>
 
 <body>
@@ -15,6 +17,28 @@
     <h1>Titre de la page</h1>
 
     <div id=menu class="menu">
+      <div class="options">
+        <label class="temperature-option">
+          <input type="radio" name="temperature" value="1.5" checked>
+          <span class="circle green"></span>
+          <h4>1.5°C</h4>
+        </label>
+        <label class="temperature-option">
+          <input type="radio" name="temperature" value="2">
+          <span class="circle yellow"></span>
+          <h4>2°C</h4>
+        </label>
+        <label class="temperature-option">
+          <input type="radio" name="temperature" value="3">
+          <span class="circle orange"></span>
+          <h4>3°C</h4>
+        </label>
+        <label class="temperature-option">
+          <input type="radio" name="temperature" value="4">
+          <span class="circle red"></span>
+          <h4>4°C</h4>
+        </label>
+      </div>
       <h4>Partie I</h4>
       <h4>Partie II</h4>
       <h4>Partie III</h4>
@@ -43,9 +67,21 @@
         rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
       </p>
 
-      <div id="animation-container-1" class="container">
-        <h3>Titre de l'illustration</h3>
-        {% include 'animation1.html' %}
+      <div id="evolution-container-1" class="anim-container">
+        <h3>Evolution de la mer de glace de 2010 à 2100 (+1.5°C)</h3>
+        {% include 'evolution_mer_de_glace_1_5.html' %}
+      </div>
+      <div id="evolution-container-2" class="anim-container">
+        <h3>Evolution de la mer de glace de 2010 à 2100 (+2°C)</h3>
+        {% include 'evolution_mer_de_glace_2.html' %}
+      </div>
+      <div id="evolution-container-3" class="anim-container">
+        <h3>Evolution de la mer de glace de 2010 à 2100 (+3°C)</h3>
+        {% include 'evolution_mer_de_glace_3.html' %}
+      </div>
+      <div id="evolution-container-4" class="anim-container">
+        <h3>Evolution de la mer de glace de 2010 à 2100 (+4°C)</h3>
+        {% include 'evolution_mer_de_glace_4.html' %}
       </div>
 
       <br>
@@ -70,9 +106,9 @@
         rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
       </p>
 
-      <div id="animation-container-2" class="container">
+      <div id="animation-container-1" class="anim-container">
         <h3>Titre de l'illustration</h3>
-        {% include 'animation2.html' %}
+        {% include 'animation1.html' %}
       </div>
     </div>
   </div>
