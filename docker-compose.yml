@@ -31,13 +31,6 @@ services:
       - ./apps/server:/src/www/apps/server
       - ./packages:/src/www/packages
 
-  common:
-    image: node:20
-    command: npm run dev
-    working_dir: /src/www/packages/common
-    volumes:
-      - ./packages/common:/src/www/packages/common
-
   db:
     image: mongo:7.0
     ports:
