@@ -1,6 +1,5 @@
 import { singleton } from 'tsyringe';
 import { DatabaseService } from './database-service/database-service';
-import { Document } from 'mongodb';
 import User from '../models/user';
 import { StatusCodes } from 'http-status-codes';
 import { DocumentDefinition } from 'mongoose';
