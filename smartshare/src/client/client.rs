@@ -59,7 +59,7 @@ impl Client {
 
     pub async fn on_message_server(&mut self, message: MessageServer) {
         match message {
-            MessageServer::ServerUpdate(modif) => self.on_server_change(modif).await,
+            MessageServer::ServerUpdate(modif) => self.on_server_change(&modif).await,
             MessageServer::Ack => self.on_ack().await,
         }
     }
