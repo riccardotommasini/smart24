@@ -1,10 +1,11 @@
-import { Request, Router } from 'express';
+import { NextFunction, Response, Router } from 'express';
 import { AbstractController } from '../abstract-controller';
 import { PostService } from '../../services/post-service/post-service';
 import { StatusCodes } from 'http-status-codes';
 import { ICreatePost } from '../../models/post';
 import { body } from 'express-validator';
 import { singleton } from 'tsyringe';
+import { AuthRequest, auth } from '../../middleware/auth';
 
 @singleton()
 export class PostController extends AbstractController {
@@ -17,9 +18,12 @@ export class PostController extends AbstractController {
             '/',
             body('text', '`text` must not be empty').trim().isLength({ min: 1 }),
             body('image').trim().isURL().optional(),
-            async (req: Request<object, ICreatePost>, res, next) => {
+            auth,
+            async (req: AuthRequest<object, ICreatePost>, res: Response, next: NextFunction) => {
                 try {
-                    res.status(StatusCodes.CREATED).send(await this.postService.publishPost('', req.body));
+                    res.status(StatusCodes.CREATED).send(
+                        await this.postService.publishPost(req.user?.username ?? '', req.body),
+                    );
                 } catch (e) {
                     next(e);
                 }

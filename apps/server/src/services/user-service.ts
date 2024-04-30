@@ -3,7 +3,6 @@ import User, { IUser } from '../models/user';
 import { singleton } from 'tsyringe';
 import { DatabaseService } from './database-service/database-service';
 import { StatusCodes } from 'http-status-codes';
-import { DocumentDefinition } from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { env } from '../utils/env';
@@ -30,14 +29,14 @@ export class UserService {
         body('password', 'Password must not be empty.').trim().isLength({ min: 1 }).escape(),
     ];
 
-    public async login(user: DocumentDefinition<IUser>) {
-        const foundUser = await User.findOne({ username: user.username });
+    public async login(username: string, password: string) {
+        const foundUser = await User.findOne({ username });
 
         if (!foundUser) {
             throw new Error('UserName of user is not correct');
         }
 
-        const isMatch = bcrypt.compareSync(user.passwordHash, foundUser.passwordHash);
+        const isMatch = bcrypt.compareSync(password, foundUser.passwordHash);
 
         if (isMatch) {
             const token = jwt.sign({ _id: foundUser._id?.toString(), name: foundUser.name }, env.SECRET_KEY, {
