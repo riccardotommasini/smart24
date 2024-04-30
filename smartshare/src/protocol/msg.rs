@@ -1,4 +1,4 @@
-use kyte::{Delta, Op};
+use operational_transform::{Operation, OperationSeq};
 use serde::{Deserialize, Serialize};
 use serde_json::de;
 
@@ -18,23 +18,24 @@ pub enum MessageIde {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 #[serde(tag = "update_type", rename_all = "snake_case")]
 pub struct TextModification {
-    pub offset: usize,
-    pub delete: usize,
+    pub offset: u64,
+    pub delete: u64,
     pub text: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "modifrequest", rename_all = "snake_case")]
 pub struct ModifRequest {
-    pub delta: Delta<String, ()>,
+    pub delta: OperationSeq,
     pub rev_num: usize,
 }
 
-pub fn toDelta(modif: &TextModification) -> Delta<String, ()> {
-    Delta::new()
-        .retain(modif.offset, ())
-        .delete(modif.delete)
-        .insert(modif.text.to_owned(), ())
+pub fn toOperationSeq(modif: &TextModification) -> OperationSeq {
+    let mut seq = OperationSeq::default();
+    seq.retain(modif.offset);
+    seq.delete(modif.delete);
+    seq.insert(modif.text.as_str());
+    seq
 }
 
 enum State {
@@ -43,62 +44,62 @@ enum State {
     ins,
 }
 
-pub fn toIdeChanges(delta: &Delta<String, ()>) -> Vec<TextModification> {
+pub fn toIdeChanges(delta: &OperationSeq) -> Vec<TextModification> {
     let mut modifs: Vec<TextModification> = vec![];
     let mut modif = TextModification::default();
     let mut state = State::ret;
-    for op in delta.clone().into_iter() {
+    for op in delta.clone().ops() {
         match state {
             State::ret => match op {
-                Op::Retain(retain) => {
-                    modif.offset += retain.retain;
+                Operation::Retain(retain) => {
+                    modif.offset += retain;
                 }
-                Op::Delete(delete) => {
+                Operation::Delete(delete) => {
                     state = State::del;
-                    modif.delete += delete.delete;
+                    modif.delete += delete;
                 }
-                Op::Insert(insert) => {
+                Operation::Insert(insert) => {
                     state = State::ins;
-                    modif.text = format!("{}{}", modif.text, insert.insert);
+                    modif.text = format!("{}{}", modif.text, insert);
                 }
             },
 
             State::del => match op {
-                Op::Retain(retain) => {
-                    let base_offset = modif.offset + modif.text.len();
+                Operation::Retain(retain) => {
+                    let base_offset = modif.offset + (modif.text.len() as u64);
                     modifs.push(modif);
                     modif = TextModification::default();
-                    modif.offset = base_offset + retain.retain;
+                    modif.offset = base_offset + retain;
                     state = State::ret;
                 }
-                Op::Delete(delete) => {
-                    modif.delete += delete.delete;
+                Operation::Delete(delete) => {
+                    modif.delete += delete;
                 }
-                Op::Insert(insert) => {
+                Operation::Insert(insert) => {
                     state = State::ins;
-                    modif.text = format!("{}{}", modif.text, insert.insert);
+                    modif.text = format!("{}{}", modif.text, insert);
                 }
             },
             State::ins => match op {
-                Op::Retain(retain) => {
-                    let base_offset = modif.offset + modif.text.len();
+                Operation::Retain(retain) => {
+                    let base_offset = modif.offset + (modif.text.len() as u64);
                     modifs.push(modif);
                     modif = TextModification::default();
-                    modif.offset = base_offset + retain.retain;
+                    modif.offset = base_offset + retain;
                     state = State::ret;
                 }
-                Op::Delete(delete) => {
-                    let base_offset = modif.offset + modif.text.len();
+                Operation::Delete(delete) => {
+                    let base_offset = modif.offset + (modif.text.len() as u64);
                     modifs.push(modif);
                     modif = TextModification {
                         offset: base_offset,
-                        delete: delete.delete,
+                        delete: *delete,
                         text: "".to_owned(),
                     };
                     state = State::del;
                 }
-                Op::Insert(insert) => {
-                    modif.text = format!("{}{}", modif.text, insert.insert);
+                Operation::Insert(insert) => {
+                    modif.text = format!("{}{}", modif.text, insert);
                 }
             },
         }

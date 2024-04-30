@@ -1,14 +1,14 @@
 use smartshare::protocol::msg::{MessageServer, ModifRequest};
 use tokio::sync::mpsc;
 use tracing::{error, info, trace, warn};
-use kyte::{Compose, Delta, Transform};
+use operational_transform::{Operation, OperationSeq};
 
 use crate::client::Client;
 
 pub struct Server {
     clients: Vec<Client>,
     receiver: mpsc::Receiver<ServerMessage>,
-    deltas: Vec<Delta<String, ()>>,
+    deltas: Vec<OperationSeq>,
 }
 
 impl Server {
@@ -16,7 +16,7 @@ impl Server {
         let (tx, rx) = mpsc::channel(16);
         (
             Self {
-                deltas: vec![Delta::new()],
+                deltas: vec![OperationSeq::default()],
                 clients: vec![],
                 receiver: rx,
             },
@@ -56,7 +56,7 @@ impl Server {
                 } else {
                     let mut delta_p = req.delta;
                     for i in req.rev_num + 1..self.deltas.len() {
-                        delta_p = self.deltas[i].clone().transform(delta_p.clone(), true);
+                        (_, delta_p) = self.deltas[i].transform(&delta_p).unwrap();
                     }
                     self.deltas.push(delta_p.clone());
                     for client in self
