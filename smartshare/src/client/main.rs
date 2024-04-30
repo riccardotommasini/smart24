@@ -10,6 +10,7 @@ use tracing::{error, info};
 async fn main() {
     let subscriber = tracing_subscriber::fmt()
         .with_writer(std::io::stderr)
+        .with_ansi(false)
         .finish();
     tracing::subscriber::set_global_default(subscriber).unwrap();
 

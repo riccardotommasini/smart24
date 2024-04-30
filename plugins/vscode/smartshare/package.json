@@ -16,8 +16,11 @@
   "contributes": {
     "commands": [
       {
-        "command": "smartshare.helloWorld",
-        "title": "Hello World"
+        "command": "smartshare.start",
+        "title": "Connect SmartShare"
+      },{
+        "command": "smartshare.stop",
+        "title": "Disconnect SmartShare"
       }
     ]
   },
