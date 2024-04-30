@@ -39,7 +39,6 @@ export class Application {
         //await this.databaseService.connect();
         try {
             await mongoose.connect(env.MONGO_URL, {});
-            // console.log('🗃️ Connected to database');
         } catch (error) {
             console.error('Error connecting to database: ', error);
         }
