@@ -1,7 +1,6 @@
 import { singleton } from 'tsyringe';
 import { DatabaseService } from './database-service/database-service';
 import { Document } from 'mongodb';
-import crypto from 'crypto';
 import { Request, Response, RequestHandler } from 'express';
 import asyncHandler from 'express-async-handler';
 import { body, validationResult } from 'express-validator';
@@ -9,13 +8,13 @@ import User from '../models/user';
 import { StatusCodes } from 'http-status-codes';
 import { DocumentDefinition } from 'mongoose';
 import UserSchema, { IUser } from '../models/user';
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { env } from '../utils/env';
 
 @singleton()
 export class UserService {
-    constructor(private readonly databaseService: DatabaseService) { }
+    constructor(private readonly databaseService: DatabaseService) {}
 
     getMessage() {
         return 'Hello world! ';
@@ -61,27 +60,22 @@ export class UserService {
     ];
 
     public async login(user: DocumentDefinition<IUser>) {
-        try {
-            const foundUser = await UserSchema.findOne({ username: user.username });
+        const foundUser = await UserSchema.findOne({ username: user.username });
 
-            if (!foundUser) {
-                throw new Error('UserName of user is not correct');
-            }
+        if (!foundUser) {
+            throw new Error('UserName of user is not correct');
+        }
 
-            console.log(user.passwordHash + 'vs' + foundUser.passwordHash);
-            const isMatch = bcrypt.compareSync(user.passwordHash, foundUser.passwordHash);
+        const isMatch = bcrypt.compareSync(user.passwordHash, foundUser.passwordHash);
 
-            if (isMatch) {
-                const token = jwt.sign({ _id: foundUser._id?.toString(), name: foundUser.name }, env.SECRET_KEY, {
-                    expiresIn: '2 days',
-                });
+        if (isMatch) {
+            const token = jwt.sign({ _id: foundUser._id?.toString(), name: foundUser.name }, env.SECRET_KEY, {
+                expiresIn: '2 days',
+            });
 
-                return { user: {id: foundUser.userId, username: foundUser.username}, token: token };
-            } else {
-                throw new Error('Password is not correct');
-            }
-        } catch (error) {
-            throw error;
+            return { user: { id: foundUser.userId, username: foundUser.username }, token: token };
+        } else {
+            throw new Error('Password is not correct');
         }
     }
 }
