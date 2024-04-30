@@ -1,5 +1,5 @@
 use kyte::{Compose, Delta, Transform};
-use smartshare::protocol::msg::{toDelta, MessageIde, MessageServer};
+use smartshare::protocol::msg::{toDelta, MessageIde, MessageServer, ModifRequest};
 
 use crate::ide::Ide;
 use crate::server::Server;
@@ -34,7 +34,8 @@ impl Client {
         self.unsent_delta = Delta::new();
     }
 
-    async fn on_server_change(&mut self, server_change: &Delta<String, ()>) {
+    async fn on_server_change(&mut self, modif: &ModifRequest) {
+        let server_change = &modif.delta;
         self.server_state = self.server_state.clone().compose(server_change.clone());
         self.unsent_delta = self
             .sent_delta
@@ -54,7 +55,10 @@ impl Client {
     }
 
     pub async fn on_message_server(&mut self, message: MessageServer) {
-        todo!()
+        match message {
+            MessageServer::ServerUpdate(modif) => self.on_server_change(modif).await,
+            MessageServer::Ack => self.on_ack().await,
+        }
     }
 
     pub async fn on_message_ide(&mut self, message_ide: MessageIde) {
