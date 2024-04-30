@@ -10,16 +10,18 @@ pub struct Client {
     unsent_delta: Delta<String, ()>,
     server: Server,
     ide: Ide,
+    client_id: usize,
 }
 
 impl Client {
-    pub fn new(server: Server, ide: Ide) -> Self {
+    pub fn new(server: Server, ide: Ide, client_id: usize) -> Self {
         Self {
             server_state: Delta::new(),
             sent_delta: Delta::new(),
             unsent_delta: Delta::new(),
             server,
             ide,
+            client_id,
         }
     }
 
@@ -29,8 +31,11 @@ impl Client {
     }
 
     async fn submit_change(&mut self) {
-        todo!("send the new 'unsent_delta' to the server");
-        self.sent_delta = self.unsent_delta;
+        self.server.send(MessageServer::ServerUpdate(ModifRequest {
+            delta: self.unsent_delta.clone(),
+            rev_num: self.client_id,
+        }));
+        self.sent_delta = self.unsent_delta.clone();
         self.unsent_delta = Delta::new();
     }
 

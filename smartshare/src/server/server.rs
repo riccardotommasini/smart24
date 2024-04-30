@@ -64,15 +64,15 @@ impl Server {
                         .iter()
                         //.filter(|client| client.id() != source_id)
                     {
-                        let notif: MessageServer;
+                        let notif = 
                         if client.id() == source_id {
-                            notif = MessageServer::Ack;
+                            MessageServer::Ack
                         } else {
-                            notif = MessageServer::ServerUpdate(ModifRequest {
+                            MessageServer::ServerUpdate(ModifRequest {
                                 delta: delta_p.clone(),
                                 rev_num: self.deltas.len() - 1,
                             })
-                        }
+                        };
                         if client.send(notif).await.is_err() {
                             warn!(
                                 "Could not send message to client {}. Maybe it is disconnected ?",

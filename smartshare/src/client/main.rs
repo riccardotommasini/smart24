@@ -51,7 +51,7 @@ async fn main() {
     let (server_sender, server_receiver) = mpsc::channel(8);
     let server = Server::new(server_sender);
 
-    let mut client = Client::new(server, ide);
+    let mut client = Client::new(server, ide, 0);
 
     tokio::spawn(async move {
         let mut stdout_sink = message_sink::<MessageIde, _>(tokio::io::stdout());
@@ -67,6 +67,8 @@ async fn main() {
 
     let mut stdin_stream = message_stream::<MessageIde, _>(tokio::io::stdin());
     let mut tcp_stream = message_stream::<MessageServer, _>(rx);
+
+
 
     loop {
         select! {
