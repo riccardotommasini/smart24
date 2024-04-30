@@ -5,13 +5,24 @@ import { body, validationResult } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
 import { Document } from 'mongodb';
 import { singleton } from 'tsyringe';
-import User from '../models/user';
+import User, { IUser } from '../models/user';
 import { DatabaseService } from './database-service/database-service';
 import { HttpException } from '../models/http-exception';
+import { Types } from 'mongoose'
 
 @singleton()
 export class UserService {
     constructor(private readonly databaseService: DatabaseService) {}
+
+    async getUser(userId: Types.ObjectId): Promise<IUser> {
+        const user = await User.findById(userId);
+
+        if (!user) {
+            throw new HttpException(StatusCodes.NOT_FOUND, `No user found with ID ${userId}`);
+        }
+
+        return user;
+    }
 
     validators = [
         body('username', 'Username must not be empty.').trim().isLength({ min: 1 }).escape(),
