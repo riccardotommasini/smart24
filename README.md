@@ -10,6 +10,8 @@
     - `pip install numpy scipy pandas matplotlib shapely requests configobj netcdf4 xarray pytest seaborn oggm tables geopandas salem rasterio`
     Avec ça vous devriez avoir une configuration minimale pour lancer oggm
 
+    SI CA NE MARCHE PAS alors faire `pip install -r requirements.txt --upgrade`
+
 
 EXPLORATEUR DE FICHIERS
 - Données OGGM stockées à \\wsl.localhost\Ubuntu\home\linab pour Lina
