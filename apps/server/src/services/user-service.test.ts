@@ -70,4 +70,32 @@ describe('UserService', () => {
             return expect(userService.login('INVALID USERNAME', DEFAULT_USER.passwordHash)).rejects.toBeDefined();
         });
     });
+
+    describe('loadSession', () => {
+        it('should load session', async () => {
+            const user = new User(DEFAULT_USER);
+            await user.save();
+
+            const login = await userService.login(DEFAULT_USER.username, DEFAULT_USER.passwordHash);
+            const [sessionUser] = await userService.loadSession(login.token);
+
+            expect(sessionUser).toBeDefined();
+            expect(sessionUser.username).toEqual(DEFAULT_USER.username);
+        });
+
+        it('should not load session if token is invalid', () => {
+            return expect(userService.loadSession('INVALID TOKEN')).rejects.toBeDefined();
+        });
+
+        it('should not load session if user does not exists', async () => {
+            const user = new User(DEFAULT_USER);
+            await user.save();
+
+            const login = await userService.login(DEFAULT_USER.username, DEFAULT_USER.passwordHash);
+
+            await user.deleteOne();
+
+            return expect(userService.loadSession(login.token)).rejects.toBeDefined();
+        });
+    });
 });

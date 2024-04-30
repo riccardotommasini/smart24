@@ -5,10 +5,10 @@ import { singleton } from 'tsyringe';
 import { DatabaseService } from './database-service/database-service';
 import { StatusCodes } from 'http-status-codes';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { env } from '../utils/env';
 import { HttpException } from '../models/http-exception';
-import mongoose, { Types } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 
 @singleton()
 export class UserService {
@@ -48,6 +48,18 @@ export class UserService {
         } else {
             throw new Error('Password is not correct');
         }
+    }
+
+    public async loadSession(token: string): Promise<[user: IUser & Document, decoded: JwtPayload]> {
+        const decoded = jwt.verify(token, env.SECRET_KEY) as JwtPayload;
+
+        const foundUser = await User.findById(decoded._id);
+
+        if (!foundUser) {
+            throw new HttpException(StatusCodes.UNAUTHORIZED, 'User not found');
+        }
+
+        return [foundUser, decoded];
     }
 
     /*
