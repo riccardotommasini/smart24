@@ -1,35 +1,50 @@
 local M = {}
-local ignore = nil
 local ns = vim.api.nvim_create_namespace('smartshare')
+local is_user_input = true
 
-local function get_line_column_from_byte_offset(byte_offset)
-    local line = vim.fn.byte2line(byte_offset)
-    local line_start = vim.fn.line2byte(line)
-    local col = byte_offset - line_start + 1
-    return line - 1, col
+function M.get_line_column_from_byte_offset(byte_offset)
+    local line = vim.fn.byte2line(byte_offset + 1) - 1
+    print(byte_offset)
+    print(line)
+    if line < 0 then
+        return 0, 0
+    end
+    local line_start = vim.api.nvim_buf_get_offset(0, line)
+    local col = byte_offset - line_start
+    return line, col
 end
 
-function M.insert_received_text(offset, text)
-    local start_row, start_col = get_line_column_from_byte_offset(offset)
-    vim.api.nvim_buf_set_text(0, start_row, start_col, start_row, start_col, text)
+function M.set_text(offset, deleted, text)
+    local start_row, start_col = M.get_line_column_from_byte_offset(offset)
+    local end_row, end_col = M.get_line_column_from_byte_offset(offset + deleted)
+    print(start_row, start_col, end_row, end_col)
+    vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col, text)
 end
 
-function M.delete_text(offset, deleted)
-    local start_row, start_col = get_line_column_from_byte_offset(offset)
-    local end_row, end_col = get_line_column_from_byte_offset(offset + deleted)
-    vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col, {})
+function string:split(delimiter)
+    local result               = {}
+    local from                 = 1
+    local delim_from, delim_to = string.find(self, delimiter, from)
+    while delim_from do
+        table.insert(result, string.sub(self, from, delim_from - 1))
+        from                 = delim_to + 1
+        delim_from, delim_to = string.find(self, delimiter, from)
+    end
+    table.insert(result, string.sub(self, from))
+    return result
 end
 
-local handle = vim.fn.jobstart("./test", {
+local handle = vim.fn.jobstart("./client 192.168.83.193:4903", {
     on_stdout = function(_job_id, data, event)
-        for _,json_object in ipairs(data) do
-            print(json_object)
-            local change = vim.json.decode(json_object)
+        for _, json_object in ipairs(data) do
+            if json_object ~= nil and json_object ~= '' then
+                local change = vim.json.decode(json_object)
 
-            if change.action == "text_update" and change.update_type == "insert" then
-                M.insert_received_text(change.offset, change.text)
-            elseif change.action == "text_update" and change.update_type == "delete" then
-                M.delete_text(change.offset, change.deleted)
+                if change.action == "i_d_e_update" and change.update_type == "TextModification" then
+                    is_user_input = false
+
+                    M.set_text(change.offset, change.delete, change.text:split("\n"))
+                end
             end
         end
     end,
@@ -54,15 +69,17 @@ vim.api.nvim_buf_attach(0, false, {
         new_column,
         new_byte_len
     )
-        if ignore ~= nil and ignore.row == startrow and ignore.col == startcolumn then
-            ignore = nil
-            return
-        end
-
+        --[[
         local extmark_opts =
         { priority = 10, end_col = 6, hl_group = "TermCursor" }
 
-        vim.api.nvim_buf_set_extmark(0, ns, 1, 5, extmark_opts)
+        vim.api.nvim_buf_set_extmark(buf, ns, 1, 5, extmark_opts)
+        ]]
+
+        if is_user_input == false then
+            is_user_input = true
+            return
+        end
 
         if new_row > old_row or (new_row == old_row and new_column >= old_column) then
             local column_end;
@@ -71,33 +88,27 @@ vim.api.nvim_buf_attach(0, false, {
             else
                 column_end = new_column
             end
+
             local message = {
-                action = "text_update",
-                update_type = "insert",
+                action = "i_d_e_update",
                 offset = byte_offset,
-                text = vim.api.nvim_buf_get_text(buf, startrow, startcolumn, startrow + new_row, column_end, {})
+                delete = 0,
+                text = table.concat(
+                    vim.api.nvim_buf_get_text(buf, startrow, startcolumn, startrow + new_row, column_end, {}), '\n')
             }
 
-            local json = vim.fn.json_encode(message)
-            print(json)
-            --[[
-            vim.fn.chansend(handle, string.len(json) .. "\n")
+            local json = vim.json.encode(message)
             vim.fn.chansend(handle, json .. "\n")
-            ]]
         else
             local message = {
-                action = "text_update",
-                update_type = "delete",
+                action = "i_d_e_update",
                 offset = byte_offset,
-                deleted = old_byte_len - new_byte_len
+                delete = old_byte_len - new_byte_len,
+                text = ""
             }
 
-            local json = vim.fn.json_encode(message)
-            print(json)
-            --[[
-            vim.fn.chansend(handle, string.len(json) .. "\n")
+            local json = vim.json.encode(message)
             vim.fn.chansend(handle, json .. "\n")
-            ]]
         end
     end
 })
