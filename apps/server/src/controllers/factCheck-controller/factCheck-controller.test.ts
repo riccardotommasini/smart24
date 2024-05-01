@@ -9,7 +9,7 @@ import User, { IUser } from '../../models/user';
 import { Post, IPost } from '../../models/post';
 import { Metrics, IMetrics } from '../../models/metrics';
 import { FactCheckService } from '../../services/factCheck-service';
-import { UserService } from '../../services/user-service';
+import { AuthService } from '../../services/auth-service/auth-service';
 
 const DEFAULT_CREATE_FACTCHECK: ICreateFactCheck = {
     comment: 'This is my fact check!',
@@ -45,7 +45,7 @@ describe('FactCheckController', () => {
 
         await user.save();
         console.log('User saved');
-        token = (await container.resolve(UserService).login(username, passwordHash)).token;
+        token = (await container.resolve(AuthService).login(username, passwordHash)).token;
 
         metrics = new Metrics({});
         await metrics.save();

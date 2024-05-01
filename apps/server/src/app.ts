@@ -7,6 +7,7 @@ import { DatabaseService } from './services/database-service/database-service';
 import { UserController } from './controllers/user-controller';
 import { PostController } from './controllers/post-controller/post-controller';
 import { FactCheckerController } from './controllers/factCheck-controller/factCheck-controller';
+import { AuthController } from './controllers/auth-controller/auth-controller';
 
 @singleton()
 export class Application {
@@ -14,6 +15,7 @@ export class Application {
 
     constructor(
         private userController: UserController,
+        private authController: AuthController,
         private postController: PostController,
         private factCheckerController: FactCheckerController,
         private readonly databaseService: DatabaseService,
@@ -45,6 +47,7 @@ export class Application {
 
     private configureRoutes(): void {
         this.userController.use(this.app);
+        this.authController.use(this.app);
         this.postController.use(this.app);
         this.factCheckerController.use(this.app);
 
