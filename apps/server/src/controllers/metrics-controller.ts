@@ -17,17 +17,14 @@ export class MetricsController extends AbstractController {
     }
 
     protected configureRoutes(router: Router) {
-
         router.get('/post/:id/metrics', auth, async (req: AuthRequest<{ id: string }>, res, next) => {
             const postId = req.params.id;
             try {
                 const metrics = await this.metricService.getMetricsByPostId(postId);
                 return res.status(StatusCodes.OK).send(metrics);
-
             } catch (e) {
                 next(e);
             }
         });
     }
-    
 }
