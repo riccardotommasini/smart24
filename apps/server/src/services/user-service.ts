@@ -96,12 +96,6 @@ export class UserService {
         return [foundUser, decoded];
     }
 
-    /*
-    Test :
-    curl -X POST -H "Content-Type: application/json" -d '{"username":"momo","mail":"a@gmail.com","password":"azerty"}' http://localhost:3000/user/create
-    curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/trustUser
-    */
-
     async trustUser(userId: string, otherUserId: string) {
         const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
 
@@ -114,11 +108,6 @@ export class UserService {
         ]);
     }
 
-    /*
-    Test :
-    curl -X POST -H "Content-Type: application/json" -d '{"username":"momo","mail":"a@gmail.com","password":"azerty"}' http://localhost:3000/user/create
-    curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/untrustUser
-    */
     async untrustUser(userId: string, otherUserId: string) {
         const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
 
@@ -131,10 +120,6 @@ export class UserService {
         ]);
     }
 
-    /*
-    Test :
-    curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/visitUserProfile
-    */
     async getUserProfile(otherUserId: string) {
         const otherUserIdObject = new Types.ObjectId(otherUserId);
 

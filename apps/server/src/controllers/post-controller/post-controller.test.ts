@@ -23,7 +23,7 @@ describe('PostController', () => {
     });
 
     beforeEach(async () => {
-        const username = 'fuckyou';
+        const username = 'michel';
         const passwordHash = 'yoyoyoyo';
         user = new User({
             username,
@@ -58,7 +58,7 @@ describe('PostController', () => {
                 .post('/posts')
                 .send({})
                 .set('Authorization', 'Bearer ' + token)
-                .expect(StatusCodes.INTERNAL_SERVER_ERROR);
+                .expect(StatusCodes.BAD_REQUEST);
         });
     });
 });
