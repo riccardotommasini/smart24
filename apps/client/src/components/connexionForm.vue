@@ -1,13 +1,29 @@
-<script>
-    import '../assets/HomeView.css'
+<script setup>
+import { useUserInfoStore } from '@/stores/userInfo';
+import '../assets/HomeView.css'
+import { useTokenStore } from '../stores/auth.ts'
+import { ref } from 'vue';
+
+const tokenStore = useTokenStore();
+const userInfoStore = useUserInfoStore();
+
+const username = ref('');
+const password = ref('');
+
+async function login() {
+    const res = await tokenStore.login({username : username.value, password : password.value});
+    userInfoStore.update(res.data.user);
+    window.location.href = '/homepage';
+}
+
 </script>
 
 <template>
 
     <div class="container">
-        <form class="login-form">
-            <input type="email" class="input-field" placeholder="Email">
-            <input type="password" class="input-field" placeholder="Password">
+        <form class="login-form" @submit.prevent="login">
+            <input type="username" class="input-field" placeholder="Username" v-model="username">
+            <input type="password" class="input-field" placeholder="Password" v-model="password">
             <button type="submit" class="login-button">Login</button>
             <a class="forgot-password" href="">Forgot password ?</a>
             <div class="line-container">
@@ -21,15 +37,5 @@
         </form>
     </div>
 
-
-</template>
-<script>
-    import '../assets/HomeView.css'
-    import '../assets/main.css'
-</script>
-
-<template>
-
-    <h1 class="std title1 laila">Connexion</h1>
 
 </template>

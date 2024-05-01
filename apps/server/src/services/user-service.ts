@@ -5,6 +5,9 @@ import { StatusCodes } from 'http-status-codes';
 import { HttpException } from '../models/http-exception';
 import { Document, UpdateQuery } from 'mongoose';
 import { NonStrictObjectId } from 'src/utils/objectid';
+import bcryptjs from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { env } from '../utils/env'
 
 @singleton()
 export class UserService {
@@ -16,6 +19,26 @@ export class UserService {
         }
 
         return user;
+    }
+  
+    public async login(username: string, password: string) {
+        const foundUser = await User.findOne({ username });
+
+        if (!foundUser) {
+            throw new Error('UserName of user is not correct');
+        }
+
+        const isMatch = bcryptjs.compareSync(password, foundUser.passwordHash);
+
+        if (isMatch) {
+            const token = jwt.sign({ _id: foundUser._id?.toString(), name: foundUser.name }, env.SECRET_KEY, {
+                expiresIn: '2 days',
+            });
+
+            return { user: { name: foundUser.name, surname: foundUser.surname, username: foundUser.username }, token: token };
+        } else {
+            throw new Error('Password is not correct');
+        }
     }
 
     async createUser(user: IUserCreation): Promise<IUser & Document> {
