@@ -8,9 +8,13 @@ import { container } from 'tsyringe';
 import { UserService } from '../services/user-service';
 
 export interface AuthRequest<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Params extends object = Record<any, any>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Body extends object = Record<any, any>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Query extends object = Record<any, any>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
 > extends Request<Params, any, Body, Query> {
     token?: string | JwtPayload;
     user?: IUser & Document;

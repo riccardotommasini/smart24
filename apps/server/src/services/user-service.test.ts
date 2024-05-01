@@ -76,6 +76,92 @@ describe('UserService', () => {
         });
     });
 
+    describe('signup', () => {
+        it('should signup user', async () => {
+            await userService.signup(DEFAULT_USER.username, DEFAULT_USER.mail, DEFAULT_USER.passwordHash);
+
+            expect(await User.findOne({ username: DEFAULT_USER.username, mail: DEFAULT_USER.mail })).toBeDefined();
+        });
+
+        it('should signup user with all extra info', async () => {
+            const userData = {
+                ...DEFAULT_USER,
+                name: 'John',
+                surname: 'Doe',
+                birthday: new Date(2001, 6, 29),
+                factChecker: true,
+                organization: 'Hello',
+            };
+
+            await userService.signup(
+                userData.username,
+                userData.mail,
+                userData.passwordHash,
+                userData.name,
+                userData.surname,
+                userData.birthday,
+                userData.factChecker,
+                userData.organization,
+            );
+
+            const res = await User.findOne({ username: userData.username, mail: userData.mail });
+
+            expect(res?.name).toEqual(userData.name);
+            expect(res?.surname).toEqual(userData.surname);
+            expect(res?.birthday).toEqual(userData.birthday);
+            expect(res?.factChecker).toEqual(userData.factChecker);
+            expect(res?.organization).toEqual(userData.organization);
+        });
+
+        it('should reject if username already exists', async () => {
+            const user = new User(DEFAULT_USER);
+            await user.save();
+
+            return expect(
+                userService.signup(DEFAULT_USER.username, 'othermail', 'otherpassword'),
+            ).rejects.toBeDefined();
+        });
+
+        it('should reject if mail already exists', async () => {
+            const user = new User(DEFAULT_USER);
+            await user.save();
+
+            return expect(
+                userService.signup('otherusername', DEFAULT_USER.mail, 'otherpassword'),
+            ).rejects.toBeDefined();
+        });
+
+        it('should reject if organization is provided for non-fact-checker', async () => {
+            return expect(
+                userService.signup(
+                    DEFAULT_USER.username,
+                    DEFAULT_USER.mail,
+                    DEFAULT_USER.passwordHash,
+                    undefined,
+                    undefined,
+                    undefined,
+                    false,
+                    'organization',
+                ),
+            ).rejects.toBeDefined();
+        });
+
+        it('should reject if organization is not provided for fact-checker', async () => {
+            return expect(
+                userService.signup(
+                    DEFAULT_USER.username,
+                    DEFAULT_USER.mail,
+                    DEFAULT_USER.passwordHash,
+                    undefined,
+                    undefined,
+                    undefined,
+                    true,
+                    undefined,
+                ),
+            ).rejects.toBeDefined();
+        });
+    });
+
     describe('loadSession', () => {
         let user: IUser & Document;
 
