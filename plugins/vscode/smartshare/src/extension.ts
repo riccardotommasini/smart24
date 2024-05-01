@@ -64,7 +64,7 @@ export async function activate(context: vscode.ExtensionContext) {
             return;
         }
     
-        const client_executable = __dirname + '/../../../../smartshare/target/debug/client';
+        const client_executable = __dirname + '/client';
         childProcess = spawn(client_executable, [addr]);
         if (!childProcess.pid) {
             return;
