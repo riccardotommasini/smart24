@@ -1,17 +1,25 @@
 import mongoose, { Schema } from 'mongoose';
 
+export interface UpdateMetrics {
+    likedBy?: string[];
+    dislikedBy?: string[];
+    trustedBy?: string[];
+    untrustedBy?: string[];
+}
+
+
 export interface IMetrics {
     nbLikes: number;
     nbDislikes: number;
     nbTrusts: number;
     nbUntrusts: number;
     nbComments: number;
-    likedBy: Schema.Types.ObjectId[];
-    dislikedBy: Schema.Types.ObjectId[];
-    trustedBy: Schema.Types.ObjectId[];
-    untrustedBy: Schema.Types.ObjectId[];
-    sharedBy: Schema.Types.ObjectId[];
-    factCheckedBy: Schema.Types.ObjectId[];
+    likedBy: string[];
+    dislikedBy: string[];
+    trustedBy: string[];
+    untrustedBy: string[];
+    sharedBy: string[];
+    factCheckedBy: string[];
 }
 
 const MetricsSchema = new Schema<IMetrics>({
@@ -20,12 +28,12 @@ const MetricsSchema = new Schema<IMetrics>({
     nbTrusts: { type: Number, required: false, default: 0 },
     nbUntrusts: { type: Number, required: false, default: 0 },
     nbComments: { type: Number, required: false, default: 0 },
-    likedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    dislikedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    trustedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    untrustedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    sharedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    factCheckedBy: [{ type: Schema.Types.ObjectId, ref: 'FactCheck' }],
+    likedBy: [{ type: String, ref: 'User' }],
+    dislikedBy: [{ type: String, ref: 'User' }],
+    trustedBy: [{ type: String, ref: 'User' }],
+    untrustedBy: [{ type: String, ref: 'User' }],
+    sharedBy: [{ type: String, ref: 'User' }],
+    factCheckedBy: [{ type: String, ref: 'FactCheck' }],
 });
 
 export const Metrics = mongoose.model<IMetrics>('Metrics', MetricsSchema);

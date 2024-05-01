@@ -26,4 +26,15 @@ export class PostService {
 
         return post;
     }
+
+    async getPost(postId: string): Promise<Document & IPost> {
+        const postIdObject = new Types.ObjectId(postId);
+        const post = await Post.findOne({ _id: postIdObject });
+
+        if (!post) {
+            throw new Error(`No post found with ID ${postId}`);
+        }
+
+        return post;
+    }
 }

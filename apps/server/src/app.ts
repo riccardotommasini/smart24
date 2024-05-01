@@ -9,6 +9,7 @@ import { DatabaseService } from './services/database-service/database-service';
 import { DefaultController } from './controllers/default-controller/default-controller';
 import { UserController } from './controllers/user-controller';
 import { PostController } from './controllers/post-controller/post-controller';
+import { MetricsController } from './controllers/metrics-controller';
 
 @singleton()
 export class Application {
@@ -18,6 +19,7 @@ export class Application {
         @inject(SYMBOLS.defaultController) private defaultController: DefaultController,
         @inject(SYMBOLS.userController) private userController: UserController,
         private postController: PostController,
+        private metricsController: MetricsController,
         private readonly databaseService: DatabaseService,
     ) {
         this.app = express();
@@ -49,6 +51,7 @@ export class Application {
         this.defaultController.use(this.app);
         this.userController.use(this.app);
         this.postController.use(this.app);
+        this.metricsController.use(this.app);
 
         this.app.use('**', (req, res, next) => {
             next(new HttpException(404, `${req.method} ${req.url} not found`));
