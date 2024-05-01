@@ -6,7 +6,7 @@ import { errorHandler } from './middleware/error-handler';
 import { DatabaseService } from './services/database-service/database-service';
 import { UserController } from './controllers/user-controller';
 import { PostController } from './controllers/post-controller/post-controller';
-import { MetricsController } from './controllers/metrics-controller';
+import { MetricsController } from './controllers/metrics-controller/metrics-controller';
 import { FactCheckerController } from './controllers/factCheck-controller/factCheck-controller';
 import { AuthController } from './controllers/auth-controller/auth-controller';
 

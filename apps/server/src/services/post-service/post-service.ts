@@ -4,6 +4,8 @@ import { Metrics } from '../../models/metrics';
 import { ICreatePost, IPost, Post } from '../../models/post';
 import { UserService } from '../user-service';
 import { NonStrictObjectId } from '../../utils/objectid';
+import { HttpException } from '../../models/http-exception';
+import { StatusCodes } from 'http-status-codes';
 
 @singleton()
 export class PostService {
@@ -31,7 +33,7 @@ export class PostService {
         const post = await Post.findOne({ _id: postId });
 
         if (!post) {
-            throw new Error(`No post found with ID ${postId}`);
+            throw new HttpException(StatusCodes.NOT_FOUND, `No post found with ID ${postId}`);
         }
 
         return post;
