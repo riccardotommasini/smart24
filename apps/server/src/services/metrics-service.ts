@@ -1,5 +1,5 @@
 import { singleton } from 'tsyringe';
-import { Types, Document, Schema } from 'mongoose';
+import { Types, Document, Schema, UpdateQuery } from 'mongoose';
 import { Metrics, UpdateMetrics, IMetrics } from '../models/metrics';
 import { PostService } from './post-service/post-service';
 
@@ -99,5 +99,11 @@ export class MetricsService {
             await metrics.save();
         }
         return metrics;
+    }
+
+    async updateMetrics(metricsId: string, update: UpdateQuery<IMetrics>): Promise<IMetrics | null> {
+        const metricsObjectId = new Types.ObjectId(metricsId);
+        const updatedMetrics = await Metrics.findByIdAndUpdate(metricsObjectId, update, { new: true });
+        return updatedMetrics;
     }
 }

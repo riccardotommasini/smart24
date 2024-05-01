@@ -5,7 +5,8 @@ import { singleton } from 'tsyringe';
 import { UserService } from '../services/user-service';
 import { AbstractController } from './abstract-controller';
 import { MetricsService } from '../services/metrics-service';
-import { auth } from '../middleware/auth';
+import { auth, AuthRequest } from '../middleware/auth';
+import { HttpException } from '../models/http-exception';
 
 @singleton()
 export class UserController extends AbstractController {
