@@ -7,7 +7,7 @@ import { body, validationResult } from 'express-validator';
 import { singleton } from 'tsyringe';
 import { AuthRequest, auth } from '../../middleware/auth';
 import { HttpException } from '../../models/http-exception';
-import { ICreateComment } from 'src/models/comment';
+import { ICreateComment } from '../../models/comment';
 
 @singleton()
 export class PostController extends AbstractController {
