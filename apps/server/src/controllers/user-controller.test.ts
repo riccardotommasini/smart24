@@ -1,5 +1,5 @@
 import request from 'supertest';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 import User, { IUser } from '../models/user';
 import { Application } from '../app';
 import { container } from 'tsyringe';
@@ -39,6 +39,41 @@ describe('UserController', () => {
         await mongoose.connection.db.dropDatabase();
     });
 
+    describe('GET /user/:userId', () => {
+        it('should get user', () => {
+            return request(app['app'])
+                .get(`/user/${user._id}`)
+                .set('Authorization', `Bearer ${token}`)
+                .expect(StatusCodes.OK);
+        });
+
+        it('should not get user if not exists', () => {
+            return request(app['app'])
+                .get(`/user/${new Types.ObjectId()}`)
+                .set('Authorization', `Bearer ${token}`)
+                .expect(StatusCodes.NOT_FOUND);
+        });
+    });
+
+    describe('GET /user/:userId/profile', () => {
+        it('should get user profile', async () => {
+            const user2 = new User(DEFAULT_USER_2);
+            await user2.save();
+
+            return request(app['app'])
+                .get(`/user/${user2._id}/profile`)
+                .set('Authorization', `Bearer ${token}`)
+                .expect(StatusCodes.OK);
+        });
+
+        it('should not get user profile if user does not exists', () => {
+            return request(app['app'])
+                .get(`/user/${new Types.ObjectId()}/profile`)
+                .set('Authorization', `Bearer ${token}`)
+                .expect(StatusCodes.NOT_FOUND);
+        });
+    });
+
     describe('POST /user/trustUser', () => {
         it('should trust user', async () => {
             const user2 = new User(DEFAULT_USER_2);
@@ -74,26 +109,6 @@ describe('UserController', () => {
         it('should not untrust user if body has no otherUserId', () => {
             return request(app['app'])
                 .post('/user/untrustUser')
-                .set('Authorization', `Bearer ${token}`)
-                .expect(StatusCodes.BAD_REQUEST);
-        });
-    });
-
-    describe('POST /user/visitUserProfile', () => {
-        it('should visit user profile', async () => {
-            const user2 = new User(DEFAULT_USER_2);
-            await user2.save();
-
-            return request(app['app'])
-                .post('/user/visitUserProfile')
-                .set('Authorization', `Bearer ${token}`)
-                .send({ otherUserId: user2._id })
-                .expect(StatusCodes.OK);
-        });
-
-        it('should not visit user profile if body has no otherUserId', () => {
-            return request(app['app'])
-                .post('/user/visitUserProfile')
                 .set('Authorization', `Bearer ${token}`)
                 .expect(StatusCodes.BAD_REQUEST);
         });

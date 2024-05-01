@@ -14,6 +14,30 @@ export class UserController extends AbstractController {
     }
 
     protected configureRoutes(router: Router) {
+        router.get(
+            '/:userId',
+            auth,
+            async (req: AuthRequest<{ userId: string }>, res: Response, next: NextFunction) => {
+                try {
+                    res.status(StatusCodes.OK).send(await this.userService.getUser(req.params.userId));
+                } catch (error) {
+                    next(error);
+                }
+            },
+        );
+
+        router.get(
+            '/:userId/profile',
+            auth,
+            async (req: AuthRequest<{ userId: string }>, res: Response, next: NextFunction) => {
+                try {
+                    res.status(StatusCodes.OK).send(await this.userService.getUserProfile(req.params.userId));
+                } catch (error) {
+                    next(error);
+                }
+            },
+        );
+
         router.post(
             '/trustUser',
             auth,
@@ -46,24 +70,6 @@ export class UserController extends AbstractController {
 
                     await this.userService.untrustUser(req.user!._id, req.body.otherUserId);
                     res.status(StatusCodes.NO_CONTENT).send();
-                } catch (error) {
-                    next(error);
-                }
-            },
-        );
-
-        router.post(
-            '/visitUserProfile',
-            auth,
-            body('otherUserId', 'is required').trim().isLength({ min: 1 }),
-            async (req: AuthRequest<object, { otherUserId: string }>, res: Response, next: NextFunction) => {
-                try {
-                    const errors = validationResult(req);
-                    if (!errors.isEmpty()) {
-                        throw new HttpException(StatusCodes.BAD_REQUEST, 'Invalid request', errors);
-                    }
-
-                    res.status(StatusCodes.OK).send(await this.userService.getUserProfile(req.body.otherUserId));
                 } catch (error) {
                     next(error);
                 }
