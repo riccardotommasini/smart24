@@ -3,7 +3,7 @@ import { Post } from '../models/post';
 import { singleton } from 'tsyringe';
 import { StatusCodes } from 'http-status-codes';
 import { HttpException } from '../models/http-exception';
-import { Document, UpdateQuery } from 'mongoose';
+import { Document, UpdateQuery, Types } from 'mongoose';
 import { NonStrictObjectId } from 'src/utils/objectid';
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
