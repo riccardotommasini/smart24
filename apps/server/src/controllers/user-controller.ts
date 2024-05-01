@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { Request, Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
 import { singleton } from 'tsyringe';
