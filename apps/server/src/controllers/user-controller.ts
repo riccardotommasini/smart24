@@ -10,12 +10,12 @@ import { HttpException } from '../models/http-exception';
 @singleton()
 export class UserController extends AbstractController {
     constructor(private readonly userService: UserService) {
-        super();
+        super({ basePath: '/user' });
     }
 
     protected configureRoutes(router: Router) {
         router.post(
-            '/user/trustUser',
+            '/trustUser',
             auth,
             body('otherUserId', 'is required').trim().isLength({ min: 1 }),
             async (req: AuthRequest<object, { otherUserId: string }>, res: Response, next: NextFunction) => {
@@ -34,7 +34,7 @@ export class UserController extends AbstractController {
         );
 
         router.post(
-            '/user/untrustUser',
+            '/untrustUser',
             auth,
             body('otherUserId', 'is required').trim().isLength({ min: 1 }),
             async (req: AuthRequest<object, { otherUserId: string }>, res: Response, next: NextFunction) => {
@@ -53,7 +53,7 @@ export class UserController extends AbstractController {
         );
 
         router.post(
-            '/user/visitUserProfile',
+            '/visitUserProfile',
             auth,
             body('otherUserId', 'is required').trim().isLength({ min: 1 }),
             async (req: AuthRequest<object, { otherUserId: string }>, res: Response, next: NextFunction) => {
