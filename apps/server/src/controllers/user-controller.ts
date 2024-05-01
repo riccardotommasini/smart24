@@ -64,7 +64,7 @@ export class UserController extends AbstractController {
             body('otherUserId', '`otherUserId` is required'),
             (req: AuthRequest<object, { otherUserId: string }>, res: Response, next: NextFunction) => {
                 try {
-                    this.userService.user_trustUser_post(req.user!._id, req.body.otherUserId);
+                    this.userService.trustUser(req.user!._id, req.body.otherUserId);
                     res.status(StatusCodes.OK).send();
                 } catch (error) {
                     next();
@@ -78,7 +78,7 @@ export class UserController extends AbstractController {
             body('otherUserId', '`otherUserId` is required'),
             (req: AuthRequest<object, { otherUserId: string }>, res: Response, next: NextFunction) => {
                 try {
-                    this.userService.user_untrustUser_post(req.user!._id, req.body.otherUserId);
+                    this.userService.untrustUser(req.user!._id, req.body.otherUserId);
                     res.status(StatusCodes.OK).send();
                 } catch (error) {
                     next();
@@ -92,7 +92,7 @@ export class UserController extends AbstractController {
             body('otherUserId', '`otherUserId` is required'),
             (req: AuthRequest<object, { otherUserId: string }>, res: Response, next: NextFunction) => {
                 try {
-                    this.userService.user_visitUserProfile_post(req.body.otherUserId);
+                    this.userService.getUserProfile(req.body.otherUserId);
                     res.status(StatusCodes.OK).send();
                 } catch (error) {
                     next();

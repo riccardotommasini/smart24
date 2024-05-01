@@ -102,7 +102,7 @@ export class UserService {
     curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/trustUser
     */
 
-    async user_trustUser_post(userId: string, otherUserId: string) {
+    async trustUser(userId: string, otherUserId: string) {
         const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
 
         await Promise.all([
@@ -119,7 +119,7 @@ export class UserService {
     curl -X POST -H "Content-Type: application/json" -d '{"username":"momo","mail":"a@gmail.com","password":"azerty"}' http://localhost:3000/user/create
     curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/untrustUser
     */
-    async user_untrustUser_post(userId: string, otherUserId: string) {
+    async untrustUser(userId: string, otherUserId: string) {
         const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
 
         await Promise.all([
@@ -135,41 +135,19 @@ export class UserService {
     Test :
     curl -X POST -H "Content-Type: application/json" -d '{"otherUserId": "6630be9d130907c60efc4aaa"}' http://localhost:3000/user/visitUserProfile
     */
-    async user_visitUserProfile_post(otherUserId: string) {
-        let otherUserInfo = new User();
-        let lastPostsByUser = [];
-        const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
+    async getUserProfile(otherUserId: string) {
+        const otherUserIdObject = new Types.ObjectId(otherUserId);
 
-        //retrieve data of other user
-        User.findById(otherUserId)
-            .then((foundUser) => {
-                if (!foundUser) {
-                    return;
-                }
+        const userData = await this.getUser(otherUserIdObject);
+        const lastPosts = await Post.aggregate([
+            { $match: { createdBy: otherUserIdObject } },
+            { $sort: { date: -1 } },
+            { $limit: 50 },
+        ]);
 
-                otherUserInfo = foundUser;
-
-                const pipeline: mongoose.PipelineStage[] = [
-                    { $match: { createdBy: otherUserIdObject } },
-                    { $sort: { date: -1 } },
-                    { $limit: 50 },
-                ];
-
-                return Post.aggregate(pipeline);
-            })
-            .then((res) => {
-                if (!res) {
-                    return;
-                }
-                lastPostsByUser = res;
-
-                //send response
-                const response = {
-                    userData: otherUserInfo,
-                    lastPosts: lastPostsByUser,
-                };
-
-                return response;
-            });
+        return {
+            userData,
+            lastPosts,
+        };
     }
 }

@@ -3,6 +3,7 @@ import { UserService } from './user-service';
 import mongoose, { Types, Document } from 'mongoose';
 import User, { IUser } from '../models/user';
 import { DatabaseService } from './database-service/database-service';
+import { PostService } from './post-service/post-service';
 
 const DEFAULT_USER = {
     username: 'joe',
@@ -73,6 +74,10 @@ describe('UserService', () => {
             await user.save();
 
             return expect(userService.login('INVALID USERNAME', DEFAULT_USER.passwordHash)).rejects.toBeDefined();
+        });
+
+        it('should reject if user does not exists', async () => {
+            return expect(userService.login(DEFAULT_USER.username, DEFAULT_USER.passwordHash)).rejects.toBeDefined();
         });
     });
 
@@ -191,7 +196,7 @@ describe('UserService', () => {
         });
     });
 
-    describe('user_trustUser_post', () => {
+    describe('trustUser', () => {
         let user1: IUser & Document;
         let user2: IUser & Document;
 
@@ -203,9 +208,9 @@ describe('UserService', () => {
         });
 
         it('should trust user', async () => {
-            await userService.user_trustUser_post(user1._id.toString(), user2._id.toString());
+            await userService.trustUser(user1._id.toString(), user2._id.toString());
 
-            user1 = await User.findById(user1._id);
+            user1 = (await User.findById(user1._id))!;
 
             expect(user1.trustedUsers).toContainEqual(user2._id);
         });
@@ -213,11 +218,76 @@ describe('UserService', () => {
         it('should remove from untrusted users', async () => {
             user1.updateOne({ _id: user1._id }, { $push: { untrustedUsers: user2._id } });
 
-            await userService.user_trustUser_post(user1._id.toString(), user2._id.toString());
+            await userService.trustUser(user1._id.toString(), user2._id.toString());
 
-            user1 = await User.findById(user1._id);
+            user1 = (await User.findById(user1._id))!;
 
             expect(user1.untrustedUsers).not.toContainEqual(user2._id);
+        });
+    });
+
+    describe('untrustUser', () => {
+        let user1: IUser & Document;
+        let user2: IUser & Document;
+
+        beforeEach(async () => {
+            user1 = new User(DEFAULT_USER);
+            user2 = new User(DEFAULT_USER_2);
+
+            await Promise.all([user1.save(), user2.save()]);
+        });
+
+        it('should untrust user', async () => {
+            await userService.untrustUser(user1._id.toString(), user2._id.toString());
+
+            user1 = (await User.findById(user1._id))!;
+
+            expect(user1.untrustedUsers).toContainEqual(user2._id);
+        });
+
+        it('should remove from trusted users', async () => {
+            user1.updateOne({ _id: user1._id }, { $push: { trustedUsers: user2._id } });
+
+            await userService.untrustUser(user1._id.toString(), user2._id.toString());
+
+            user1 = (await User.findById(user1._id))!;
+
+            expect(user1.trustedUsers).not.toContainEqual(user2._id);
+        });
+    });
+
+    describe('getUserProfile', () => {
+        let user1: IUser & Document;
+        let user2: IUser & Document;
+
+        beforeEach(async () => {
+            user1 = new User(DEFAULT_USER);
+            user2 = new User(DEFAULT_USER_2);
+
+            await Promise.all([user1.save(), user2.save()]);
+        });
+
+        it('should get user profile', async () => {
+            const profile = await userService.getUserProfile(user2._id.toString());
+
+            expect(profile).toBeDefined();
+            expect(profile.userData.username).toEqual(user2.username);
+        });
+
+        it('should return last posts', async () => {
+            const posts = await Promise.all([
+                container.resolve(PostService).publishPost(user2._id, { text: 'Hello' }),
+                container.resolve(PostService).publishPost(user2._id, { text: 'Hola' }),
+            ]);
+
+            const profile = await userService.getUserProfile(user2._id.toString());
+            const postsIds = posts.map((post) => post._id);
+
+            expect(profile).toBeDefined();
+
+            for (const post of posts) {
+                expect(postsIds).toContainEqual(post._id);
+            }
         });
     });
 });
