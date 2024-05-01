@@ -4,6 +4,7 @@ import { Metrics } from '../../models/metrics';
 import { ICreatePost, IPost, Post } from '../../models/post';
 import { UserService } from '../user-service';
 import { NonStrictObjectId } from '../../utils/objectid';
+import { ICreateComment, Comment } from '../../models/comment';
 import { HttpException } from '../../models/http-exception';
 import { StatusCodes } from 'http-status-codes';
 
@@ -27,6 +28,26 @@ export class PostService {
         await post.save();
 
         return post;
+    }
+
+    async publishComment(userId: NonStrictObjectId, newComment: ICreateComment): Promise<Document & IPost> {
+        await this.userService.getUser(userId);
+        await this.getPost(newComment.parentPostId.toString());
+
+        const metrics = new Metrics({});
+        await metrics.save();
+
+        const comment = new Comment({
+            text: newComment.text,
+            image: newComment.image,
+            createdBy: userId,
+            metrics: metrics._id,
+            parentPostId: newComment.parentPostId,
+        });
+
+        await comment.save();
+
+        return comment;
     }
 
     async getPost(postId: NonStrictObjectId): Promise<Document & IPost> {

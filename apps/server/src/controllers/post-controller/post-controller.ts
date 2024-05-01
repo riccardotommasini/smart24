@@ -7,6 +7,7 @@ import { body, validationResult } from 'express-validator';
 import { singleton } from 'tsyringe';
 import { AuthRequest, auth } from '../../middleware/auth';
 import { HttpException } from '../../models/http-exception';
+import { ICreateComment } from '../../models/comment';
 
 @singleton()
 export class PostController extends AbstractController {
@@ -32,6 +33,27 @@ export class PostController extends AbstractController {
                     );
                 } catch (e) {
                     next(e);
+                }
+            },
+        );
+        router.post(
+            '/comment',
+            auth,
+            body('text', 'is required').trim().isLength({ min: 1 }),
+            body('image').trim().isURL().optional(),
+            body('parentPostId').trim().isLength({ min: 1 }),
+            async (req: AuthRequest<object, ICreateComment>, res: Response, next: NextFunction) => {
+                try {
+                    const errors = validationResult(req);
+                    if (!errors.isEmpty()) {
+                        throw new HttpException(StatusCodes.BAD_REQUEST, 'Invalid request', errors);
+                    }
+
+                    res.status(StatusCodes.CREATED).send(
+                        await this.postService.publishComment(req.user?._id ?? '', req.body),
+                    );
+                } catch (error) {
+                    next(error);
                 }
             },
         );
