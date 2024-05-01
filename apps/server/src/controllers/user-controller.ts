@@ -10,8 +10,9 @@ import { HttpException } from '../models/http-exception';
 
 @singleton()
 export class UserController extends AbstractController {
-    constructor(private readonly userService: UserService,
-                private readonly metricsService: MetricsService
+    constructor(
+        private readonly userService: UserService,
+        private readonly metricsService: MetricsService,
     ) {
         super();
     }
@@ -82,8 +83,8 @@ export class UserController extends AbstractController {
                 try {
                     const updatedMetrics = await this.metricsService.likePost(userId, postId);
                     if (!updatedMetrics) {
-                            res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
-                        }
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
+                    }
                     res.json(updatedMetrics);
                 } catch (e) {
                     next(e);
@@ -106,8 +107,8 @@ export class UserController extends AbstractController {
                 try {
                     const updatedMetrics = await this.metricsService.dislikePost(userId, postId);
                     if (!updatedMetrics) {
-                            res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
-                        }
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
+                    }
                     res.json(updatedMetrics);
                 } catch (e) {
                     next(e);
@@ -130,8 +131,8 @@ export class UserController extends AbstractController {
                 try {
                     const updatedMetrics = await this.metricsService.trustPost(userId, postId);
                     if (!updatedMetrics) {
-                            res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
-                        }
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
+                    }
                     res.json(updatedMetrics);
                 } catch (e) {
                     next(e);
@@ -154,8 +155,8 @@ export class UserController extends AbstractController {
                 try {
                     const updatedMetrics = await this.metricsService.untrustPost(userId, postId);
                     if (!updatedMetrics) {
-                            res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
-                        }
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
+                    }
                     res.json(updatedMetrics);
                 } catch (e) {
                     next(e);
@@ -164,6 +165,3 @@ export class UserController extends AbstractController {
         );
     }
 }
-
-
-

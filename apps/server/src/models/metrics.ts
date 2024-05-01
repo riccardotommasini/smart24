@@ -7,7 +7,6 @@ export interface UpdateMetrics {
     untrustedBy?: string[];
 }
 
-
 export interface IMetrics {
     nbLikes: number;
     nbDislikes: number;
