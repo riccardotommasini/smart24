@@ -1,19 +1,17 @@
-import User, { IUser } from '../models/user';
+import User, { IUser, IUserCreation } from '../models/user';
 import { Post } from '../models/post';
 import { singleton } from 'tsyringe';
-import { DatabaseService } from './database-service/database-service';
 import { StatusCodes } from 'http-status-codes';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import bcryptjs from 'bcryptjs';
-import { env } from '../utils/env';
 import { HttpException } from '../models/http-exception';
-import mongoose, { Document, Types, UpdateQuery } from 'mongoose';
+import { Document, UpdateQuery } from 'mongoose';
+import { NonStrictObjectId } from 'src/utils/objectid';
+import bcryptjs from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { env } from '../utils/env'
 
 @singleton()
 export class UserService {
-    constructor(private readonly databaseService: DatabaseService) {}
-
-    async getUser(userId: Types.ObjectId): Promise<IUser> {
+    async getUser(userId: NonStrictObjectId): Promise<IUser> {
         const user = await User.findById(userId);
 
         if (!user) {
@@ -22,7 +20,7 @@ export class UserService {
 
         return user;
     }
-
+  
     public async login(username: string, password: string) {
         const foundUser = await User.findOne({ username });
 
@@ -37,51 +35,23 @@ export class UserService {
                 expiresIn: '2 days',
             });
 
-            return { user: { mail: foundUser.mail, username: foundUser.username }, token: token };
+            return { user: { name: foundUser.name, surname: foundUser.surname, username: foundUser.username }, token: token };
         } else {
             throw new Error('Password is not correct');
         }
     }
 
-    async signup(
-        username: string,
-        mail: string,
-        password: string,
-        name?: string,
-        surname?: string,
-        birthday?: Date,
-        factChecker?: boolean,
-        organization?: string,
-    ): Promise<IUser & Document> {
-        if (!factChecker && organization) {
-            throw new HttpException(StatusCodes.BAD_REQUEST, 'organization must be empty for non-fact-checkers');
-        } else if (factChecker && !organization) {
-            throw new HttpException(StatusCodes.BAD_REQUEST, 'organization must be provided for fact-checker');
-        }
+    async createUser(user: IUserCreation): Promise<IUser & Document> {
+        const existingUser = await User.findOne({ $or: [{ username: user.username }, { mail: user.mail }] });
 
-        const existingUser = await User.findOne({ $or: [{ username: username }, { mail: mail }] });
         if (existingUser) {
             throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or mail already exists');
         }
 
-        const user = new User({
-            username,
-            mail,
-            passwordHash: password,
-            name,
-            surname,
-            birthday,
-            factChecker,
-            organization,
-        });
+        const newUser = new User({ ...user, passwordHash: user.password });
+        await newUser.save();
 
-        try {
-            await user.save();
-            return user;
-        } catch (error) {
-            console.error(error);
-            throw new HttpException(StatusCodes.INTERNAL_SERVER_ERROR, 'Error saving user');
-        }
+        return newUser;
     }
 
     async updateUser(userId: string, update: UpdateQuery<IUser>): Promise<IUser | null> {
@@ -103,48 +73,30 @@ export class UserService {
         return updatedUser;
     }
 
-    public async loadSession(token: string): Promise<[user: IUser & Document, decoded: JwtPayload]> {
-        const decoded = jwt.verify(token, env.SECRET_KEY) as JwtPayload;
-
-        const foundUser = await User.findById(decoded._id);
-
-        if (!foundUser) {
-            throw new HttpException(StatusCodes.UNAUTHORIZED, 'User not found');
-        }
-
-        return [foundUser, decoded];
-    }
-
-    async trustUser(userId: string, otherUserId: string) {
-        const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
-
+    async trustUser(userId: NonStrictObjectId, otherUserId: NonStrictObjectId) {
         await Promise.all([
             User.updateOne(
-                { _id: userId, trustedUsers: { $ne: otherUserIdObject } },
-                { $push: { trustedUsers: otherUserIdObject } },
+                { _id: userId, trustedUsers: { $ne: otherUserId } },
+                { $push: { trustedUsers: otherUserId } },
             ),
-            User.updateOne({ _id: userId }, { $pull: { untrustedUsers: { $in: [otherUserIdObject] } } }),
+            User.updateOne({ _id: userId }, { $pull: { untrustedUsers: { $in: [otherUserId] } } }),
         ]);
     }
 
-    async untrustUser(userId: string, otherUserId: string) {
-        const otherUserIdObject = new mongoose.Types.ObjectId(otherUserId);
-
+    async untrustUser(userId: NonStrictObjectId, otherUserId: NonStrictObjectId) {
         await Promise.all([
             User.updateOne(
-                { _id: userId, untrustedUsers: { $ne: otherUserIdObject } },
-                { $push: { untrustedUsers: otherUserIdObject } },
+                { _id: userId, untrustedUsers: { $ne: otherUserId } },
+                { $push: { untrustedUsers: otherUserId } },
             ),
-            User.updateOne({ _id: userId }, { $pull: { trustedUsers: { $in: [otherUserIdObject] } } }),
+            User.updateOne({ _id: userId }, { $pull: { trustedUsers: { $in: [otherUserId] } } }),
         ]);
     }
 
-    async getUserProfile(otherUserId: string) {
-        const otherUserIdObject = new Types.ObjectId(otherUserId);
-
-        const userData = await this.getUser(otherUserIdObject);
+    async getUserProfile(otherUserId: NonStrictObjectId) {
+        const userData = await this.getUser(otherUserId);
         const lastPosts = await Post.aggregate([
-            { $match: { createdBy: otherUserIdObject } },
+            { $match: { createdBy: otherUserId } },
             { $sort: { date: -1 } },
             { $limit: 50 },
         ]);

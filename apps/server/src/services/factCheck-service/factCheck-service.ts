@@ -3,7 +3,7 @@ import { Document, Types } from 'mongoose';
 import { singleton } from 'tsyringe';
 import { FactCheck, ICreateFactCheck, IFactCheck } from '../../models/FactCheck';
 import { HttpException } from '../../models/http-exception';
-import { MetricsService } from '../metrics-service';
+import { MetricsService } from '../metrics-service/metrics-service';
 import { PostService } from '../post-service/post-service';
 import { UserService } from '../user-service';
 
