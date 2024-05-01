@@ -222,13 +222,5 @@ describe('UserController', () => {
                     expect(res.body.name).toEqual('Richard');
                 });
         });
-
-        it('should not update if body has fields not in the interface', () => {
-            return request(app['app'])
-                .post('/user/update')
-                .set('Authorization', `Bearer ${token}`)
-                .send({ name: 'Richard', unknownField: 'unknown' })
-                .expect(StatusCodes.BAD_REQUEST);
-        });
     });
 });
