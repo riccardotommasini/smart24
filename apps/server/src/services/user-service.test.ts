@@ -290,4 +290,74 @@ describe('UserService', () => {
             }
         });
     });
+
+    describe('updateUser', () => {
+        let user: IUser & Document;
+
+        beforeEach(async () => {
+            user = new User(DEFAULT_USER);
+            await user.save();
+        });
+
+        it('should update user', async () => {
+            const updated = await userService.updateUser(user._id.toString(), {
+                username: 'newusername',
+                mail: 'newmail',
+                passwordHash: 'newpassword',
+            });
+
+            expect(updated).toBeDefined();
+            expect(updated.username).toEqual('newusername');
+            expect(updated.mail).toEqual('newmail');
+        });
+
+        it('should not update username if already exists', async () => {
+            const user2 = new User(DEFAULT_USER_2);
+            await user2.save();
+
+            return expect(
+                userService.updateUser(user._id.toString(), {
+                    username: DEFAULT_USER_2.username,
+                    mail: 'newmail',
+                    passwordHash: 'newpassword',
+                }),
+            ).rejects.toBeDefined();
+        });
+
+        it('should not update mail if already exists', async () => {
+            const user2 = new User(DEFAULT_USER_2);
+            await user2.save();
+
+            return expect(
+                userService.updateUser(user._id.toString(), {
+                    username: 'newusername',
+                    mail: DEFAULT_USER_2.mail,
+                    passwordHash: 'newpassword',
+                }),
+            ).rejects.toBeDefined();
+        });
+
+        it('should not update password if not provided', async () => {
+            const updated = await userService.updateUser(user._id.toString(), {
+                username: 'newusername',
+                mail: 'newmail',
+            });
+
+            expect(updated).toBeDefined();
+            expect(updated.passwordHash).toEqual(user.passwordHash);
+        });
+
+        it('should not add a new field if the field is not in the interface definition', async ()=>{
+            const updated = await userService.updateUser(user._id.toString(), {
+                username: 'newusername',
+                mail: 'newmail',
+                passwordHash: 'newpassword',
+                newField: 'newField',
+            });
+
+            expect(updated).toBeDefined();
+            expect(updated.newField).toBeUndefined();
+            expect(updated.username).toEqual('newusername');
+        });
+    });
 });

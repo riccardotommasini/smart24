@@ -210,4 +210,25 @@ describe('UserController', () => {
                 .expect(StatusCodes.BAD_REQUEST);
         });
     });
+
+    describe('POST /user/update', () => {
+        it('should update name', () => {
+            return request(app['app'])
+                .post('/user/update')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ name: 'Richard' })
+                .expect(StatusCodes.OK)
+                .then((res) => {
+                    expect(res.body.name).toEqual('Richard');
+                });
+        });
+
+        it('should not update if body has fields not in the interface', () => {
+            return request(app['app'])
+                .post('/user/update')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ name: 'Richard', unknownField: 'unknown' })
+                .expect(StatusCodes.BAD_REQUEST);
+        });
+    });
 });

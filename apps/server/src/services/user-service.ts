@@ -61,7 +61,7 @@ export class UserService {
 
         const existingUser = await User.findOne({ $or: [{ username: username }, { mail: mail }] });
         if (existingUser) {
-            throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or email already exists');
+            throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or mail already exists');
         }
 
         const user = new User({
@@ -86,6 +86,19 @@ export class UserService {
 
     async updateUser(userId: string, update: UpdateQuery<IUser>): Promise<IUser | null> {
         const userObjectId = new Types.ObjectId(userId);
+
+        if (update.username || update.mail) {
+            const existingUser = await User.findOne({
+                $or: [{ username: update.username }, { mail: update.mail }],
+                _id: { $ne: userObjectId }, // Exclude the current user
+            });
+
+            // If a user with the same username or mail exists, throw an error
+            if (existingUser) {
+                throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or mail already exists');
+            }
+        }
+
         const updatedUser = await User.findByIdAndUpdate(userObjectId, update, { new: true });
         return updatedUser;
     }

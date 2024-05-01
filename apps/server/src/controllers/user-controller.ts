@@ -6,6 +6,7 @@ import { UserService } from '../services/user-service';
 import { AbstractController } from './abstract-controller';
 import { AuthRequest, auth } from '../middleware/auth';
 import { HttpException } from '../models/http-exception';
+import { IUser } from 'src/models/user';
 
 @singleton()
 export class UserController extends AbstractController {
@@ -116,6 +117,19 @@ export class UserController extends AbstractController {
                     res.status(StatusCodes.OK).send(await this.userService.getUserProfile(req.body.otherUserId));
                 } catch (error) {
                     next(error);
+                }
+            },
+        );
+
+        router.post(
+            '/user/update',
+            auth,
+            async (req: AuthRequest<object, IUser>, res: Response, next: NextFunction) => {
+                try {
+                    console.log(req.user?._id);
+                    res.status(StatusCodes.OK).send(await this.userService.updateUser(req.user?._id, req.body));
+                } catch (e) {
+                    next(e);
                 }
             },
         );
