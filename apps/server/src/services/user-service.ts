@@ -1,15 +1,12 @@
 import User, { IUser, IUserCreation } from '../models/user';
 import { Post } from '../models/post';
 import { singleton } from 'tsyringe';
-import { DatabaseService } from './database-service/database-service';
 import { StatusCodes } from 'http-status-codes';
 import { HttpException } from '../models/http-exception';
 import mongoose, { Document, Types, UpdateQuery } from 'mongoose';
 
 @singleton()
 export class UserService {
-    constructor(private readonly databaseService: DatabaseService) {}
-
     async getUser(userId: Types.ObjectId | string): Promise<IUser> {
         const user = await User.findById(userId);
 
