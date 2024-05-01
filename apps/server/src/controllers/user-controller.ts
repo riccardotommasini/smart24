@@ -81,16 +81,12 @@ export class UserController extends AbstractController {
             },
         );
 
-        router.post(
-            '/user/update',
-            auth,
-            async (req: AuthRequest<object, IUser>, res: Response, next: NextFunction) => {
-                try {
-                    res.status(StatusCodes.OK).send(await this.userService.updateUser(req.user?._id, req.body));
-                } catch (e) {
-                    next(e);
-                }
-            },
-        );
+        router.post('/update', auth, async (req: AuthRequest<object, IUser>, res: Response, next: NextFunction) => {
+            try {
+                res.status(StatusCodes.OK).send(await this.userService.updateUser(req.user?._id, req.body));
+            } catch (e) {
+                next(e);
+            }
+        });
     }
 }
