@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@types/luxon": "^3.4.2",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^20.12.7"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  }
+}

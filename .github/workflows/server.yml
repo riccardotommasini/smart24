@@ -4,7 +4,6 @@ on:
   pull_request:
     paths:
       - apps/server/**
-      - packages/common/**
       - .github/workflows/server.yml
   workflow_dispatch:
 

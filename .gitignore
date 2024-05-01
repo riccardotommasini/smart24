@@ -6,9 +6,12 @@ coverage
 junit.xml
 globalConfig.json
 
+# Python
+.venv
+__pycache__
+
 # DB
-data/**
-!data/.gitkeep
+data
 
 # Environment
 .env
@@ -19,3 +22,5 @@ data/**
 
 # Others
 .DS_Store
+
+curl.txt
