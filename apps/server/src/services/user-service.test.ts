@@ -1,9 +1,9 @@
+import mongoose, { Document, Types } from 'mongoose';
 import { container } from 'tsyringe';
-import { UserService } from './user-service';
-import mongoose, { Types, Document } from 'mongoose';
 import User, { IUser } from '../models/user';
 import { DatabaseService } from './database-service/database-service';
 import { PostService } from './post-service/post-service';
+import { UserService } from './user-service';
 
 const DEFAULT_USER = {
     username: 'joe',
@@ -307,8 +307,8 @@ describe('UserService', () => {
             });
 
             expect(updated).toBeDefined();
-            expect(updated.username).toEqual('newusername');
-            expect(updated.mail).toEqual('newmail');
+            expect(updated?.username).toEqual('newusername');
+            expect(updated?.mail).toEqual('newmail');
         });
 
         it('should not update username if already exists', async () => {
@@ -344,10 +344,10 @@ describe('UserService', () => {
             });
 
             expect(updated).toBeDefined();
-            expect(updated.passwordHash).toEqual(user.passwordHash);
+            expect(updated?.passwordHash).toEqual(user.passwordHash);
         });
 
-        it('should not add a new field if the field is not in the interface definition', async ()=>{
+        it('should not add a new field if the field is not in the interface definition', async () => {
             const updated = await userService.updateUser(user._id.toString(), {
                 username: 'newusername',
                 mail: 'newmail',
@@ -356,8 +356,21 @@ describe('UserService', () => {
             });
 
             expect(updated).toBeDefined();
-            expect(updated.newField).toBeUndefined();
-            expect(updated.username).toEqual('newusername');
+            expect(updated?.newField).toBeUndefined();
+            expect(updated?.username).toEqual('newusername');
+        });
+
+        it('should update parameters', async () => {
+            const updated = await userService.updateUser(user._id.toString(), {
+                parameters: {
+                    rateFactChecked: 5,
+                    rateDiversification: 19,
+                },
+            });
+
+            expect(updated).toBeDefined();
+            expect(updated?.parameters.rateFactChecked).toEqual(5);
+            expect(updated?.parameters.rateDiversification).toEqual(19);
         });
     });
 });
