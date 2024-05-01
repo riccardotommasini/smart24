@@ -25,11 +25,10 @@ export class UserController extends AbstractController {
         router.post('/user/trustUser', auth, (req : AuthRequest, res, next) => {
 
             //unfold parameters
-            let userId;
             if (!req.user) {
                 return;
             }
-            userId = req.user._id;
+            const userId = req.user._id;
             const otherUserId = req.body.otherUserId;
 
             try {
@@ -38,39 +37,38 @@ export class UserController extends AbstractController {
             } catch(error) {
                 next();
             }
-        })
+        });
 
         router.post('/user/untrustUser', auth, (req : AuthRequest, res, next) => {
 
             //unfold parameters
-            let userId;
             if (!req.user) {
                 return;
             }
-            userId = req.user._id;
+            const userId = req.user._id;
             const otherUserId = req.body.otherUserId;
 
             try {
-                this.userService.user_untrustUser_post(userId, otherUserId)
-                res.status(StatusCodes.OK).send()
+                this.userService.user_untrustUser_post(userId, otherUserId);
+                res.status(StatusCodes.OK).send();
             } catch(error) {
                 next();
             }
             
-        })
+        });
 
         router.post('/user/visitUserProfile', auth, (req : AuthRequest, res, next) => {
 
             const otherUserId = req.body.otherUserId;
 
             try {
-                this.userService.user_visitUserProfile_post(otherUserId)
-                res.status(StatusCodes.OK).send()
+                this.userService.user_visitUserProfile_post(otherUserId);
+                res.status(StatusCodes.OK).send();
             } catch(error) {
                 next();
             }
             
-        })
+        });
       
         router.post(
             '/user/create',
