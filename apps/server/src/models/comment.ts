@@ -1,12 +1,12 @@
-import { Schema } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 import { Post, IPost, ICreatePost } from './post';
 
 export interface ICreateComment extends ICreatePost {
-    parentPostId: { type: Schema.Types.ObjectId; ref: 'Post' };
+    parentPostId: Types.ObjectId;
 }
 
 export interface IComment extends IPost {
-    parentPostId: { type: Schema.Types.ObjectId; ref: 'Post' };
+    parentPostId: Types.ObjectId;
 }
 
 export const CommentSchema = new Schema<IComment>({
