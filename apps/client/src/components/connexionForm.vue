@@ -12,7 +12,6 @@ const password = ref('');
 
 async function login() {
     const res = await tokenStore.login({username : username.value, password : password.value});
-    console.log(res);
     userInfoStore.update(res.data.user);
     window.location.href = '/homepage';
 }
@@ -38,15 +37,5 @@ async function login() {
         </form>
     </div>
 
-
-</template>
-<script>
-    import '../assets/HomeView.css'
-    import '../assets/main.css'
-</script>
-
-<template>
-
-    <h1 class="std title1 laila">Connexion</h1>
 
 </template>

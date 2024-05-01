@@ -5,6 +5,9 @@ import { StatusCodes } from 'http-status-codes';
 import { HttpException } from '../models/http-exception';
 import { Document, UpdateQuery } from 'mongoose';
 import { NonStrictObjectId } from 'src/utils/objectid';
+import bcryptjs from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { env } from '../utils/env'
 
 @singleton()
 export class UserService {
@@ -38,23 +41,9 @@ export class UserService {
         }
     }
 
-    async signup(
-        username: string,
-        mail: string,
-        password: string,
-        name?: string,
-        surname?: string,
-        birthday?: Date,
-        factChecker?: boolean,
-        organization?: string,
-    ): Promise<IUser & Document> {
-        if (!factChecker && organization) {
-            throw new HttpException(StatusCodes.BAD_REQUEST, 'organization must be empty for non-fact-checkers');
-        } else if (factChecker && !organization) {
-            throw new HttpException(StatusCodes.BAD_REQUEST, 'organization must be provided for fact-checker');
-        }
+    async createUser(user: IUserCreation): Promise<IUser & Document> {
+        const existingUser = await User.findOne({ $or: [{ username: user.username }, { mail: user.mail }] });
 
-        const existingUser = await User.findOne({ $or: [{ username: username }, { mail: mail }] });
         if (existingUser) {
             throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or email already exists');
         }

@@ -15,7 +15,6 @@ export const useUserInfoStore = defineStore({
         localStorage.setItem('surname', userInfo.surname);
         this.name = userInfo.name;
         localStorage.setItem('name', userInfo.name);
-        console.log('user : ' + this.username + ' name : ' + this.name + ' surname : ' + this.surname);
     }
   },
   getters : {
