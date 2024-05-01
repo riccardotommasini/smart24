@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import { singleton } from 'tsyringe';
 import { UserService } from '../services/user-service';
 import { AbstractController } from './abstract-controller';
-import { MetricsService } from '../services/metrics-service';
+import { MetricsService } from '../services/metrics-service/metrics-service';
 import { auth, AuthRequest } from '../middleware/auth';
 import { HttpException } from '../models/http-exception';
 

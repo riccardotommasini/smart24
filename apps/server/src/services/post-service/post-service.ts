@@ -1,18 +1,16 @@
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 import { singleton } from 'tsyringe';
 import { Metrics } from '../../models/metrics';
 import { ICreatePost, IPost, Post } from '../../models/post';
 import { UserService } from '../user-service';
-import { HttpException } from '../../models/http-exception';
-import { StatusCodes } from 'http-status-codes';
+import { NonStrictObjectId } from '../../utils/objectid';
 
 @singleton()
 export class PostService {
     constructor(private readonly userService: UserService) {}
 
-    async publishPost(userId: string, newPost: ICreatePost): Promise<Document & IPost> {
-        const userObjectId = new Types.ObjectId(userId);
-        await this.userService.getUser(userObjectId);
+    async publishPost(userId: NonStrictObjectId, newPost: ICreatePost): Promise<Document & IPost> {
+        await this.userService.getUser(userId);
 
         const metrics = new Metrics({});
         await metrics.save();
@@ -20,7 +18,7 @@ export class PostService {
         const post = new Post({
             text: newPost.text,
             image: newPost.image,
-            createdBy: userObjectId,
+            createdBy: userId,
             metrics: metrics._id,
         });
 
@@ -29,9 +27,8 @@ export class PostService {
         return post;
     }
 
-    async getPost(postId: string): Promise<Document & IPost> {
-        const postIdObject = new Types.ObjectId(postId);
-        const post = await Post.findOne({ _id: postIdObject });
+    async getPost(postId: NonStrictObjectId): Promise<Document & IPost> {
+        const post = await Post.findOne({ _id: postId });
 
         if (!post) {
             throw new Error(`No post found with ID ${postId}`);
@@ -39,13 +36,8 @@ export class PostService {
 
         return post;
     }
-    async getMetricsId(postId: Types.ObjectId): Promise<string> {
-        const post = await Post.findById(postId);
 
-        if (!post) {
-            throw new HttpException(StatusCodes.NOT_FOUND, `No post found with ID ${postId}`);
-        }
-
-        return post.metrics.toString();
+    async getMetricsId(postId: NonStrictObjectId): Promise<string> {
+        return (await this.getPost(postId)).metrics.toString();
     }
 }

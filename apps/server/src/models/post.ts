@@ -13,8 +13,8 @@ export interface IPost extends ICreatePost {
     text: string;
     date: DateTime;
     image?: string;
-    createdBy: Schema.Types.ObjectId;
-    metrics: Schema.Types.ObjectId;
+    createdBy: mongoose.Types.ObjectId;
+    metrics: mongoose.Types.ObjectId;
 }
 
 const PostSchema = new Schema<IPost>(

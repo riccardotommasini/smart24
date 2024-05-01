@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { singleton } from 'tsyringe';
 import { AbstractController } from './abstract-controller';
-import { MetricsService } from '../services/metrics-service';
+import { MetricsService } from '../services/metrics-service/metrics-service';
 import { StatusCodes } from 'http-status-codes';
 // import { body } from 'express-validator';
 import { AuthRequest, auth } from '../middleware/auth';
