@@ -4,7 +4,6 @@ import sinon from 'sinon';
 import { container } from 'tsyringe';
 import { Application } from '../../app';
 import { StatusCodes } from 'http-status-codes';
-import { PostService } from '../../services/post-service/post-service';
 import { ICreatePost } from '../../models/post';
 import User, { IUser } from '../../models/user';
 import { Document } from 'mongoose';
@@ -16,14 +15,11 @@ const DEFAULT_CREATE_POST: ICreatePost = {
 
 describe('PostController', () => {
     let app: Application;
-    let postService: PostService;
     let user: IUser & Document;
     let token: string;
 
     beforeEach(async () => {
         app = container.resolve(Application);
-        postService = container.resolve(PostService);
-
         await app.init();
     });
 
@@ -48,20 +44,18 @@ describe('PostController', () => {
 
     describe('POST /post', () => {
         it('should call publishPost', () => {
-            const mock = sinon.mock(postService);
-            mock.expects('publishPost').once();
-
             return request(app['app'])
                 .post('/posts')
                 .send(DEFAULT_CREATE_POST)
                 .set('Authorization', 'Bearer ' + token)
                 .expect(StatusCodes.CREATED)
-                .then(() => mock.verify());
+                .then((res) => {
+                    expect(res.body.text).toEqual(DEFAULT_CREATE_POST.text);
+                    expect(res.body.createdBy).toEqual(user._id.toString());
+                });
         });
 
         it('should not create if body has no text', () => {
-            sinon.mock(postService);
-
             return request(app['app'])
                 .post('/posts')
                 .send({})
