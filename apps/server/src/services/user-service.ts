@@ -25,6 +25,7 @@ export class UserService {
 
     public async login(username: string, password: string) {
         const foundUser = await User.findOne({ username });
+        console.log(foundUser);
 
         if (!foundUser) {
             throw new Error('UserName of user is not correct');
@@ -37,7 +38,7 @@ export class UserService {
                 expiresIn: '2 days',
             });
 
-            return { user: { mail: foundUser.mail, username: foundUser.username }, token: token };
+            return { user: { name: foundUser.name, surname: foundUser.surname, username: foundUser.username }, token: token };
         } else {
             throw new Error('Password is not correct');
         }
