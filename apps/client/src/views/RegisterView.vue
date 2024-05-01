@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 
 import slogan from '../components/slogan.vue';
-import connexionForm from '../components/connexionForm.vue';
+import registerForm from '../components/registerForm.vue';
 import '../assets/HomeView.css'
 
 </script>
@@ -9,10 +9,15 @@ import '../assets/HomeView.css'
 <template>
   
   <slogan/>
-  <connexionForm/>
+  <registerForm/>
 
 </template>
 
 <style scoped>
 
 </style>
+  
+ 
+  
+  
+  
