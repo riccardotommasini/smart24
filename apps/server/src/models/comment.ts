@@ -1,8 +1,16 @@
-import { Schema } from 'mongoose';
-import { Post } from './post';
+import { Schema, Types } from 'mongoose';
+import { Post, IPost, ICreatePost } from './post';
 
-const CommentSchema = new Schema({
-    post: { type: Schema.Types.ObjectId, ref: 'Post' }, // reference to the associated post
+export interface ICreateComment extends ICreatePost {
+    parentPostId: Types.ObjectId;
+}
+
+export interface IComment extends IPost {
+    parentPostId: Types.ObjectId;
+}
+
+export const CommentSchema = new Schema<IComment>({
+    parentPostId: { type: Schema.Types.ObjectId, ref: 'Post' },
 });
 
 // Create a Comment model that inherits from Post

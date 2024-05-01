@@ -8,8 +8,8 @@ import { ICreateFactCheck } from '../../models/FactCheck';
 import User, { IUser } from '../../models/user';
 import { Post, IPost } from '../../models/post';
 import { Metrics, IMetrics } from '../../models/metrics';
-import { FactCheckService } from '../../services/factCheck-service';
-import { UserService } from '../../services/user-service';
+import { AuthService } from '../../services/auth-service/auth-service';
+import { FactCheckService } from '../../services/factCheck-service/factCheck-service';
 
 const DEFAULT_CREATE_FACTCHECK: ICreateFactCheck = {
     comment: 'This is my fact check!',
@@ -44,8 +44,8 @@ describe('FactCheckController', () => {
         });
 
         await user.save();
-        console.log('User saved');
-        token = (await container.resolve(UserService).login(username, passwordHash)).token;
+
+        token = (await container.resolve(AuthService).login(username, passwordHash)).token;
 
         metrics = new Metrics({});
         await metrics.save();
@@ -62,7 +62,6 @@ describe('FactCheckController', () => {
 
     afterEach(async () => {
         await mongoose.connection.db.dropDatabase();
-        console.log('DB dropped');
         sinon.restore();
     });
 
@@ -70,7 +69,6 @@ describe('FactCheckController', () => {
         it('should call createAssignFactCheck', () => {
             const mock = sinon.mock(factCheckService);
             mock.expects('createAssignFactCheck').once();
-            console.log('token = ', token);
             return request(app['app'])
                 .post('/factCheck/create')
                 .send(DEFAULT_CREATE_FACTCHECK)

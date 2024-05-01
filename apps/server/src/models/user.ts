@@ -19,6 +19,13 @@ export interface IUser extends Document {
     parameters: { globalTrust: boolean; rateFactChecked: number; diversification: number };
 }
 
+export type IUserCreation = Pick<IUser, 'username' | 'mail'> & { password: string } & Partial<IUser>;
+
+export interface IUserSession {
+    user: Pick<IUser, 'mail' | 'username'> & { _id: string };
+    token: string;
+}
+
 const UserSchema: Schema<IUser> = new Schema<IUser>({
     name: { type: String, required: false, maxlength: 100 },
     surname: { type: String, required: false, maxlength: 100 },
