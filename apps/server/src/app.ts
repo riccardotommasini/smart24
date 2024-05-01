@@ -6,6 +6,7 @@ import { errorHandler } from './middleware/error-handler';
 import { DatabaseService } from './services/database-service/database-service';
 import { UserController } from './controllers/user-controller';
 import { PostController } from './controllers/post-controller/post-controller';
+import { FactCheckerController } from './controllers/factCheck-controller/factCheck-controller';
 
 @singleton()
 export class Application {
@@ -14,6 +15,7 @@ export class Application {
     constructor(
         private userController: UserController,
         private postController: PostController,
+        private factCheckerController: FactCheckerController,
         private readonly databaseService: DatabaseService,
     ) {
         this.app = express();
@@ -44,6 +46,7 @@ export class Application {
     private configureRoutes(): void {
         this.userController.use(this.app);
         this.postController.use(this.app);
+        this.factCheckerController.use(this.app);
 
         this.app.use('**', (req, res, next) => {
             next(new HttpException(404, `${req.method} ${req.url} not found`));

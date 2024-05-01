@@ -7,7 +7,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcryptjs from 'bcryptjs';
 import { env } from '../utils/env';
 import { HttpException } from '../models/http-exception';
-import mongoose, { Document, Types } from 'mongoose';
+import mongoose, { Document, Types, UpdateQuery } from 'mongoose';
 
 @singleton()
 export class UserService {
@@ -82,6 +82,12 @@ export class UserService {
             console.error(error);
             throw new HttpException(StatusCodes.INTERNAL_SERVER_ERROR, 'Error saving user');
         }
+    }
+
+    async updateUser(userId: string, update: UpdateQuery<IUser>): Promise<IUser | null> {
+        const userObjectId = new Types.ObjectId(userId);
+        const updatedUser = await User.findByIdAndUpdate(userObjectId, update, { new: true });
+        return updatedUser;
     }
 
     public async loadSession(token: string): Promise<[user: IUser & Document, decoded: JwtPayload]> {
