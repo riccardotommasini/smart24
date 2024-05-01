@@ -1,10 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
 
 export interface UpdateMetrics {
-    likedBy?: string[];
-    dislikedBy?: string[];
-    trustedBy?: string[];
-    untrustedBy?: string[];
+    likedBy?: mongoose.Types.ObjectId[];
+    dislikedBy?: mongoose.Types.ObjectId[];
+    trustedBy?: mongoose.Types.ObjectId[];
+    untrustedBy?: mongoose.Types.ObjectId[];
 }
 
 export interface IMetrics {
@@ -13,12 +13,13 @@ export interface IMetrics {
     nbTrusts: number;
     nbUntrusts: number;
     nbComments: number;
-    likedBy: string[];
-    dislikedBy: string[];
-    trustedBy: string[];
-    untrustedBy: string[];
-    sharedBy: string[];
-    factCheckedBy: string[];
+    nbFactChecks: number;
+    likedBy: mongoose.Types.ObjectId[];
+    dislikedBy: mongoose.Types.ObjectId[];
+    trustedBy: mongoose.Types.ObjectId[];
+    untrustedBy: mongoose.Types.ObjectId[];
+    sharedBy: mongoose.Types.ObjectId[];
+    factChecks: mongoose.Types.ObjectId[];
 }
 
 const MetricsSchema = new Schema<IMetrics>({
@@ -27,12 +28,12 @@ const MetricsSchema = new Schema<IMetrics>({
     nbTrusts: { type: Number, required: false, default: 0 },
     nbUntrusts: { type: Number, required: false, default: 0 },
     nbComments: { type: Number, required: false, default: 0 },
-    likedBy: [{ type: String, ref: 'User' }],
-    dislikedBy: [{ type: String, ref: 'User' }],
-    trustedBy: [{ type: String, ref: 'User' }],
-    untrustedBy: [{ type: String, ref: 'User' }],
-    sharedBy: [{ type: String, ref: 'User' }],
-    factCheckedBy: [{ type: String, ref: 'FactCheck' }],
+    nbFactChecks: { type: Number, required: false, default: 0 },
+    likedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    dislikedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    trustedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    untrustedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    sharedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    factChecks: [{ type: Schema.Types.ObjectId, ref: 'FactCheck' }],
 });
-
 export const Metrics = mongoose.model<IMetrics>('Metrics', MetricsSchema);

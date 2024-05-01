@@ -1,5 +1,5 @@
 import { singleton } from 'tsyringe';
-import { Types, Document, Schema, UpdateQuery } from 'mongoose';
+import mongoose, { Types, Document, Schema, UpdateQuery } from 'mongoose';
 import { Metrics, UpdateMetrics, IMetrics } from '../models/metrics';
 import { PostService } from './post-service/post-service';
 
@@ -31,16 +31,17 @@ export class MetricsService {
 
     async likePost(userId: string, postId: string): Promise<Document & UpdateMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
+        const userIdObject = new mongoose.Types.ObjectId(userId);
 
         if (!metrics) {
             const metric = new Metrics({
-                likedBy: [userId],
+                likedBy: [userIdObject],
                 nbLikes: 1,
             });
 
             await metric.save();
         } else {
-            metrics.likedBy.push(userId);
+            metrics.likedBy.push(userIdObject);
             metrics.nbLikes += 1;
             await metrics.save();
         }
@@ -49,16 +50,17 @@ export class MetricsService {
 
     async dislikePost(userId: string, postId: string): Promise<Document & UpdateMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
+        const userIdObject = new mongoose.Types.ObjectId(userId);
 
         if (!metrics) {
             const metric = new Metrics({
-                dislikedBy: [userId],
+                dislikedBy: [userIdObject],
                 nbDislikes: 1,
             });
 
             await metric.save();
         } else {
-            metrics.dislikedBy.push(userId);
+            metrics.dislikedBy.push(userIdObject);
             metrics.nbDislikes += 1;
             await metrics.save();
         }
@@ -67,16 +69,17 @@ export class MetricsService {
 
     async trustPost(userId: string, postId: string): Promise<Document & UpdateMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
+        const userIdObject = new mongoose.Types.ObjectId(userId);
 
         if (!metrics) {
             const metric = new Metrics({
-                trustedBy: [userId],
+                trustedBy: [userIdObject],
                 nbTrusts: 1,
             });
 
             await metric.save();
         } else {
-            metrics.trustedBy.push(userId);
+            metrics.trustedBy.push(userIdObject);
             metrics.nbTrusts += 1;
             await metrics.save();
         }
@@ -85,18 +88,24 @@ export class MetricsService {
 
     async untrustPost(userId: string, postId: string): Promise<Document & UpdateMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
+        const userIdObject = new mongoose.Types.ObjectId(userId);
 
         if (!metrics) {
             const metric = new Metrics({
-                untrustedBy: [userId],
+                untrustedBy: [userIdObject],
                 nbUntrusts: 1,
             });
 
             await metric.save();
         } else {
-            metrics.untrustedBy.push(userId);
-            metrics.nbUntrusts += 1;
-            await metrics.save();
+            await Metrics.updateOne(
+                { _id: metrics._id },
+                { $push: { untrustedBy: userIdObject }, $inc: { nbUntrusts: 1 } },
+            );
+
+            // metrics.untrustedBy.push(userIdObject);
+            // metrics.nbUntrusts += 1;
+            // await metrics.save();
         }
         return metrics;
     }
