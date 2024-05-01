@@ -67,4 +67,18 @@ export class MetricsService {
         await (await this.findMetrics(metricsId)).updateOne(update);
         return this.findMetrics(metricsId);
     }
+
+    async getNbLikesPost(postId: NonStrictObjectId): Promise<number> {
+        return (await this.getMetricsByPostId(postId)).nbLikes;
+    }
+
+    async getNbDislikesPost(postId: NonStrictObjectId): Promise<number> {
+        return (await this.getMetricsByPostId(postId)).nbDislikes;
+    }
+
+    async getNbCommentsPost(postId: NonStrictObjectId): Promise<number> {
+        return (await this.getMetricsByPostId(postId)).nbComments;
+    }
+
+    
 }

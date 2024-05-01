@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import PageAccueil from '../views/PageAccueil.vue'
+import RegisterView from '../views/RegisterView.vue'
+import Feed from '../components/common/feed.vue'
 
 
 const router = createRouter({
@@ -17,9 +19,13 @@ const router = createRouter({
       component : PageAccueil
     },
     {
-      path: '/Register',
+      path: '/register',
       name: 'register',
       component: RegisterView
+    },{
+      path: '/feed',
+      name: 'feed',
+      component: Feed
     }
   ]
 })
