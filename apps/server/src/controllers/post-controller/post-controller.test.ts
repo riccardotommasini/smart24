@@ -68,6 +68,33 @@ describe('PostController', () => {
         });
     });
 
+    describe('GET /posts/:id', () => {
+        it('should get post', async () => {
+            const post = await request(app['app'])
+                .post('/posts')
+                .send(DEFAULT_CREATE_POST)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.CREATED)
+                .then((res) => res.body);
+
+            return request(app['app'])
+                .get(`/posts/${post._id}`)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.OK)
+                .then((res) => {
+                    expect(res.body.text).toEqual(DEFAULT_CREATE_POST.text);
+                    expect(res.body.createdBy).toEqual(user._id.toString());
+                });
+        });
+
+        it('should throw if post does not exists', async () => {
+            return request(app['app'])
+                .get(`/posts/${new mongoose.Types.ObjectId()}`)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.NOT_FOUND);
+        });
+    });
+
     describe('POST /post/comment', () => {
         it('should create comment', async () => {
             const post = new Post(DEFAULT_POST);

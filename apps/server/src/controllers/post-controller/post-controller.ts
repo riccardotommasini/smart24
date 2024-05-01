@@ -28,9 +28,7 @@ export class PostController extends AbstractController {
                         throw new HttpException(StatusCodes.BAD_REQUEST, 'Invalid request', errors);
                     }
 
-                    res.status(StatusCodes.CREATED).send(
-                        await this.postService.publishPost(req.user?._id ?? '', req.body),
-                    );
+                    res.status(StatusCodes.CREATED).send(await this.postService.publishPost(req.user!._id, req.body));
                 } catch (e) {
                     next(e);
                 }
@@ -50,7 +48,7 @@ export class PostController extends AbstractController {
                     }
 
                     res.status(StatusCodes.CREATED).send(
-                        await this.postService.publishComment(req.user?._id ?? '', req.body),
+                        await this.postService.publishComment(req.user!._id, req.body),
                     );
                 } catch (error) {
                     next(error);
@@ -58,11 +56,9 @@ export class PostController extends AbstractController {
             },
         );
 
-        router.get('/post/:id', auth, async (req: AuthRequest<{ id: string }>, res, next) => {
-            const postId = req.params.id;
+        router.get('/:id', auth, async (req: AuthRequest<{ id: string }>, res, next) => {
             try {
-                const post = await this.postService.getPost(postId);
-                return res.status(StatusCodes.OK).send(post);
+                return res.status(StatusCodes.OK).send(await this.postService.getPost(req.params.id));
             } catch (e) {
                 next(e);
             }

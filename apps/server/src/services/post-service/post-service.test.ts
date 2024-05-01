@@ -53,4 +53,60 @@ describe('PostService', () => {
             ).rejects.toBeDefined();
         });
     });
+
+    describe('publishComment', () => {
+        it('should publish comment', async () => {
+            const post = await postService.publishPost(user._id, DEFAULT_CREATE_POST);
+
+            const comment = await postService.publishComment(user._id, {
+                text: 'This is my comment',
+                parentPostId: post._id,
+            });
+
+            expect((await Post.findById(comment._id))?.text).toEqual('This is my comment');
+        });
+
+        it('should create corresponding metrics', async () => {
+            const post = await postService.publishPost(user._id, DEFAULT_CREATE_POST);
+
+            const comment = await postService.publishComment(user._id, {
+                text: 'This is my comment',
+                parentPostId: post._id,
+            });
+
+            expect(await Metrics.countDocuments({ _id: comment.metrics })).toEqual(1);
+        });
+
+        it('should not publish if user does not exists', async () => {
+            return expect(
+                postService.publishComment(new Types.ObjectId().toString(), {
+                    text: 'This is my comment',
+                    parentPostId: new Types.ObjectId(),
+                }),
+            ).rejects.toBeDefined();
+        });
+
+        it('should not publish if post does not exists', async () => {
+            return expect(
+                postService.publishComment(user._id, {
+                    text: 'This is my comment',
+                    parentPostId: new Types.ObjectId(),
+                }),
+            ).rejects.toBeDefined();
+        });
+    });
+
+    describe('getPost', () => {
+        it('should get post', async () => {
+            const post = await postService.publishPost(user._id, DEFAULT_CREATE_POST);
+
+            const foundPost = await postService.getPost(post._id);
+
+            expect(foundPost).toBeDefined();
+        });
+
+        it('should not get post if it does not exists', async () => {
+            return expect(postService.getPost(new Types.ObjectId())).rejects.toBeDefined();
+        });
+    });
 });
