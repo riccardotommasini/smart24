@@ -8,10 +8,10 @@ import { container } from 'tsyringe';
 import { UserService } from '../services/user-service';
 
 export interface AuthRequest<
-    Params extends object = object,
-    Body extends object = object,
-    Query extends object = object,
-> extends Request<Params, object, Body, Query> {
+    Params extends object = Record<any, any>,
+    Body extends object = Record<any, any>,
+    Query extends object = Record<any, any>,
+> extends Request<Params, any, Body, Query> {
     token?: string | JwtPayload;
     user?: IUser & Document;
 }

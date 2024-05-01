@@ -4,8 +4,8 @@ import { Post } from '../models/post';
 import { singleton } from 'tsyringe';
 import { DatabaseService } from './database-service/database-service';
 import { StatusCodes } from 'http-status-codes';
-import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import bcryptjs from 'bcryptjs';
 import { env } from '../utils/env';
 import { HttpException } from '../models/http-exception';
 import mongoose, { Document, Types } from 'mongoose';
@@ -37,7 +37,7 @@ export class UserService {
             throw new Error('UserName of user is not correct');
         }
 
-        const isMatch = bcrypt.compareSync(password, foundUser.passwordHash);
+        const isMatch = bcryptjs.compareSync(password, foundUser.passwordHash);
 
         if (isMatch) {
             const token = jwt.sign({ _id: foundUser._id?.toString(), name: foundUser.name }, env.SECRET_KEY, {

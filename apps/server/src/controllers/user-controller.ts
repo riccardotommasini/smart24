@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import { singleton } from 'tsyringe';
 import { UserService } from '../services/user-service';
 import { AbstractController } from './abstract-controller';
+import { AuthRequest, auth } from '../middleware/auth';
 
 @singleton()
 export class UserController extends AbstractController {
@@ -21,10 +22,13 @@ export class UserController extends AbstractController {
             }
         });
 
-        router.post('/user/trustUser', (req, res, next) => {
+        router.post('/user/trustUser', auth, (req: AuthRequest, res, next) => {
             //unfold parameters
-            const userId = '6630e8211bad35dff50ccc85';
-            const otherUserId = '6630be9d130907c60efc4aaa';
+            if (!req.user) {
+                return;
+            }
+            const userId = req.user._id;
+            const otherUserId = req.body.otherUserId;
 
             try {
                 this.userService.user_trustUser_post(userId, otherUserId);
@@ -34,9 +38,14 @@ export class UserController extends AbstractController {
             }
         });
 
-        router.post('/user/untrustUser', (req, res, next) => {
-            const userId = '6630e8211bad35dff50ccc85';
-            const otherUserId = '6630be9d130907c60efc4aaa';
+        router.post('/user/untrustUser', auth, (req: AuthRequest, res, next) => {
+            //unfold parameters
+            if (!req.user) {
+                return;
+            }
+            const userId = req.user._id;
+            const otherUserId = req.body.otherUserId;
+
             try {
                 this.userService.user_untrustUser_post(userId, otherUserId);
                 res.status(StatusCodes.OK).send();
@@ -45,8 +54,9 @@ export class UserController extends AbstractController {
             }
         });
 
-        router.post('/user/visitUserProfile', (req, res, next) => {
-            const otherUserId = '6630f07c080932226bb2612a';
+        router.post('/user/visitUserProfile', auth, (req: AuthRequest, res, next) => {
+            const otherUserId = req.body.otherUserId;
+
             try {
                 this.userService.user_visitUserProfile_post(otherUserId);
                 res.status(StatusCodes.OK).send();
@@ -60,7 +70,7 @@ export class UserController extends AbstractController {
             body('username').trim().notEmpty().withMessage('Username is required'),
             body('mail').trim().isEmail().withMessage('Invalid email'),
             body('password').trim().isLength({ min: 5 }).withMessage('Password must be at least 5 characters long'),
-            async (req, res, next) => {
+            async (req: AuthRequest, res, next) => {
                 const errors = validationResult(req);
                 if (!errors.isEmpty()) {
                     return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });

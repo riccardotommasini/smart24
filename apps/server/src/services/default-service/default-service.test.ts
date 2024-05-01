@@ -1,5 +1,6 @@
 import { container } from 'tsyringe';
 import { DefaultService } from './default-service';
+import { describe, beforeEach, it } from 'node:test';
 
 describe('DefaultService', () => {
     let defaultService: DefaultService;
