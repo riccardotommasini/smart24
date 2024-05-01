@@ -44,7 +44,6 @@ describe('FactCheckController', () => {
         });
 
         await user.save();
-        console.log('User saved');
         token = (await container.resolve(UserService).login(username, passwordHash)).token;
 
         metrics = new Metrics({});
@@ -62,7 +61,6 @@ describe('FactCheckController', () => {
 
     afterEach(async () => {
         await mongoose.connection.db.dropDatabase();
-        console.log('DB dropped');
         sinon.restore();
     });
 
@@ -70,7 +68,6 @@ describe('FactCheckController', () => {
         it('should call createAssignFactCheck', () => {
             const mock = sinon.mock(factCheckService);
             mock.expects('createAssignFactCheck').once();
-            console.log('token = ', token);
             return request(app['app'])
                 .post('/factCheck/create')
                 .send(DEFAULT_CREATE_FACTCHECK)
