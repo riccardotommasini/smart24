@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 
 import slogan from '../components/slogan.vue';
 import connexionForm from '../components/connexionForm.vue';

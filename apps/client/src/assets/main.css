@@ -9,3 +9,13 @@
 .std.title1 {
   font-weight: 700;
 }
+
+.std.title2 {
+  font-size: x-large;
+  font-weight: 500;
+}
+
+.std.title3 {
+  font-size: larger;
+  font-weight: 300;
+}
