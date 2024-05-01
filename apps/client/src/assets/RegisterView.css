@@ -1,0 +1,104 @@
+.slogan{
+    width: 50%;
+    height:100vh;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.div-h1{
+    font-size: 5rem;
+    font-weight: 700;
+}
+
+.div-p{
+    margin-top: 6vh;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+
+.laila{
+    font-family: "Laila", serif;
+    font-style: normal;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    width:30% !important;
+    margin-right: 10vh !important;
+    margin-left: 10vh !important;
+    height: 70%;
+    background-color: white;
+    border-radius: 15px;
+}
+
+.login-form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10%;
+}
+
+.input-field {
+    width: 97%;
+    height: 10%;
+    margin-bottom: 7%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.line-container {
+    display: flex;
+    align-items: center;
+    width: 75%;
+    margin-bottom: 7%;
+}
+
+.line {
+    flex-grow: 1;
+    height: 0.1vh;
+    background-color: black;
+}
+
+.circle {
+    width: 3vh;
+    height: 3vh;
+    margin-right:1vh;
+    margin-left: 1vh;
+    background-color: black;
+    border-radius: 50%; /* Rend le div en forme de cercle */
+}
+
+
+.forgot-password {
+    font-family: 'inter', sans-serif;
+    margin-bottom: 7%;
+    font-size:0.8rem;
+    color: black;
+    text-decoration: underline;
+}
+.login-button {
+    width: 70%;
+    height: 15%;
+    background-color: #4B4B54;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 7%;
+    font-family: 'inter', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #333;
+}
