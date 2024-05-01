@@ -4,12 +4,16 @@ import { StatusCodes } from 'http-status-codes';
 import { singleton } from 'tsyringe';
 import { UserService } from '../services/user-service';
 import { AbstractController } from './abstract-controller';
-import { AuthRequest, auth } from '../middleware/auth';
+import { MetricsService } from '../services/metrics-service';
+import { auth, AuthRequest } from '../middleware/auth';
 import { HttpException } from '../models/http-exception';
 
 @singleton()
 export class UserController extends AbstractController {
-    constructor(private readonly userService: UserService) {
+    constructor(
+        private readonly userService: UserService,
+        private readonly metricsService: MetricsService,
+    ) {
         super({ basePath: '/user' });
     }
 
@@ -34,6 +38,102 @@ export class UserController extends AbstractController {
                     res.status(StatusCodes.OK).send(await this.userService.getUserProfile(req.params.userId));
                 } catch (error) {
                     next(error);
+                }
+            },
+        );
+
+        router.post(
+            '/likepost',
+            body('userId').trim().notEmpty(),
+            body('postId').trim().notEmpty(),
+            auth,
+            async (req, res, next) => {
+                const errors = validationResult(req);
+                const userId = req.body.userId;
+                const postId = req.body.postId;
+                if (!errors.isEmpty()) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+                }
+                try {
+                    const updatedMetrics = await this.metricsService.likePost(userId, postId);
+                    if (!updatedMetrics) {
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
+                    }
+                    res.json(updatedMetrics);
+                } catch (e) {
+                    next(e);
+                }
+            },
+        );
+
+        router.post(
+            '/dislikepost',
+            body('userId').trim().notEmpty(),
+            body('postId').trim().notEmpty(),
+            auth,
+            async (req, res, next) => {
+                const errors = validationResult(req);
+                const userId = req.body.userId;
+                const postId = req.body.postId;
+                if (!errors.isEmpty()) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+                }
+                try {
+                    const updatedMetrics = await this.metricsService.dislikePost(userId, postId);
+                    if (!updatedMetrics) {
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
+                    }
+                    res.json(updatedMetrics);
+                } catch (e) {
+                    next(e);
+                }
+            },
+        );
+
+        router.post(
+            '/trustpost',
+            body('userId').trim().notEmpty(),
+            body('postId').trim().notEmpty(),
+            auth,
+            async (req, res, next) => {
+                const errors = validationResult(req);
+                const userId = req.body.userId;
+                const postId = req.body.postId;
+                if (!errors.isEmpty()) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+                }
+                try {
+                    const updatedMetrics = await this.metricsService.trustPost(userId, postId);
+                    if (!updatedMetrics) {
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
+                    }
+                    res.json(updatedMetrics);
+                } catch (e) {
+                    next(e);
+                }
+            },
+        );
+
+        router.post(
+            '/untrustpost',
+            body('userId').trim().notEmpty(),
+            body('postId').trim().notEmpty(),
+            auth,
+            async (req: AuthRequest, res: Response, next: NextFunction) => {
+                const errors = validationResult(req);
+                const userId = req.body.userId;
+                const postId = req.body.postId;
+                if (!errors.isEmpty()) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+                }
+                try {
+                    const updatedMetrics = await this.metricsService.untrustPost(userId, postId);
+                    if (!updatedMetrics) {
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
+                    }
+                    res.json(updatedMetrics);
+                } catch (e) {
+                    next(e);
                 }
             },
         );

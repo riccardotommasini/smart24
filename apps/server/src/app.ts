@@ -6,6 +6,7 @@ import { errorHandler } from './middleware/error-handler';
 import { DatabaseService } from './services/database-service/database-service';
 import { UserController } from './controllers/user-controller';
 import { PostController } from './controllers/post-controller/post-controller';
+import { MetricsController } from './controllers/metrics-controller';
 import { FactCheckerController } from './controllers/factCheck-controller/factCheck-controller';
 import { AuthController } from './controllers/auth-controller/auth-controller';
 
@@ -17,6 +18,7 @@ export class Application {
         private userController: UserController,
         private authController: AuthController,
         private postController: PostController,
+        private metricsController: MetricsController,
         private factCheckerController: FactCheckerController,
         private readonly databaseService: DatabaseService,
     ) {
@@ -49,6 +51,7 @@ export class Application {
         this.userController.use(this.app);
         this.authController.use(this.app);
         this.postController.use(this.app);
+        this.metricsController.use(this.app);
         this.factCheckerController.use(this.app);
 
         this.app.use('**', (req, res, next) => {

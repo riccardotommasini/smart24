@@ -1,5 +1,12 @@
 import mongoose, { Schema } from 'mongoose';
 
+export interface UpdateMetrics {
+    likedBy?: mongoose.Types.ObjectId[];
+    dislikedBy?: mongoose.Types.ObjectId[];
+    trustedBy?: mongoose.Types.ObjectId[];
+    untrustedBy?: mongoose.Types.ObjectId[];
+}
+
 export interface IMetrics {
     nbLikes: number;
     nbDislikes: number;
@@ -7,12 +14,12 @@ export interface IMetrics {
     nbUntrusts: number;
     nbComments: number;
     nbFactChecks: number;
-    likedBy: Schema.Types.ObjectId[];
-    dislikedBy: Schema.Types.ObjectId[];
-    trustedBy: Schema.Types.ObjectId[];
-    untrustedBy: Schema.Types.ObjectId[];
-    sharedBy: Schema.Types.ObjectId[];
-    factChecks: Schema.Types.ObjectId[];
+    likedBy: mongoose.Types.ObjectId[];
+    dislikedBy: mongoose.Types.ObjectId[];
+    trustedBy: mongoose.Types.ObjectId[];
+    untrustedBy: mongoose.Types.ObjectId[];
+    sharedBy: mongoose.Types.ObjectId[];
+    factChecks: mongoose.Types.ObjectId[];
 }
 
 const MetricsSchema = new Schema<IMetrics>({
@@ -29,5 +36,4 @@ const MetricsSchema = new Schema<IMetrics>({
     sharedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     factChecks: [{ type: Schema.Types.ObjectId, ref: 'FactCheck' }],
 });
-
 export const Metrics = mongoose.model<IMetrics>('Metrics', MetricsSchema);

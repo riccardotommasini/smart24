@@ -9,7 +9,7 @@ const props = defineProps([
 </script>
 
 <template>
-    <div class="bandeau">
+    <div class="bandeau-main">
         <div>
             <div class="logo-app">
                 <image href="../assets/logo_app"></image>
@@ -28,7 +28,7 @@ const props = defineProps([
 
 <style scoped>
 
-.bandeau {
+.bandeau-main {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
