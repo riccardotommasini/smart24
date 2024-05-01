@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vulgarisation sur la fonte des glaciers</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/menu.css') }}">
@@ -12,11 +13,17 @@
 </head>
 
 <body>
-  <div class="container">
-    <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+  <header>
     <h1>Titre de la page</h1>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="#section-1">Partie I</a></li>
+      <li><a href="#section-2">Partie II</a></li>
+      <li><a href="#section-3">Partie III</a></li>
+      <li><a href="#section-4">Partie IV</a></li>
+      <li><a href="#section-5">Partie V</a></li>
 
-    <div id=menu class="menu">
       <div class="options">
         <label class="temperature-option">
           <input type="radio" name="temperature" value="1.5" checked>
@@ -39,80 +46,217 @@
           <h4>4°C</h4>
         </label>
       </div>
-      <h4>Partie I</h4>
-      <h4>Partie II</h4>
-      <h4>Partie III</h4>
-      <h4>Partie IV</h4>
-      <h4>Partie V</h4>
-    </div>
+    </ul>
+  </nav>
 
-    <div id="parts-container">
-      <h2>Partie I</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
-        malesuada
-        libero massa, id mattis ligula aliquet non. Maecenas luctus quis erat at pulvinar. Mauris lacinia libero a felis
-        semper, condimentum pharetra nunc vehicula. Mauris vehicula imperdiet augue, in vestibulum orci pellentesque
-        eget.
-        Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
-        tincidunt
-        ut. </p>
-      <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
-      <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
-        ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur id
-        nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
-        maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
-        Integer
-        tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
-        non
-        rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
-      </p>
+  <div class="container">
+    <main>
+      <section class="section-container" id="section-1">
+        <h2>Partie I</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
+          malesuada
+          libero massa, id mattis ligula aliquet non. Maecenas luctus quis erat at pulvinar. Mauris lacinia libero a
+          felis
+          semper, condimentum pharetra nunc vehicula. Mauris vehicula imperdiet augue, in vestibulum orci pellentesque
+          eget.
+          Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
+          tincidunt
+          ut. </p>
+        <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+        <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
+          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur
+          id
+          nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
+          maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
+          Integer
+          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+          non
+          rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
+        </p>
 
-      <div id="evolution-container-1" class="anim-container">
-        <h3>Evolution de la mer de glace de 2010 à 2100 (+1.5°C)</h3>
-        {% include 'evolution_mer_de_glace_1_5.html' %}
-      </div>
-      <div id="evolution-container-2" class="anim-container">
-        <h3>Evolution de la mer de glace de 2010 à 2100 (+2°C)</h3>
-        {% include 'evolution_mer_de_glace_2.html' %}
-      </div>
-      <div id="evolution-container-3" class="anim-container">
-        <h3>Evolution de la mer de glace de 2010 à 2100 (+3°C)</h3>
-        {% include 'evolution_mer_de_glace_3.html' %}
-      </div>
-      <div id="evolution-container-4" class="anim-container">
-        <h3>Evolution de la mer de glace de 2010 à 2100 (+4°C)</h3>
-        {% include 'evolution_mer_de_glace_4.html' %}
-      </div>
+        <div id="evolution-container-1" class="anim-container">
+          <h3>Evolution de la mer de glace de 2010 à 2100 (+1.5°C)</h3>
+          {% include 'evolution_mer_de_glace_1_5.html' %}
+        </div>
+        <div id="evolution-container-2" class="anim-container">
+          <h3>Evolution de la mer de glace de 2010 à 2100 (+2°C)</h3>
+          {% include 'evolution_mer_de_glace_2.html' %}
+        </div>
+        <div id="evolution-container-3" class="anim-container">
+          <h3>Evolution de la mer de glace de 2010 à 2100 (+3°C)</h3>
+          {% include 'evolution_mer_de_glace_3.html' %}
+        </div>
+        <div id="evolution-container-4" class="anim-container">
+          <h3>Evolution de la mer de glace de 2010 à 2100 (+4°C)</h3>
+          {% include 'evolution_mer_de_glace_4.html' %}
+        </div>
+      </section>
 
       <br>
 
-      <h2>Partie II</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
-        malesuada
-        libero massa, id mattis ligula aliquet non. Maecenas luctus quis erat at pulvinar. Mauris lacinia libero a felis
-        semper, condimentum pharetra nunc vehicula. Mauris vehicula imperdiet augue, in vestibulum orci pellentesque
-        eget.
-        Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
-        tincidunt
-        ut. </p>
-      <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
-      <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
-        ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur id
-        nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
-        maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
-        Integer
-        tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
-        non
-        rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
-      </p>
+      <section class="section-container" id="section-2">
+        <h2>Partie II</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
+          malesuada
+          libero massa, id mattis ligula aliquet non. Maecenas luctus quis erat at pulvinar. Mauris lacinia libero a
+          felis
+          semper, condimentum pharetra nunc vehicula. Mauris vehicula imperdiet augue, in vestibulum orci pellentesque
+          eget.
+          Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
+          tincidunt
+          ut. </p>
+        <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+        <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
+          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur
+          id
+          nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
+          maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
+          Integer
+          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+          non
+          rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
+        </p>
 
-      <div id="animation-container-1" class="anim-container">
-        <h3>Titre de l'illustration</h3>
-        {% include 'animation1.html' %}
-      </div>
-    </div>
+
+
+
+
+
+        <div class="slides">
+          <div class="slide-wrapper">
+            <div id="volume-container-1" class="slide-container">
+              <h3>Volume selon le scénario SSP126</h3>
+              {% include 'mdg_volume_scenario_1_ssp126.html' %}
+            </div>
+          </div>
+
+          <div class="slide-wrapper">
+            <div id="volume-container-2" class="slide-container">
+              <h3>Volume selon le scénario SSP370</h3>
+              {% include 'mdg_volume_scenario_2_ssp370.html' %}
+            </div>
+          </div>
+
+          <div class="slide-wrapper">
+            <div id="volume-container-3" class="slide-container">
+              <h3>Volume selon le scénario SSP585</h3>
+              {% include 'mdg_volume_scenario_3_ssp585.html' %}
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="anim-container">
+          <img
+            src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_milk-consumption.svg') }}"
+            alt="Illustration">
+          <img
+            src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_us-birth-rates-of-triplets-or-more.svg') }}"
+            alt="Illustration">
+        </div>
+      </section>
+
+      <br>
+
+      <section class="section-container" id="section-3">
+        <h2>Partie III</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
+          malesuada
+          libero massa, id mattis ligula aliquet non. Maecenas luctus quis erat at pulvinar. Mauris lacinia libero a
+          felis
+          semper, condimentum pharetra nunc vehicula. Mauris vehicula imperdiet augue, in vestibulum orci pellentesque
+          eget.
+          Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
+          tincidunt
+          ut. </p>
+        <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+        <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
+          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur
+          id
+          nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
+          maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
+          Integer
+          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+          non
+          rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
+        </p>
+
+        <div id="animation-container-2" class="anim-container">
+          <h3>Titre de l'illustration</h3>
+          {% include 'animation2.html' %}
+        </div>
+      </section>
+
+      <br>
+
+      <section class="section-container" id="section-4">
+        <h2>Partie IV</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
+          malesuada
+          libero massa, id mattis ligula aliquet non. Maecenas luctus quis erat at pulvinar. Mauris lacinia libero a
+          felis
+          semper, condimentum pharetra nunc vehicula. Mauris vehicula imperdiet augue, in vestibulum orci pellentesque
+          eget.
+          Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
+          tincidunt
+          ut. </p>
+        <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+        <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
+          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur
+          id
+          nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
+          maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
+          Integer
+          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+          non
+          rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
+        </p>
+
+        <div id="animation-container-3" class="anim-container">
+          <h3>Titre de l'illustration</h3>
+        </div>
+      </section>
+
+      <br>
+
+      <section class="section-container" id="section-5">
+        <h2>Partie V</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
+          malesuada
+          libero massa, id mattis ligula aliquet non. Maecenas luctus quis erat at pulvinar. Mauris lacinia libero a
+          felis
+          semper, condimentum pharetra nunc vehicula. Mauris vehicula imperdiet augue, in vestibulum orci pellentesque
+          eget.
+          Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
+          tincidunt
+          ut. </p>
+        <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+        <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
+          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur
+          id
+          nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
+          maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
+          Integer
+          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+          non
+          rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
+        </p>
+
+        <div id="animation-container-4" class="anim-container">
+          <h3>Titre de l'illustration</h3>
+        </div>
+      </section>
+    </main>
   </div>
-
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 
