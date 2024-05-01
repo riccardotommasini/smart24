@@ -20,7 +20,7 @@ export class UserService {
 
         return user;
     }
-
+  
     public async login(username: string, password: string) {
         const foundUser = await User.findOne({ username });
 
