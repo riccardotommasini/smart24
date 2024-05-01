@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 import { IUser } from '../models/user';
 import { Document } from 'mongoose';
 import { container } from 'tsyringe';
-import { UserService } from '../services/user-service';
+import { AuthService } from '../services/auth-service/auth-service';
 
 export interface AuthRequest<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,7 +28,7 @@ export const auth: RequestHandler = async (req: Request, res: Response, next: Ne
             throw new HttpException(StatusCodes.UNAUTHORIZED, 'You must be logged in');
         }
 
-        const [user, decoded] = await container.resolve(UserService).loadSession(token);
+        const [user, decoded] = await container.resolve(AuthService).loadSession(token);
 
         (req as AuthRequest).token = decoded;
         (req as AuthRequest).user = user;
