@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/require-v-for-key -->
 <script setup>
 
 const props = defineProps([
@@ -7,8 +8,9 @@ const props = defineProps([
 </script>
 
 <template>
-    <div class="feed">
-        <div v-for="item, key in  props.postList">
+    <div class="feed-main">
+        // eslint-disable-next-line vue/require-v-for-key
+        <div v-for="(item, index) in  props.postList": key="index">
             <post :info="item"></post>
         </div>
     </div>
@@ -17,7 +19,7 @@ const props = defineProps([
 
 <style scoped>
 
-.feed {
+.feed-main {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

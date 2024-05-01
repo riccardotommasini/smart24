@@ -3,9 +3,9 @@ import { singleton } from 'tsyringe';
 import { Metrics } from '../../models/metrics';
 import { ICreatePost, IPost, Post } from '../../models/post';
 import { UserService } from '../user-service';
+import { ICreateComment, Comment } from '../../models/comment';
 import { HttpException } from '../../models/http-exception';
 import { StatusCodes } from 'http-status-codes';
-import { ICreateComment, Comment } from '../../models/comment';
 
 @singleton()
 export class PostService {
@@ -33,8 +33,7 @@ export class PostService {
     async publishComment(userId: string, newComment: ICreateComment): Promise<Document & IPost> {
         const userObjectId = new Types.ObjectId(userId);
         await this.userService.getUser(userObjectId);
-        const parentPostId = new Types.ObjectId(newComment.parentPostId.toString());
-        await this.getPost(parentPostId);
+        await this.getPost(newComment.parentPostId.toString());
 
         const metrics = new Metrics({});
         await metrics.save();
@@ -52,8 +51,9 @@ export class PostService {
         return comment;
     }
 
-    async getPost(postId: Types.ObjectId): Promise<IPost> {
-        const post = await Post.findById(postId);
+    async getPost(postId: string): Promise<Document & IPost> {
+        const postIdObject = new Types.ObjectId(postId);
+        const post = await Post.findOne({ _id: postIdObject });
 
         if (!post) {
             throw new HttpException(StatusCodes.NOT_FOUND, `No post found with ID ${postId}`);
@@ -63,7 +63,7 @@ export class PostService {
     }
 
     async getMetricsId(postId: Types.ObjectId): Promise<string> {
-        const post = await this.getPost(postId);
+        const post = await this.getPost(postId.toString());
 
         return post.metrics.toString();
     }

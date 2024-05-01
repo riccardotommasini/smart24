@@ -6,8 +6,8 @@ import { StatusCodes } from 'http-status-codes';
 import { ICreatePost, Post } from '../../models/post';
 import User, { IUser } from '../../models/user';
 import { Document } from 'mongoose';
-import { UserService } from '../../services/user-service';
 import { DateTime } from 'luxon';
+import { AuthService } from '../../services/auth-service/auth-service';
 
 const DEFAULT_CREATE_POST: ICreatePost = {
     text: 'This is my post!',
@@ -39,7 +39,7 @@ describe('PostController', () => {
 
         await user.save();
 
-        token = (await container.resolve(UserService).login(username, passwordHash)).token;
+        token = (await container.resolve(AuthService).login(username, passwordHash)).token;
     });
 
     afterEach(async () => {

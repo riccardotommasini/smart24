@@ -3,7 +3,13 @@ version: '3.10'
 services:
   client:
     image: node:20
-    command: sh client_start.sh
+#        npm run dev -- --host 0.0.0.0 --port 8080 &&
+    command: >
+      bash -c "
+        echo 'Trying to install/update dependencies in case of architecture missmatch...' &&
+        npm ci &&
+        npm run dev -- --host 0.0.0.0 --port 8080
+      "
     working_dir: /src/www/apps/client
     environment:
       VITE_SERVER_URL: http://localhost:${SERVER_PORT:-3000}

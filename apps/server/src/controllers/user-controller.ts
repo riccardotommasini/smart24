@@ -1,31 +1,41 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { NextFunction, Response, Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
 import { singleton } from 'tsyringe';
 import { UserService } from '../services/user-service';
 import { AbstractController } from './abstract-controller';
-import { AuthRequest, auth } from '../middleware/auth';
+import { MetricsService } from '../services/metrics-service';
+import { auth, AuthRequest } from '../middleware/auth';
 import { HttpException } from '../models/http-exception';
 
 @singleton()
 export class UserController extends AbstractController {
-    constructor(private readonly userService: UserService) {
-        super();
+    constructor(
+        private readonly userService: UserService,
+        private readonly metricsService: MetricsService,
+    ) {
+        super({ basePath: '/user' });
     }
 
     protected configureRoutes(router: Router) {
-        router.post(
-            '/login',
-            body('username', 'is required').trim().isLength({ min: 1 }),
-            body('password', 'is required').trim().isLength({ min: 1 }),
-            async (req: Request<object, object, { username: string; password: string }>, res, next) => {
+        router.get(
+            '/:userId',
+            auth,
+            async (req: AuthRequest<{ userId: string }>, res: Response, next: NextFunction) => {
                 try {
-                    const errors = validationResult(req);
-                    if (!errors.isEmpty()) {
-                        throw new HttpException(StatusCodes.BAD_REQUEST, 'Invalid request', errors);
-                    }
+                    res.status(StatusCodes.OK).send(await this.userService.getUser(req.params.userId));
+                } catch (error) {
+                    next(error);
+                }
+            },
+        );
 
-                    res.status(StatusCodes.OK).send(await this.userService.login(req.body.username, req.body.password));
+        router.get(
+            '/:userId/profile',
+            auth,
+            async (req: AuthRequest<{ userId: string }>, res: Response, next: NextFunction) => {
+                try {
+                    res.status(StatusCodes.OK).send(await this.userService.getUserProfile(req.params.userId));
                 } catch (error) {
                     next(error);
                 }
@@ -33,31 +43,23 @@ export class UserController extends AbstractController {
         );
 
         router.post(
-            '/user/create',
-            body('username', 'is required').trim().notEmpty(),
-            body('mail', 'is required').trim().notEmpty(),
-            body('mail', 'must be a valid email').isEmail(),
-            body('password', '`password` of length >=5 is required').trim().isLength({ min: 5 }),
-            body('birthday', '`birthday` must be a valid date').isISO8601().toDate().optional(),
-            async (req: AuthRequest, res, next) => {
+            '/likepost',
+            body('userId').trim().notEmpty(),
+            body('postId').trim().notEmpty(),
+            auth,
+            async (req, res, next) => {
+                const errors = validationResult(req);
+                const userId = req.body.userId;
+                const postId = req.body.postId;
+                if (!errors.isEmpty()) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+                }
                 try {
-                    const errors = validationResult(req);
-                    if (!errors.isEmpty()) {
-                        throw new HttpException(StatusCodes.BAD_REQUEST, 'Invalid request', errors);
+                    const updatedMetrics = await this.metricsService.likePost(userId, postId);
+                    if (!updatedMetrics) {
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
                     }
-
-                    res.status(StatusCodes.OK).send(
-                        await this.userService.signup(
-                            req.body.username,
-                            req.body.mail,
-                            req.body.password,
-                            req.body.name,
-                            req.body.surname,
-                            req.body.birthday,
-                            req.body.factChecker,
-                            req.body.organization,
-                        ),
-                    );
+                    res.json(updatedMetrics);
                 } catch (e) {
                     next(e);
                 }
@@ -65,7 +67,79 @@ export class UserController extends AbstractController {
         );
 
         router.post(
-            '/user/trustUser',
+            '/dislikepost',
+            body('userId').trim().notEmpty(),
+            body('postId').trim().notEmpty(),
+            auth,
+            async (req, res, next) => {
+                const errors = validationResult(req);
+                const userId = req.body.userId;
+                const postId = req.body.postId;
+                if (!errors.isEmpty()) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+                }
+                try {
+                    const updatedMetrics = await this.metricsService.dislikePost(userId, postId);
+                    if (!updatedMetrics) {
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
+                    }
+                    res.json(updatedMetrics);
+                } catch (e) {
+                    next(e);
+                }
+            },
+        );
+
+        router.post(
+            '/trustpost',
+            body('userId').trim().notEmpty(),
+            body('postId').trim().notEmpty(),
+            auth,
+            async (req, res, next) => {
+                const errors = validationResult(req);
+                const userId = req.body.userId;
+                const postId = req.body.postId;
+                if (!errors.isEmpty()) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+                }
+                try {
+                    const updatedMetrics = await this.metricsService.trustPost(userId, postId);
+                    if (!updatedMetrics) {
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
+                    }
+                    res.json(updatedMetrics);
+                } catch (e) {
+                    next(e);
+                }
+            },
+        );
+
+        router.post(
+            '/untrustpost',
+            body('userId').trim().notEmpty(),
+            body('postId').trim().notEmpty(),
+            auth,
+            async (req: AuthRequest, res: Response, next: NextFunction) => {
+                const errors = validationResult(req);
+                const userId = req.body.userId;
+                const postId = req.body.postId;
+                if (!errors.isEmpty()) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+                }
+                try {
+                    const updatedMetrics = await this.metricsService.untrustPost(userId, postId);
+                    if (!updatedMetrics) {
+                        res.status(StatusCodes.NOT_FOUND).send('Post not found !!!');
+                    }
+                    res.json(updatedMetrics);
+                } catch (e) {
+                    next(e);
+                }
+            },
+        );
+
+        router.post(
+            '/trustUser',
             auth,
             body('otherUserId', 'is required').trim().isLength({ min: 1 }),
             async (req: AuthRequest<object, { otherUserId: string }>, res: Response, next: NextFunction) => {
@@ -84,7 +158,7 @@ export class UserController extends AbstractController {
         );
 
         router.post(
-            '/user/untrustUser',
+            '/untrustUser',
             auth,
             body('otherUserId', 'is required').trim().isLength({ min: 1 }),
             async (req: AuthRequest<object, { otherUserId: string }>, res: Response, next: NextFunction) => {
@@ -96,24 +170,6 @@ export class UserController extends AbstractController {
 
                     await this.userService.untrustUser(req.user!._id, req.body.otherUserId);
                     res.status(StatusCodes.NO_CONTENT).send();
-                } catch (error) {
-                    next(error);
-                }
-            },
-        );
-
-        router.post(
-            '/user/visitUserProfile',
-            auth,
-            body('otherUserId', 'is required').trim().isLength({ min: 1 }),
-            async (req: AuthRequest<object, { otherUserId: string }>, res: Response, next: NextFunction) => {
-                try {
-                    const errors = validationResult(req);
-                    if (!errors.isEmpty()) {
-                        throw new HttpException(StatusCodes.BAD_REQUEST, 'Invalid request', errors);
-                    }
-
-                    res.status(StatusCodes.OK).send(await this.userService.getUserProfile(req.body.otherUserId));
                 } catch (error) {
                     next(error);
                 }
