@@ -16,9 +16,9 @@ export class PostController extends AbstractController {
     protected configureRoutes(router: Router): void {
         router.post(
             '/',
+            auth,
             body('text', '`text` must not be empty').trim().isLength({ min: 1 }),
             body('image').trim().isURL().optional(),
-            auth,
             async (req: AuthRequest<object, ICreatePost>, res: Response, next: NextFunction) => {
                 try {
                     res.status(StatusCodes.CREATED).send(

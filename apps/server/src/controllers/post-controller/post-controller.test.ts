@@ -1,6 +1,5 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
-import sinon from 'sinon';
 import { container } from 'tsyringe';
 import { Application } from '../../app';
 import { StatusCodes } from 'http-status-codes';
@@ -39,11 +38,10 @@ describe('PostController', () => {
 
     afterEach(async () => {
         await mongoose.connection.db.dropDatabase();
-        sinon.restore();
     });
 
     describe('POST /post', () => {
-        it('should call publishPost', () => {
+        it('should create post', async () => {
             return request(app['app'])
                 .post('/posts')
                 .send(DEFAULT_CREATE_POST)
