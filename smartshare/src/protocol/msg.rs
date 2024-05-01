@@ -1,6 +1,7 @@
+use std::usize;
+
 use operational_transform::{Operation, OperationSeq};
 use serde::{Deserialize, Serialize};
-use serde_json::de;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "action", rename_all = "snake_case")]
@@ -30,65 +31,64 @@ pub struct ModifRequest {
     pub rev_num: usize,
 }
 
-pub fn toOperationSeq(modif: &TextModification) -> OperationSeq {
+pub fn to_operation_seq(modif: &TextModification, src_length: &u64) -> OperationSeq {
     let mut seq = OperationSeq::default();
     seq.retain(modif.offset);
     seq.delete(modif.delete);
     seq.insert(modif.text.as_str());
-    todo!("rajouter un retain jusqu'à la fin du fichier");
-    //seq.retain(...);
+    seq.retain(src_length - modif.offset - modif.delete);
     seq
 }
 
 enum State {
-    ret,
-    del,
-    ins,
+    Ret,
+    Del,
+    Ins,
 }
 
-pub fn toIdeChanges(delta: &OperationSeq) -> Vec<TextModification> {
+pub fn to_ide_changes(delta: &OperationSeq) -> Vec<TextModification> {
     let mut modifs: Vec<TextModification> = vec![];
     let mut modif = TextModification::default();
-    let mut state = State::ret;
+    let mut state = State::Ret;
     for op in delta.clone().ops() {
         match state {
-            State::ret => match op {
+            State::Ret => match op {
                 Operation::Retain(retain) => {
                     modif.offset += retain;
                 }
                 Operation::Delete(delete) => {
-                    state = State::del;
+                    state = State::Del;
                     modif.delete += delete;
                 }
                 Operation::Insert(insert) => {
-                    state = State::ins;
+                    state = State::Ins;
                     modif.text = format!("{}{}", modif.text, insert);
                 }
             },
 
-            State::del => match op {
+            State::Del => match op {
                 Operation::Retain(retain) => {
                     let base_offset = modif.offset + (modif.text.len() as u64);
                     modifs.push(modif);
                     modif = TextModification::default();
                     modif.offset = base_offset + retain;
-                    state = State::ret;
+                    state = State::Ret;
                 }
                 Operation::Delete(delete) => {
                     modif.delete += delete;
                 }
                 Operation::Insert(insert) => {
-                    state = State::ins;
+                    state = State::Ins;
                     modif.text = format!("{}{}", modif.text, insert);
                 }
             },
-            State::ins => match op {
+            State::Ins => match op {
                 Operation::Retain(retain) => {
                     let base_offset = modif.offset + (modif.text.len() as u64);
                     modifs.push(modif);
                     modif = TextModification::default();
                     modif.offset = base_offset + retain;
-                    state = State::ret;
+                    state = State::Ret;
                 }
                 Operation::Delete(delete) => {
                     let base_offset = modif.offset + (modif.text.len() as u64);
@@ -98,7 +98,7 @@ pub fn toIdeChanges(delta: &OperationSeq) -> Vec<TextModification> {
                         delete: *delete,
                         text: "".to_owned(),
                     };
-                    state = State::del;
+                    state = State::Del;
                 }
                 Operation::Insert(insert) => {
                     modif.text = format!("{}{}", modif.text, insert);
@@ -106,6 +106,8 @@ pub fn toIdeChanges(delta: &OperationSeq) -> Vec<TextModification> {
             },
         }
     }
-    modifs.push(modif);
+    if modif.delete != 0 || !modif.text.is_empty() {
+        modifs.push(modif);
+    }
     modifs
 }

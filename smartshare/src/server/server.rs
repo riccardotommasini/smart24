@@ -1,3 +1,4 @@
+use operational_transform::OperationSeq;
 use smartshare::protocol::msg::{MessageServer, ModifRequest};
 use tokio::sync::mpsc;
 use tracing::{error, info, trace, warn};
@@ -59,13 +60,10 @@ impl Server {
                         (_, delta_p) = self.deltas[i].transform(&delta_p).unwrap();
                     }
                     self.deltas.push(delta_p.clone());
-                    for client in self
-                        .clients
-                        .iter()
-                        //.filter(|client| client.id() != source_id)
+                    for client in self.clients.iter()
+                    //.filter(|client| client.id() != source_id)
                     {
-                        let notif = 
-                        if client.id() == source_id {
+                        let notif = if client.id() == source_id {
                             MessageServer::Ack
                         } else {
                             MessageServer::ServerUpdate(ModifRequest {

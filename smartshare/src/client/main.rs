@@ -5,12 +5,12 @@ pub mod server;
 use core::panic;
 use std::env;
 
-use futures::{try_join, SinkExt};
+use futures::SinkExt;
 use smartshare::protocol::msg::{MessageIde, MessageServer};
 use smartshare::protocol::{message_sink, message_stream};
+use tokio::net::TcpStream;
 use tokio::select;
 use tokio::sync::mpsc;
-use tokio::{net::TcpStream, stream};
 use tokio_stream::wrappers::ReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info};
@@ -67,8 +67,6 @@ async fn main() {
 
     let mut stdin_stream = message_stream::<MessageIde, _>(tokio::io::stdin());
     let mut tcp_stream = message_stream::<MessageServer, _>(rx);
-
-
 
     loop {
         select! {
