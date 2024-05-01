@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import bcrypt from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
 
 export interface IUser extends Document {
     name: string;
@@ -44,7 +44,7 @@ const UserSchema: Schema<IUser> = new Schema<IUser>({
 const saltRounds = 8;
 
 UserSchema.pre('save', async function (next) {
-    this.passwordHash = await bcrypt.hash(this.passwordHash, saltRounds);
+    this.passwordHash = await bcryptjs.hash(this.passwordHash, saltRounds);
     next();
 });
 

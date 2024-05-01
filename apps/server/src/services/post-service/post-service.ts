@@ -1,8 +1,10 @@
-import { ICreatePost, IPost, Post } from '../../models/post';
+import { Document, Types } from 'mongoose';
 import { singleton } from 'tsyringe';
-import { Types, Document } from 'mongoose';
 import { Metrics } from '../../models/metrics';
+import { ICreatePost, IPost, Post } from '../../models/post';
 import { UserService } from '../user-service';
+import { HttpException } from '../../models/http-exception';
+import { StatusCodes } from 'http-status-codes';
 
 @singleton()
 export class PostService {
@@ -36,5 +38,14 @@ export class PostService {
         }
 
         return post;
+    }
+    async getMetricsId(postId: Types.ObjectId): Promise<string> {
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            throw new HttpException(StatusCodes.NOT_FOUND, `No post found with ID ${postId}`);
+        }
+
+        return post.metrics.toString();
     }
 }

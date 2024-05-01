@@ -21,7 +21,7 @@ services:
 
   server:
     image: node:20
-    command: npm run dev
+    command: sh server_start.sh
     working_dir: /src/www/apps/server
     environment:
       MONGO_URL: mongodb://root:root@db:27017/smart?authSource=admin

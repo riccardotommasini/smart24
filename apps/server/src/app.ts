@@ -1,25 +1,23 @@
 import express from 'express';
 import cors from 'cors';
-import { singleton, inject } from 'tsyringe';
+import { singleton } from 'tsyringe';
 import { HttpException } from './models/http-exception';
-import { SYMBOLS } from './constants/symbols';
-import './config/registry';
 import { errorHandler } from './middleware/error-handler';
 import { DatabaseService } from './services/database-service/database-service';
-import { DefaultController } from './controllers/default-controller/default-controller';
 import { UserController } from './controllers/user-controller';
 import { PostController } from './controllers/post-controller/post-controller';
 import { MetricsController } from './controllers/metrics-controller';
+import { FactCheckerController } from './controllers/factCheck-controller/factCheck-controller';
 
 @singleton()
 export class Application {
     private app: express.Application;
 
     constructor(
-        @inject(SYMBOLS.defaultController) private defaultController: DefaultController,
-        @inject(SYMBOLS.userController) private userController: UserController,
+        private userController: UserController,
         private postController: PostController,
         private metricsController: MetricsController,
+        private factCheckerController: FactCheckerController,
         private readonly databaseService: DatabaseService,
     ) {
         this.app = express();
@@ -48,10 +46,10 @@ export class Application {
     }
 
     private configureRoutes(): void {
-        this.defaultController.use(this.app);
         this.userController.use(this.app);
         this.postController.use(this.app);
         this.metricsController.use(this.app);
+        this.factCheckerController.use(this.app);
 
         this.app.use('**', (req, res, next) => {
             next(new HttpException(404, `${req.method} ${req.url} not found`));

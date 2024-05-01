@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon",
     "build": "tsc",
-    "test": "cross-env NODE_ENV=test jest --forceExit --ci",
+    "test": "cross-env NODE_ENV=test jest --forceExit --ci --runInBand",
     "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
     "lint:fix": "npm run lint -- --fix"
   },
@@ -26,6 +26,7 @@
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/luxon": "^3.4.2",
+    "@types/mocha": "^10.0.6",
     "@types/mongoose-sequence": "^3.0.11",
     "@types/node": "^20.12.7",
     "@types/sinon": "^17.0.3",

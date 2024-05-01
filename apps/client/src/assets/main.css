@@ -3,9 +3,19 @@
   height:100vh;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   background-image: linear-gradient(to bottom, #f7e1e1 50%, #B9ABAB 100%);
 }
+
 .std.title1 {
   font-weight: 700;
+}
+
+.std.title2 {
+  font-size: x-large;
+  font-weight: 500;
+}
+
+.std.title3 {
+  font-size: larger;
+  font-weight: 300;
 }
