@@ -40,10 +40,11 @@ pub fn to_operation_seq(modif: &TextModification, src_length: &u64) -> Operation
     seq
 }
 
+#[derive(Debug)]
 enum State {
     Ret,
-    Del,
     Ins,
+    Del,
 }
 
 pub fn to_ide_changes(delta: &OperationSeq) -> Vec<TextModification> {
@@ -51,57 +52,57 @@ pub fn to_ide_changes(delta: &OperationSeq) -> Vec<TextModification> {
     let mut modif = TextModification::default();
     let mut state = State::Ret;
     for op in delta.clone().ops() {
+        println!("state : {:?}; op : {:?}", state, op);
         match state {
             State::Ret => match op {
                 Operation::Retain(retain) => {
                     modif.offset += retain;
                 }
+                Operation::Insert(insert) => {
+                    state = State::Ins;
+                    modif.text = format!("{}{}", modif.text, insert);
+                }
                 Operation::Delete(delete) => {
                     state = State::Del;
                     modif.delete += delete;
-                }
-                Operation::Insert(insert) => {
-                    state = State::Ins;
-                    modif.text = format!("{}{}", modif.text, insert);
-                }
-            },
-
-            State::Del => match op {
-                Operation::Retain(retain) => {
-                    let base_offset = modif.offset + (modif.text.len() as u64);
-                    modifs.push(modif);
-                    modif = TextModification::default();
-                    modif.offset = base_offset + retain;
-                    state = State::Ret;
-                }
-                Operation::Delete(delete) => {
-                    modif.delete += delete;
-                }
-                Operation::Insert(insert) => {
-                    state = State::Ins;
-                    modif.text = format!("{}{}", modif.text, insert);
                 }
             },
             State::Ins => match op {
                 Operation::Retain(retain) => {
-                    let base_offset = modif.offset + (modif.text.len() as u64);
+                    let base_offset = modif.offset + (modif.text.chars().count() as u64);
+                    modifs.push(modif);
+                    modif = TextModification::default();
+                    modif.offset = base_offset + retain;
+                    state = State::Ret;
+                }
+                Operation::Insert(insert) => {
+                    modif.text = format!("{}{}", modif.text, insert);
+                }
+                Operation::Delete(delete) => {
+                    modif.delete += delete;
+                    state = State::Del;
+                }
+            },
+            State::Del => match op {
+                Operation::Retain(retain) => {
+                    let base_offset = modif.offset + (modif.text.chars().count() as u64);
                     modifs.push(modif);
                     modif = TextModification::default();
                     modif.offset = base_offset + retain;
                     state = State::Ret;
                 }
                 Operation::Delete(delete) => {
-                    let base_offset = modif.offset + (modif.text.len() as u64);
+                    modif.delete += delete;
+                }
+                Operation::Insert(insert) => {
+                    let base_offset = modif.offset + (modif.text.chars().count() as u64);
                     modifs.push(modif);
                     modif = TextModification {
                         offset: base_offset,
-                        delete: *delete,
-                        text: "".to_owned(),
+                        delete: 0,
+                        text: insert.clone(),
                     };
-                    state = State::Del;
-                }
-                Operation::Insert(insert) => {
-                    modif.text = format!("{}{}", modif.text, insert);
+                    state = State::Ins;
                 }
             },
         }
