@@ -2,10 +2,10 @@ import { NextFunction, Response, Router } from 'express';
 import { body } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
 import { singleton } from 'tsyringe';
-import { FactCheckService } from '../../services/factCheck-service';
-import { AbstractController } from '../abstract-controller';
 import { AuthRequest, auth } from '../../middleware/auth';
 import { ICreateFactCheck } from '../../models/FactCheck';
+import { FactCheckService } from '../../services/factCheck-service/factCheck-service';
+import { AbstractController } from '../abstract-controller';
 
 @singleton()
 export class FactCheckerController extends AbstractController {

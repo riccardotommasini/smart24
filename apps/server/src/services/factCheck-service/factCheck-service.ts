@@ -1,11 +1,11 @@
+import { StatusCodes } from 'http-status-codes';
 import { Document, Types } from 'mongoose';
 import { singleton } from 'tsyringe';
-import { FactCheck, ICreateFactCheck, IFactCheck } from '../models/FactCheck';
-import { UserService } from './user-service';
-import { MetricsService } from './metrics-service';
-import { PostService } from './post-service/post-service';
-import { HttpException } from '../models/http-exception';
-import { StatusCodes } from 'http-status-codes';
+import { FactCheck, ICreateFactCheck, IFactCheck } from '../../models/FactCheck';
+import { HttpException } from '../../models/http-exception';
+import { MetricsService } from '../metrics-service';
+import { PostService } from '../post-service/post-service';
+import { UserService } from '../user-service';
 
 @singleton()
 export class FactCheckService {
@@ -51,7 +51,7 @@ export class FactCheckService {
         const metricsId = await this.postService.getMetricsId(postId);
         await this.metricsService.updateMetrics(metricsId, {
             $inc: { nbFactChecks: 1 },
-            $push: { factCheckedBy: factCheck._id },
+            $push: { factChecks: factCheck._id },
         });
 
         return factCheck;

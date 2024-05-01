@@ -5,10 +5,10 @@ import request from 'supertest';
 import { container } from 'tsyringe';
 import { Application } from '../../app';
 import { ICreateFactCheck } from '../../models/FactCheck';
+import { IMetrics, Metrics } from '../../models/metrics';
+import { IPost, Post } from '../../models/post';
 import User, { IUser } from '../../models/user';
-import { Post, IPost } from '../../models/post';
-import { Metrics, IMetrics } from '../../models/metrics';
-import { FactCheckService } from '../../services/factCheck-service';
+import { FactCheckService } from '../../services/factCheck-service/factCheck-service';
 import { UserService } from '../../services/user-service';
 
 const DEFAULT_CREATE_FACTCHECK: ICreateFactCheck = {
