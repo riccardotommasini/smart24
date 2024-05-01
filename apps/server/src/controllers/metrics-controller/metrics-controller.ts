@@ -19,5 +19,43 @@ export class MetricsController extends AbstractController {
                 next(e);
             }
         });
+
+        router.post('/:id/metrics/like', auth, async (req: AuthRequest<{ id: string }>, res, next) => {
+            try {
+                return res.status(StatusCodes.OK).send(await this.metricService.likePost(req.user!._id, req.params.id));
+            } catch (e) {
+                next(e);
+            }
+        });
+
+        router.post('/:id/metrics/dislike', auth, async (req: AuthRequest<{ id: string }>, res, next) => {
+            try {
+                return res
+                    .status(StatusCodes.OK)
+                    .send(await this.metricService.dislikePost(req.user!._id, req.params.id));
+            } catch (e) {
+                next(e);
+            }
+        });
+
+        router.post('/:id/metrics/trust', auth, async (req: AuthRequest<{ id: string }>, res, next) => {
+            try {
+                return res
+                    .status(StatusCodes.OK)
+                    .send(await this.metricService.trustPost(req.user!._id, req.params.id));
+            } catch (e) {
+                next(e);
+            }
+        });
+
+        router.post('/:id/metrics/untrust', auth, async (req: AuthRequest<{ id: string }>, res, next) => {
+            try {
+                return res
+                    .status(StatusCodes.OK)
+                    .send(await this.metricService.untrustPost(req.user!._id, req.params.id));
+            } catch (e) {
+                next(e);
+            }
+        });
     }
 }

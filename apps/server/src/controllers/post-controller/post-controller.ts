@@ -36,11 +36,9 @@ export class PostController extends AbstractController {
             },
         );
 
-        router.get('/post/:id', auth, async (req: AuthRequest<{ id: string }>, res, next) => {
-            const postId = req.params.id;
+        router.get('/:id', auth, async (req: AuthRequest<{ id: string }>, res, next) => {
             try {
-                const post = await this.postService.getPost(postId);
-                return res.status(StatusCodes.OK).send(post);
+                return res.status(StatusCodes.OK).send(await this.postService.getPost(req.params.id));
             } catch (e) {
                 next(e);
             }

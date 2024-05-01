@@ -62,4 +62,96 @@ describe('MetricsController', () => {
                 .expect(StatusCodes.NOT_FOUND);
         });
     });
+
+    describe('POST /posts/:id/metrics/like', () => {
+        it('should like post', async () => {
+            const post = await request(app['app'])
+                .post('/posts')
+                .send(DEFAULT_CREATE_POST)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.CREATED)
+                .then((res) => res.body);
+
+            return request(app['app'])
+                .post(`/posts/${post._id}/metrics/like`)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.OK);
+        });
+
+        it('should throw if post does not exists', async () => {
+            return request(app['app'])
+                .post(`/posts/${new mongoose.Types.ObjectId()}/metrics/like`)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.NOT_FOUND);
+        });
+    });
+
+    describe('POST /posts/:id/metrics/dislike', () => {
+        it('should dislike post', async () => {
+            const post = await request(app['app'])
+                .post('/posts')
+                .send(DEFAULT_CREATE_POST)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.CREATED)
+                .then((res) => res.body);
+
+            return request(app['app'])
+                .post(`/posts/${post._id}/metrics/dislike`)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.OK);
+        });
+
+        it('should throw if post does not exists', async () => {
+            return request(app['app'])
+                .post(`/posts/${new mongoose.Types.ObjectId()}/metrics/dislike`)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.NOT_FOUND);
+        });
+    });
+
+    describe('POST /posts/:id/metrics/trust', () => {
+        it('should trust post', async () => {
+            const post = await request(app['app'])
+                .post('/posts')
+                .send(DEFAULT_CREATE_POST)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.CREATED)
+                .then((res) => res.body);
+
+            return request(app['app'])
+                .post(`/posts/${post._id}/metrics/trust`)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.OK);
+        });
+
+        it('should throw if post does not exists', async () => {
+            return request(app['app'])
+                .post(`/posts/${new mongoose.Types.ObjectId()}/metrics/trust`)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.NOT_FOUND);
+        });
+    });
+
+    describe('POST /posts/:id/metrics/untrust', () => {
+        it('should untrust post', async () => {
+            const post = await request(app['app'])
+                .post('/posts')
+                .send(DEFAULT_CREATE_POST)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.CREATED)
+                .then((res) => res.body);
+
+            return request(app['app'])
+                .post(`/posts/${post._id}/metrics/untrust`)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.OK);
+        });
+
+        it('should throw if post does not exists', async () => {
+            return request(app['app'])
+                .post(`/posts/${new mongoose.Types.ObjectId()}/metrics/untrust`)
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.NOT_FOUND);
+        });
+    });
 });
