@@ -1,5 +1,6 @@
 import { container } from 'tsyringe';
 import { DefaultService } from './default-service';
+import { describe, beforeEach, it } from 'node:test';
 
 describe('DefaultService', () => {
     let defaultService: DefaultService;
@@ -10,7 +11,7 @@ describe('DefaultService', () => {
 
     describe('getMessage', () => {
         it('should return the correct message', () => {
-            expect(defaultService.getMessage()).toBe('Hello world! ');
+            expect(defaultService.getMessage()).toBe('Hello world!');
         });
     });
 });

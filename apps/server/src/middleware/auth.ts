@@ -1,16 +1,21 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { env } from '../utils/env';
 import { HttpException } from '../models/http-exception';
 import { StatusCodes } from 'http-status-codes';
-import User from '../models/user';
+import User, { IUser } from '../models/user';
+import { Document } from 'mongoose';
 
-export interface CustomRequest extends Request {
-    token: string | JwtPayload;
-    username: string;
+export interface AuthRequest<
+    Params extends object = Record<any, any>,
+    Body extends object = Record<any, any>,
+    Query extends object = Record<any, any>,
+> extends Request<Params, any, Body, Query> {
+    token?: string | JwtPayload;
+    user?: IUser & Document;
 }
 
-export const auth = async (req: Request, res: Response, next: NextFunction) => {
+export const auth: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.header('Authorization')?.replace('Bearer ', '');
 
@@ -18,15 +23,15 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
             throw new HttpException(StatusCodes.UNAUTHORIZED, 'You must be logged in');
         }
 
-        const decoded = jwt.verify(token, env.SECRET_KEY) as { username: string };
+        const decoded = jwt.verify(token, env.SECRET_KEY) as { _id: string };
 
-        const foundUser = await User.findOne({ username: decoded.username });
+        const foundUser = await User.findById(decoded._id);
 
         if (!foundUser) {
             throw new HttpException(StatusCodes.UNAUTHORIZED, 'User not found');
         }
-        (req as CustomRequest).token = decoded;
-        (req as CustomRequest).username = decoded.username;
+        (req as AuthRequest).token = decoded;
+        (req as AuthRequest).user = foundUser;
 
         next();
     } catch (err) {
