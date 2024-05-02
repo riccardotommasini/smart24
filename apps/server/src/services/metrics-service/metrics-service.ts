@@ -3,10 +3,20 @@ import { Document, UpdateQuery } from 'mongoose';
 import { Metrics, IMetrics } from '../../models/metrics';
 import { PostService } from '../post-service/post-service';
 import { NonStrictObjectId, toObjectId } from '../../utils/objectid';
+import { RatingsLikesService } from '../ratings-services/ratings-likes-service';
+import { RatingsDislikesService } from '../ratings-services/ratings-dislikes-service';
+import { RatingsTrustService } from '../ratings-services/ratings-trust-service';
+import { RatingsUntrustService } from '../ratings-services/ratings-untrust-service';
 
 @singleton()
 export class MetricsService {
-    constructor(private readonly postService: PostService) {}
+    constructor(
+        private readonly postService: PostService,
+        private readonly ratingsLikesService: RatingsLikesService,
+        private readonly ratingsDislikesService: RatingsDislikesService,
+        private readonly ratingsTrustService: RatingsTrustService,
+        private readonly ratingsUntrustService: RatingsUntrustService,
+    ) {}
 
     async getMetricsByPostId(postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const post = await this.postService.getPost(postId);
@@ -26,9 +36,15 @@ export class MetricsService {
     async likePost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
 
-        metrics.likedBy.push(toObjectId(userId));
-        metrics.nbLikes += 1;
-        await metrics.save();
+        if (metrics.likedBy.includes(toObjectId(userId))) {
+            console.log('User already liked the post');
+        } else {
+            metrics.likedBy.push(toObjectId(userId));
+            metrics.nbLikes += 1;
+            await metrics.save();
+
+            await this.ratingsLikesService.createRatingsLikes(userId.toString(), postId.toString());
+        }
 
         return metrics;
     }
@@ -36,9 +52,15 @@ export class MetricsService {
     async dislikePost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
 
-        metrics.dislikedBy.push(toObjectId(userId));
-        metrics.nbDislikes += 1;
-        await metrics.save();
+        if (metrics.dislikedBy.includes(toObjectId(userId))) {
+            console.log('User already disliked the post');
+        } else {
+            metrics.dislikedBy.push(toObjectId(userId));
+            metrics.nbDislikes += 1;
+            await metrics.save();
+
+            await this.ratingsDislikesService.createRatingsDislikes(userId.toString(), postId.toString());
+        }
 
         return metrics;
     }
@@ -46,9 +68,15 @@ export class MetricsService {
     async trustPost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
 
-        metrics.trustedBy.push(toObjectId(userId));
-        metrics.nbTrusts += 1;
-        await metrics.save();
+        if (metrics.trustedBy.includes(toObjectId(userId))) {
+            console.log('User already trusted the post');
+        } else {
+            metrics.trustedBy.push(toObjectId(userId));
+            metrics.nbTrusts += 1;
+            await metrics.save();
+
+            await this.ratingsTrustService.createRatingsTrust(userId.toString(), postId.toString());
+        }
 
         return metrics;
     }
@@ -56,9 +84,15 @@ export class MetricsService {
     async untrustPost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
 
-        metrics.untrustedBy.push(toObjectId(userId));
-        metrics.nbUntrusts += 1;
-        await metrics.save();
+        if (metrics.untrustedBy.includes(toObjectId(userId))) {
+            console.log('User already untrusted the post');
+        } else {
+            metrics.untrustedBy.push(toObjectId(userId));
+            metrics.nbUntrusts += 1;
+            await metrics.save();
+
+            await this.ratingsUntrustService.createRatingsUntrust(userId.toString(), postId.toString());
+        }
 
         return metrics;
     }
