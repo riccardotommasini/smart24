@@ -16,11 +16,14 @@
   "contributes": {
     "commands": [
       {
-        "command": "smartshare.start",
-        "title": "Connect SmartShare"
+        "command": "smartshare.createSession",
+        "title": "SmartShare: Create Session"
       },{
-        "command": "smartshare.stop",
-        "title": "Disconnect SmartShare"
+        "command": "smartshare.joinSession",
+        "title": "SmartShare: Join Session"
+      },{
+        "command": "smartshare.disconnect",
+        "title": "SmartShare: Disconnect"
       }
     ]
   },
