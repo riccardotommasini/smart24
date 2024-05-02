@@ -18,6 +18,8 @@ describe('PostService', () => {
         await container.resolve(DatabaseService).connect();
         postService = container.resolve(PostService);
         user = new User({
+            name: 'a',
+            surname: 'b',
             mail: 'a@a.com',
             username: 'a',
             passwordHash: 'a',

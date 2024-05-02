@@ -9,6 +9,8 @@ import { UserService } from '../user-service';
 import { Metrics } from '../../models/metrics';
 
 const DEFAULT_USER: IUserCreation = {
+    name: 'ginette',
+    surname: 'reno',
     username: 'ginettereno',
     mail: 'ginette@hola.com',
     password: 'chantelhymnenational',

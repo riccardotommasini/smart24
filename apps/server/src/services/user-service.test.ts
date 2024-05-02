@@ -6,11 +6,15 @@ import { PostService } from './post-service/post-service';
 import { UserService } from './user-service';
 
 const DEFAULT_USER = {
+    name: 'joe',
+    surname: 'mama',
     username: 'joe',
     mail: 'joe@mama.com',
     passwordHash: 'hola',
 };
 const DEFAULT_USER_2 = {
+    name: 'joe',
+    surname: 'mama',
     username: 'toto',
     mail: 'toto@pasgentil.ca',
     passwordHash: 'yop',

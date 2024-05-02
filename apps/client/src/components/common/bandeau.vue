@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 
 const props = defineProps([
@@ -7,7 +8,7 @@ const props = defineProps([
 ])
 
 const redirectUserProfile = () => {
-    window.location.href = "/profile";
+    window.location.href = "/settings";
 }
 
 </script>
