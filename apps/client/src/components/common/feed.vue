@@ -9,7 +9,8 @@ const props = defineProps([
 
 <template>
     <div class="feed-main">
-        <div v-for="(item, index) in  props.postList"key="index">
+        // eslint-disable-next-line vue/require-v-for-key
+        <div v-for="(item, index) in  props.postList" key="index">
             <post :info="item"></post>
         </div>
     </div>

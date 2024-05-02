@@ -4,23 +4,22 @@ import bandeau from "../components/common/bandeau.vue"
 import feed from "../components/common/feed.vue"
 import '../assets/main.css'
 import { useUserInfoStore } from "../stores/userInfo";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const store = useUserInfoStore();
 
+const id = ref('');
 const username = ref('');
 const name = ref('');
 const surname = ref('');
 
 onMounted( () => {
-    let userInfo = store.userInfo;
-    username.value = userInfo.username;
-    name.value = userInfo.name;
-    surname.value = userInfo.surname;
-
-    console.log(username.value);
-    console.log(name.value);
-    console.log(surname.value);
+    //retrieve session information
+    const userInfo = computed(()=>store.getUserInfo).value;
+    id.value = userInfo._id!;
+    username.value = userInfo.username!;
+    name.value = userInfo.name!;
+    surname.value = userInfo.surname!;
 });
 
 </script>
@@ -28,7 +27,7 @@ onMounted( () => {
 <template>
 
     <div class="content">
-        <bandeau :username="username" :fistname="name" :lastname="surname"/>
+        <bandeau :username="username" :firstname="name" :lastname="surname"/>
         <feed></feed>
     </div>
 

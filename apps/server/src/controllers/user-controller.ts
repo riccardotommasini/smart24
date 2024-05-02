@@ -7,6 +7,7 @@ import { AbstractController } from './abstract-controller';
 import { MetricsService } from '../services/metrics-service/metrics-service';
 import { auth, AuthRequest } from '../middleware/auth';
 import { HttpException } from '../models/http-exception';
+import { IUser } from 'src/models/user';
 
 @singleton()
 export class UserController extends AbstractController {
@@ -79,5 +80,13 @@ export class UserController extends AbstractController {
                 }
             },
         );
+
+        router.post('/update', auth, async (req: AuthRequest<object, IUser>, res: Response, next: NextFunction) => {
+            try {
+                res.status(StatusCodes.OK).send(await this.userService.updateUser(req.user?._id, req.body));
+            } catch (e) {
+                next(e);
+            }
+        });
     }
 }

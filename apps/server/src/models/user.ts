@@ -16,13 +16,13 @@ export interface IUser extends Document {
     follows: [{ type: Schema.Types.ObjectId; ref: 'User' }];
     trustedUsers: [{ type: Schema.Types.ObjectId; ref: 'User' }];
     untrustedUsers: [{ type: Schema.Types.ObjectId; ref: 'User' }];
-    parameters: { globalTrust: boolean; rateFactChecked: number; diversification: number };
+    parameters: { rateFactChecked: number; rateDiversification: number };
 }
 
 export type IUserCreation = Pick<IUser, 'username' | 'mail'> & { password: string } & Partial<IUser>;
 
 export interface IUserSession {
-    user: Pick<IUser, 'mail' | 'username'> & { _id: string };
+    user: Pick<IUser, 'username' | 'name' | 'surname'> & { _id: string };
     token: string;
 }
 
@@ -42,9 +42,8 @@ const UserSchema: Schema<IUser> = new Schema<IUser>({
     trustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     untrustedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     parameters: {
-        globalTrust: { type: Boolean, required: false, default: false },
         rateFactChecked: { type: Number, required: false },
-        diversification: { type: Number, required: false },
+        rateDiversification: { type: Number, required: false },
     },
 });
 
