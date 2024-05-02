@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script>
 
 
@@ -25,6 +26,7 @@ export default {
 //     // Ajoute la classe "button-clicked" au bouton cliqué
 //     button.style.color="red";
 //   });
+
 
 
 </script>

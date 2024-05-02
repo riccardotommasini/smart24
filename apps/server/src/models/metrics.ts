@@ -14,6 +14,7 @@ export interface IMetrics {
     nbUntrusts: number;
     nbComments: number;
     nbFactChecks: number;
+    factCheckScore: number;
     likedBy: mongoose.Types.ObjectId[];
     dislikedBy: mongoose.Types.ObjectId[];
     trustedBy: mongoose.Types.ObjectId[];
@@ -29,6 +30,7 @@ const MetricsSchema = new Schema<IMetrics>({
     nbUntrusts: { type: Number, required: false, default: 0 },
     nbComments: { type: Number, required: false, default: 0 },
     nbFactChecks: { type: Number, required: false, default: 0 },
+    factCheckScore: { type: Number, required: false, default: 0 },
     likedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     dislikedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     trustedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],

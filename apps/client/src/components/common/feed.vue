@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <!-- eslint-disable vue/require-v-for-key -->
 <script setup>
 import post from '../post.vue'
@@ -19,10 +20,5 @@ console.log("posts", props.posts);
             <post :info="item"></post>
         </div>
     </div>
-
 </template>
 
-<style scoped>
-
-
-</style>

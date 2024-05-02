@@ -1,4 +1,10 @@
+<script setup lang="ts">
+import { useTokenStore } from './stores/auth';
 
+const tokenStore = useTokenStore();
+
+tokenStore.loadSession();
+</script>
 
 <template>
   <head>
@@ -11,7 +17,8 @@
   </head>
 
   <body>
-      <RouterView />
+
+    <RouterView />
   </body>
 </template>
 

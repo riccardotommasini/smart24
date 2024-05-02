@@ -55,7 +55,7 @@ export class Application {
         this.factCheckerController.use(this.app);
 
         this.app.use('**', (req, res, next) => {
-            next(new HttpException(404, `${req.method} ${req.url} not found`));
+            next(new HttpException(404, `${req.method} ${req.baseUrl} not found`));
         });
 
         this.app.use(errorHandler);

@@ -1,23 +1,26 @@
 <script setup lang="ts">
 
-import bandeau from "../components/common/bandeau.vue"
+import BandeauHomepage from "../components/common/bandeau-homepage.vue"
 import feed from "../components/common/feed.vue"
 import '../assets/PageAccueil.css'
 import { useUserInfoStore } from "../stores/userInfo";
-import { onMounted, ref } from "vue";
 import axios from "axios";
 import { useTokenStore } from "../stores/auth.ts";
+import { computed, onMounted, ref } from "vue";
 
 const store = useUserInfoStore();
 const tokenStore= useTokenStore(); 
 
+const id = ref('');
 const username = ref('');
 const name = ref('');
 const surname = ref('');
 const posts=ref<any[]>([]);;
 
 onMounted(async () => {
-    let userInfo = store.userInfo;
+    let userInfo = store.getUserInfo;
+    console.log("userinfo",userInfo);
+
     username.value = userInfo.username;
     name.value = userInfo.name;
     surname.value = userInfo.surname;
@@ -27,10 +30,9 @@ onMounted(async () => {
         posts.value.push(...array);
     } catch (error) {
         console.error("Erreur lors de la récupération des posts :", error);
-    }
+    }});
 
     
-});
 
 
 async function getPosts() {
@@ -62,20 +64,17 @@ async function getPosts() {
 </script>
 
 <template>
-
-        <div class="mainFeed">
-            <header>        
-                    <bandeau :username="username" :fistname="name" :lastname="surname"/>
-            </header>
-            <div class="screen">
-                <feed :posts="posts"></feed>
-            </div>
+    <div class="mainFeed">
+        <header>        
+                <bandeau :username="username" :fistname="name" :lastname="surname"/>
+        </header>
+        <div class="screen">
+            <feed :posts="posts"></feed>
         </div>
+    </div>
 
    
 
+
 </template>
-
-
-<!-- eslint-disable vue/require-v-for-key -->
 

@@ -7,11 +7,15 @@ import { StatusCodes } from 'http-status-codes';
 import { AuthService } from '../services/auth-service/auth-service';
 
 const DEFAULT_USER = {
+    name: 'richard',
+    surname: 'dupont',
     username: 'richard',
     mail: 'richard@richard.com',
     passwordHash: 'bouetteentabarnak',
 };
 const DEFAULT_USER_2 = {
+    name: 'joelle',
+    surname: 'gendre',
     username: 'joellegendre',
     mail: 'joellegendre@tva.ca',
     passwordHash: 'dansleparc',
@@ -111,6 +115,19 @@ describe('UserController', () => {
                 .post('/user/untrustUser')
                 .set('Authorization', `Bearer ${token}`)
                 .expect(StatusCodes.BAD_REQUEST);
+        });
+    });
+
+    describe('POST /user/update', () => {
+        it('should update name', () => {
+            return request(app['app'])
+                .post('/user/update')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ name: 'Richard' })
+                .expect(StatusCodes.OK)
+                .then((res) => {
+                    expect(res.body.name).toEqual('Richard');
+                });
         });
     });
 });
