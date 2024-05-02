@@ -51,7 +51,7 @@ describe('FactCheckService', () => {
 
         post = new Post({
             text: 'je suis un post',
-            createdBy: user._id,
+            createdBy: notAFactChecker._id,
             metrics: metrics._id,
         });
         await post.save();

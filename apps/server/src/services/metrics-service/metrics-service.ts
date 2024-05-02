@@ -79,4 +79,16 @@ export class MetricsService {
     async getNbCommentsPost(postId: NonStrictObjectId): Promise<number> {
         return (await this.getMetricsByPostId(postId)).nbComments;
     }
+
+    async addFactCheck(metricsId: NonStrictObjectId, factCheckId: NonStrictObjectId, factCheckGrade: number) {
+        const metrics = await this.findMetrics(metricsId);
+        const scoreTen = (factCheckGrade * 10) / 2;
+        const newFactCheckSCore =
+            (scoreTen + metrics.factCheckScore * metrics.nbFactChecks) / (metrics.nbFactChecks + 1);
+        return await this.updateMetrics(metricsId, {
+            $inc: { nbFactChecks: 1 },
+            $push: { factChecks: factCheckId },
+            $set: { factCheckScore: newFactCheckSCore },
+        });
+    }
 }
