@@ -2,9 +2,13 @@
 
 const props = defineProps([
     'username',
-    'fistname',
+    'firstname',
     'lastname'
 ])
+
+const redirectUserProfile = () => {
+    window.location.href = "/profile";
+}
 
 </script>
 
@@ -16,11 +20,11 @@ const props = defineProps([
             </div>
             <div class="info-user">
                 <h2 class="std title2">{{ props.username }}</h2>
-                <h3 class="std title3">{{ props.fistname }} {{ props.lastname }}</h3>
+                <h3 class="std title3">{{ props.firstname }} {{ props.lastname }}</h3>
             </div>
         </div>
         <div class="params">
-            <button class="btn btn-primary">Réglages</button>
+            <button class="btn btn-primary" @click="redirectUserProfile">Réglages</button>
         </div>
     </div>
 
