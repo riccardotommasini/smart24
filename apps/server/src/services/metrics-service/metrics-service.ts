@@ -79,6 +79,4 @@ export class MetricsService {
     async getNbCommentsPost(postId: NonStrictObjectId): Promise<number> {
         return (await this.getMetricsByPostId(postId)).nbComments;
     }
-
-    
 }

@@ -4,7 +4,17 @@ import PageAccueil from '../views/PageAccueil.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import UserSettingsView from '@/views/UserSettingsView.vue'
 import Feed from '../components/common/feed.vue'
+import { useTokenStore } from '@/stores/auth'
 import UserProfileView from '@/views/UserProfileView.vue'
+
+const ROUTES = {
+  login: 'login',
+  homepage: 'homepage',
+  register: 'register',
+  settings: 'settings',
+  feed: 'feed',
+  profile: 'profile',
+};
 
 
 const router = createRouter({
@@ -12,34 +22,67 @@ const router = createRouter({
   routes: [
     {
       path: '/login',
-      name: 'login',
-      component: LoginView
+      name: ROUTES.login,
+      component: LoginView,
+      meta: {
+        isPublic: true,
+      },
     },
     {
       path: '/homepage',
-      name: 'homepage',
-      component : PageAccueil
+      name: ROUTES.homepage,
+      component : PageAccueil,
+      meta: {
+        isPrivate: true,
+      },
     },
     {
       path: '/register',
-      name: 'register',
-      component: RegisterView
+      name: ROUTES.register,
+      component: RegisterView,
+      meta: {
+        isPublic: true,
+      },
     },
     {
       path: '/settings',
-      name: 'settings',
-      component: UserSettingsView
+      name: ROUTES.settings,
+      component: UserSettingsView,
+      meta: {
+        isPrivate: true,
+      },
     },{
       path: '/feed',
-      name: 'feed',
-      component: Feed
+      name: ROUTES.feed,
+      component: Feed,
+      meta: {
+        isPrivate: true,
+      },
     },{
       path: '/profile/:profileId',
-      name:'profile',
+      name: ROUTES.profile,
       component: UserProfileView,
-      props: true
+      props: true,
+      meta: {
+        isPrivate: true,
+      },
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: { name: ROUTES.login },
+
     }
   ]
+});
+
+router.beforeEach((to, from) => {
+  const tokenStore = useTokenStore();
+
+  if (to.meta.isPrivate && !tokenStore.isLoggedIn()) {
+    return { name: ROUTES.login };
+  } else if (to.meta.isPublic && tokenStore.isLoggedIn()) {
+    return { name: ROUTES.homepage };
+  }
 })
 
 export default router

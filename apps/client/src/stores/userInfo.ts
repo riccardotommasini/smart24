@@ -1,3 +1,4 @@
+import type { IUser } from '@/models/user';
 import { defineStore } from 'pinia'
 
 export const useUserInfoStore = defineStore({
@@ -9,11 +10,17 @@ export const useUserInfoStore = defineStore({
     surname : localStorage.getItem('surname')
   }),
   actions: {
-    update(userInfo) {
+    update(userInfo: IUser) {
         localStorage.setItem('_id', userInfo._id);
         localStorage.setItem('username', userInfo.username);
         localStorage.setItem('surname', userInfo.surname);
         localStorage.setItem('name', userInfo.name);
+    },
+    logout() {
+        localStorage.removeItem('_id');
+        localStorage.removeItem('username');
+        localStorage.removeItem('surname');
+        localStorage.removeItem('name');
     }
   },
   getters : {
