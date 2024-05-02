@@ -52,7 +52,7 @@ pub fn to_ide_changes(delta: &OperationSeq) -> Vec<TextModification> {
     let mut modif = TextModification::default();
     let mut state = State::Ret;
     for op in delta.clone().ops() {
-        println!("state : {:?}; op : {:?}", state, op);
+        eprintln!("state : {:?}; op : {:?}", state, op);
         match state {
             State::Ret => match op {
                 Operation::Retain(retain) => {
