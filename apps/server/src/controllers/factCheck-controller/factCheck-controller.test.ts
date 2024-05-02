@@ -21,6 +21,7 @@ describe('FactCheckController', () => {
     let app: Application;
     let factCheckService: FactCheckService;
     let user: IUser & Document;
+    let notAFactChecker: IUser & Document;
     let token: string;
     let metrics: IMetrics & Document;
     let post: IPost & Document;
@@ -45,7 +46,16 @@ describe('FactCheckController', () => {
             organization: 'le monde',
         });
 
+        notAFactChecker = new User({
+            name: 'toto',
+            surname: 'toto',
+            username: 'toto',
+            mail: 'toto@yahoo.fr',
+            passwordHash,
+        });
+
         await user.save();
+        await notAFactChecker.save();
 
         token = (await container.resolve(AuthService).login(username, passwordHash)).token;
 
@@ -54,7 +64,7 @@ describe('FactCheckController', () => {
 
         post = new Post({
             text: 'je suis un post',
-            createdBy: user._id,
+            createdBy: notAFactChecker._id,
             metrics: metrics._id,
         });
         await post.save();
