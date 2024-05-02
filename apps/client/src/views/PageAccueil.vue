@@ -66,7 +66,7 @@ async function getPosts() {
 <template>
     <div class="mainFeed">
         <header>        
-                <bandeau :username="username" :fistname="name" :lastname="surname"/>
+                <BandeauHomepage :username="username" :fistname="name" :lastname="surname"/>
         </header>
         <div class="screen">
             <feed :posts="posts"></feed>

@@ -43,14 +43,6 @@ header{
     justify-content: center;
 }
 
-.panel {
-    display:flex;
-    flex-direction: column;
-    justify-content:center;
-    width: 100%;
-  }
-
-
 .container{
     height:20vh;
 }
