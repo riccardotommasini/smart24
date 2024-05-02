@@ -2,35 +2,75 @@
 
 import bandeau from "../components/common/bandeau.vue"
 import feed from "../components/common/feed.vue"
-import '../assets/main.css'
+import '../assets/PageAccueil.css'
 import { useUserInfoStore } from "../stores/userInfo";
 import { onMounted, ref } from "vue";
+import axios from "axios";
+import { useTokenStore } from "../stores/auth.ts";
 
 const store = useUserInfoStore();
+const tokenStore= useTokenStore(); 
 
 const username = ref('');
 const name = ref('');
 const surname = ref('');
+const posts=ref<any[]>([]);;
 
-onMounted( () => {
+onMounted(async () => {
     let userInfo = store.userInfo;
     username.value = userInfo.username;
     name.value = userInfo.name;
     surname.value = userInfo.surname;
 
-    console.log(username.value);
-    console.log(name.value);
-    console.log(surname.value);
+    try {
+        const array = await getPosts() ;
+        posts.value.push(...array);
+    } catch (error) {
+        console.error("Erreur lors de la récupération des posts :", error);
+    }
+
+    
 });
+
+
+async function getPosts() {
+    const idPost = "66333d0f22fdb44ff5afc20b";
+    const idPost2="66334a4522fdb44ff5afc248";
+    const token = localStorage.getItem('token');
+    
+    // Vérifiez si le token est présent
+    if (!token) {
+        throw new Error('Token de connexion non trouvé.');
+    }
+
+    // Configuration de l'en-tête d'autorisation avec le token
+    const headers = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    const res = await axios.get(`/posts/${idPost}`, { headers });
+    const res2= await axios.get(`/posts/${idPost2}`, { headers });
+
+    const postsArray=[res.data, res2.data];
+    console.log("data"  , postsArray);
+
+    return postsArray;
+}
+
+
 
 </script>
 
 <template>
 
-    <div class="content">
-        <bandeau :username="username" :fistname="name" :lastname="surname"/>
-        <feed></feed>
-    </div>
+        <header>        
+                <bandeau :username="username" :fistname="name" :lastname="surname"/>
+        </header>
+        <div class="screen">
+            <feed :posts="posts"></feed>
+        </div>
+
+   
 
 </template>
 

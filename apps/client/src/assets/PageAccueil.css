@@ -1,0 +1,34 @@
+
+
+.body{
+    display: flex;
+    flex-direction: column;
+
+}
+.screen{
+    width: 100%;
+    height: 80%;
+    display:flex;
+    justify-content: center;
+    background-color: brown;
+}
+
+.panel {
+    background-color: white;
+    margin: 1em 0 1em 0;
+    padding: 1em 0 1em 0;
+    height:fit-content;
+    width: fit-content;
+    display:flex;
+    flex-direction: column;
+    justify-content:center;
+    border-radius:30px;
+  }
+
+
+.container{
+    background-color: red;
+    height:20vh;
+}
+
+    

@@ -1,21 +1,20 @@
 <script>
+import '../assets/PageAccueil.css'
+
 export default {
   props: {
-    // Définition de la propriété info
-    // info: {
-    //     text: string,
-    //     date: DateTime,
-    //     image: string,
-    //     createdBy: mongoose.Types.ObjectId,
-    //     metrics: mongoose.Types.ObjectId
-    // }
+    info: {
+        date: Date,
+        createdBy: Object,
+        metrics: Object
+    }
   }
 }
 </script>
 
 <template>
 
-    <div class="container">
+    <div class="panel">
         <div class="post">
             <div class="post-header">
                 <h2 class="std title2">{{ info.createdBy }}</h2>
@@ -40,3 +39,5 @@ export default {
 
 
 </template>
+
+

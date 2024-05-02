@@ -1,15 +1,21 @@
 <!-- eslint-disable vue/require-v-for-key -->
 <script setup>
 import post from '../post.vue'
-const props = defineProps([
-    'postList'
-])
+import '../../assets/PageAccueil.css'
+
+
+const props = defineProps({
+    posts: Array // Déclarez le type de la prop 'posts' comme un tableau d'objets
+})
+
+console.log("posts", props.posts);
+
 
 </script>
 
 <template>
-    <div class="feed-main">
-        <div v-for="(item, index) in  props.postList"key="index">
+    <div class="center">
+        <div v-for="(item) in  props.posts" key="index">
             <post :info="item"></post>
         </div>
     </div>
@@ -18,15 +24,5 @@ const props = defineProps([
 
 <style scoped>
 
-.feed-main {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-
-    width: 100%;
-    height : 120px;
-
-    background-color: rgb(208, 208, 100);
-}
 
 </style>

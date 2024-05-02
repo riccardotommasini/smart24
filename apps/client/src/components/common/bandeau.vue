@@ -9,20 +9,19 @@ const props = defineProps([
 </script>
 
 <template>
-    <div class="bandeau-main">
-        <div>
-            <div class="logo-app">
-                <image href="../assets/logo_app"></image>
-            </div>
-            <div class="info-user">
-                <h2 class="std title2">{{ props.username }}</h2>
-                <h3 class="std title3">{{ props.fistname }} {{ props.lastname }}</h3>
-            </div>
-        </div>
-        <div class="params">
-            <button class="btn btn-primary">Réglages</button>
-        </div>
-    </div>
+    <nav class="bandeau-main">
+        <li class="logo-app">
+            <image href="../assets/logo.svg"></image>
+        </li>
+        <li>
+            <a class="info-user">
+              {{ props.username }}
+            </a>
+        </li>
+        <li>
+            <button class="btn btn-primary b">Réglages</button>
+        </li>
+    </nav>
 
 </template>
 
@@ -31,12 +30,10 @@ const props = defineProps([
 .bandeau-main {
     display: flex;
     flex-direction: row;
+    align-items: center;
     justify-content: space-between;
-
     width: 100%;
-    height : 120px;
-
-    background-color: white;
+    background-color:white;
 }
 
 .info-user{
@@ -53,6 +50,14 @@ const props = defineProps([
     font-size: 0.8rem;
 
     margin: auto;
+}
+
+li{
+    list-style-type:none;
+}
+
+li button{
+    margin-right:2vh;
 }
 
 </style>
