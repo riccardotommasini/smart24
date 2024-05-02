@@ -60,7 +60,6 @@ export class PostService {
         return post;
     }
 
-
     async getPostComments(postId: NonStrictObjectId): Promise<(Document & IPost)[]> {
         return Comment.find({ parentPostId: postId });
     }

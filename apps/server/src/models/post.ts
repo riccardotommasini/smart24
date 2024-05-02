@@ -24,7 +24,6 @@ const PostSchema = new Schema<IPost>(
         image: { type: String, required: false },
         createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
         metrics: { type: Schema.Types.ObjectId, ref: 'Metrics' },
-
     },
     options,
 );

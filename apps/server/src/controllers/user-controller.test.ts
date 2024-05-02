@@ -114,7 +114,6 @@ describe('UserController', () => {
         });
     });
 
-
     describe('POST /user/update', () => {
         it('should update name', () => {
             return request(app['app'])
