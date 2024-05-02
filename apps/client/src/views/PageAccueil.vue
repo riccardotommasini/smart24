@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import bandeau from "../components/common/bandeau.vue"
+import BandeauHomepage from "../components/common/bandeau-homepage.vue"
 import feed from "../components/common/feed.vue"
 import '../assets/main.css'
 import { useUserInfoStore } from "../stores/userInfo";
@@ -25,14 +25,26 @@ onMounted( () => {
 </script>
 
 <template>
-
-    <div class="content">
-        <bandeau :username="username" :firstname="name" :lastname="surname"/>
-        <feed></feed>
-    </div>
-
+        <header>
+            <BandeauHomepage :username="username" :fistname="name" :lastname="surname"/>
+        </header>
+        <div class="screen">
+            <feed :posts="posts"></feed>
+        </div>
 </template>
 
+<style scoped>
+body {
+    display : flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 
-<!-- eslint-disable vue/require-v-for-key -->
+    width: 100%;
+    height : 100%;
+}
 
+header {
+    width: 100%;
+}
+</style>

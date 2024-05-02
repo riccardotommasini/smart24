@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import bandeau from "../components/common/bandeau.vue"
+import bandeau from "../components/common/bandeau-settings.vue"
 import feed from "../components/common/feed.vue"
 import '../assets/main.css'
 import { useUserInfoStore } from "../stores/userInfo";
