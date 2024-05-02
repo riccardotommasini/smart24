@@ -3,43 +3,47 @@ import { inspect } from "util";
 
 
 // from rust-analyzer
-export const log = new (class {
+class RustLog {
     private enabled = true;
-    private readonly output = vscode.window.createOutputChannel("SmartShare Client");
+    private readonly output;
+
+    constructor(name: string) {
+        this.output = vscode.window.createOutputChannel(name);
+    }
 
     setEnabled(yes: boolean): void {
-        log.enabled = yes;
+        this.enabled = yes;
     }
 
     // Hint: the type [T, ...T[]] means a non-empty array
     debug(...msg: [unknown, ...unknown[]]): void {
-        if (!log.enabled) return;
-        log.write("DEBUG", ...msg);
+        if (!this.enabled) return;
+        this.write("DEBUG", ...msg);
     }
 
     info(...msg: [unknown, ...unknown[]]): void {
-        log.write("INFO", ...msg);
+        this.write("INFO", ...msg);
     }
 
     warn(...msg: [unknown, ...unknown[]]): void {
         debugger;
-        log.write("WARN", ...msg);
+        this.write("WARN", ...msg);
     }
 
     error(...msg: [unknown, ...unknown[]]): void {
         debugger;
-        log.write("ERROR", ...msg);
-        log.output.show(true);
+        this.write("ERROR", ...msg);
+        this.output.show(true);
     }
 
     subprocess(pid: number, ...msg: [unknown, ...unknown[]]) : void {
-        log.output.appendLine(msg.map(log.stringify).join(" "));
+        this.output.appendLine(msg.map(this.stringify).join(" "));
     }
 
     private write(label: string, ...messageParts: unknown[]): void {
-        const message = messageParts.map(log.stringify).join(" ");
+        const message = messageParts.map(this.stringify).join(" ");
         const dateTime = new Date().toISOString()
-        log.output.appendLine(`${dateTime} ${label}: ${message}`);
+        this.output.appendLine(`${dateTime} ${label}: ${message}`);
     }
 
     private stringify(val: unknown): string {
@@ -49,4 +53,8 @@ export const log = new (class {
             depth: 6, // heuristic
         });
     }
-})();
+};
+
+
+export const logClient = new RustLog("SmartShare Client");
+export const logServer = new RustLog("SmartShare Server");

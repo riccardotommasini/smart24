@@ -26,7 +26,7 @@ async fn main() {
         .with_default_directive(LevelFilter::INFO.into())
         .from_env_lossy();
     tracing_subscriber::registry()
-        .with(fmt::layer().with_writer(std::io::stderr))
+        .with(fmt::layer().with_writer(std::io::stderr).with_ansi(false))
         .with(env_filter)
         .init();
     info!("Creating socket");
