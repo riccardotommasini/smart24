@@ -89,12 +89,22 @@ describe('FactCheckController', () => {
                 .then(() => mock.verify());
         });
 
-        it('should not create if body has no grade', () => {
+        it('should not create if body is empty', () => {
             sinon.mock(factCheckService);
 
             return request(app['app'])
                 .post('/factCheck/create')
                 .send({})
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.NOT_FOUND);
+        });
+
+        it('should not create if body has no grade', () => {
+            sinon.mock(factCheckService);
+
+            return request(app['app'])
+                .post('/factCheck/create')
+                .send({ postId: post._id.toString() })
                 .set('Authorization', 'Bearer ' + token)
                 .expect(StatusCodes.INTERNAL_SERVER_ERROR);
         });
