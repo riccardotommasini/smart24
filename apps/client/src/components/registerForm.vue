@@ -38,7 +38,7 @@ async function register(){
     confirmPassword: confirmPassword.value
   })
 
-  const res = await tokenstore.register({username: pseudo.value, mail: email.value, password: password.value})
+  await tokenstore.register({username: pseudo.value, mail: email.value, password: password.value})
   window.location.href = '/login'
 }
 </script>
