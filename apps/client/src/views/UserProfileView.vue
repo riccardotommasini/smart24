@@ -25,7 +25,6 @@ onMounted(async () => {
 
     //get all info
     userData.value = (await axios.get('/user/' + userId.value, authHeader(token.value))).data;
-    console.log(userData.value);
 });
 
 </script>

@@ -10,7 +10,6 @@ export const useUserInfoStore = defineStore({
   }),
   actions: {
     update(userInfo) {
-      console.log(userInfo);
         localStorage.setItem('_id', userInfo._id);
         localStorage.setItem('username', userInfo.username);
         localStorage.setItem('surname', userInfo.surname);
@@ -19,7 +18,6 @@ export const useUserInfoStore = defineStore({
   },
   getters : {
     getUserInfo : (state) => {
-        console.log(state);
         return {_id : state._id, username : state.username, name : state.name, surname : state.surname};
     }
   }

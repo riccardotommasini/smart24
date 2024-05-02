@@ -11,7 +11,6 @@ export const useTokenStore = defineStore({
         const response = await axios.post('/login', credentials);
             
         const token = response.data.token
-        console.log("generated token : " + token);
         localStorage.setItem('token', token);
 
         return response;

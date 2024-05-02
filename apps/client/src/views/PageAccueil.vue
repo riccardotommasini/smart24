@@ -20,11 +20,6 @@ onMounted( () => {
     username.value = userInfo.username!;
     name.value = userInfo.name!;
     surname.value = userInfo.surname!;
-
-    console.log(id.value);
-    console.log(username.value);
-    console.log(name.value);
-    console.log(surname.value);
 });
 
 </script>
