@@ -1,13 +1,27 @@
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+header {
+  grid-column: 1 / 3;
+  background: #f6e7cf;
+  color: #160f29;
+  padding: 4rem;
+  text-align: center;
+}
+
 body {
   background-color: #160f29;
   color: #f7f7f2;
   font-family: "Montserrat", sans-serif;
-  margin: 20px;
+  margin: 0;
+  
+  display: grid;
+  grid-template-columns: min-content 1fr;
 }
 
 .container {
-    max-width: 80%;
-    margin: 0 15%;
+    margin: 0 12%;
     text-align: center;
     flex-direction: column;
     min-height: 100vh;
@@ -33,5 +47,41 @@ img {
 @media only screen and (max-width: 576px) {
   .container {
     margin: 4%;
+  }
+}
+
+
+
+.slides {
+  width: 100%;
+}
+
+.slide-wrapper {
+  height: 1000px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.slide-container {
+    transition: opacity 1s ease; /* Ajoute une transition pour le fondu */
+}
+
+#volume-container-1,
+#volume-container-2,
+#volume-container-3{
+  position: sticky;
+  bottom: 1rem;
+  align-self: flex-end;
+  opacity: 0;
+}
+
+/* Animation de transition */
+@keyframes slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0%);
   }
 }
