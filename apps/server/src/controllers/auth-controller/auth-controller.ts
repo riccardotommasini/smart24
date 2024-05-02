@@ -67,7 +67,7 @@ export class AuthController extends AbstractController {
             },
         );
 
-        router.post('/loadSession', auth, async (req: AuthRequest, res) => {
+        router.post('/loadSession', async (req: AuthRequest, res) => {
             res.status(StatusCodes.OK).send(req.user);
         });
     }
