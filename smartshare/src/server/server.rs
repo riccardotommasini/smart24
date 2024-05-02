@@ -2,7 +2,6 @@ use operational_transform::OperationSeq;
 use smartshare::protocol::msg::{MessageServer, ModifRequest};
 use tokio::sync::mpsc;
 use tracing::{error, info, trace, warn};
-use operational_transform::{Operation, OperationSeq};
 
 use crate::client::Client;
 
