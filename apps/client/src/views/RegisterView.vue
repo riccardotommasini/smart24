@@ -8,9 +8,10 @@ import '../assets/HomeView.css'
 
 <template>
   
-  <slogan/>
-  <registerForm/>
-
+  <div class="main">
+    <slogan/>
+    <registerForm/>
+  </div>
 </template>
 
 <style scoped>
