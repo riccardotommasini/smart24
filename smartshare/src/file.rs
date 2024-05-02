@@ -124,7 +124,7 @@ mod test {
         ops.insert("Smart");
         ops.delete(5);
 
-        let res = file.apply(ops);
+        let res = file.apply(&ops);
 
         assert!(res.is_err());
 
