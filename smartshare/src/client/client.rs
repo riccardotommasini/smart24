@@ -1,6 +1,6 @@
 use operational_transform::OperationSeq;
 use smartshare::protocol::msg::{
-    to_ide_changes, to_operation_seq, MessageIde, MessageServer, ModifRequest,
+    to_ide_changes, to_operation_seq, MessageIde, MessageServer, ModifRequest, TextModification, Format
 };
 
 use crate::ide::Ide;
@@ -14,6 +14,7 @@ pub struct Client {
     server: Server,
     ide: Ide,
     client_id: usize,
+    format: Format,
 }
 
 impl Client {
@@ -26,6 +27,7 @@ impl Client {
             server,
             ide,
             client_id,
+            format: Format::Chars,
         }
     }
 
@@ -54,6 +56,14 @@ impl Client {
             .retain(self.sent_delta.target_len() as u64);
     }
 
+    async fn on_server_error(&mut self, err: String) {
+        let _ = self.ide.send(MessageIde::Error(err)).await;
+    }
+
+    async fn on_ide_error(&mut self, err: String) {
+        let _ = self.server.send(MessageServer::Error(err)).await;
+    }
+
     async fn on_server_change(&mut self, modif: &ModifRequest) {
         self.rev_num += 1;
         if self.rev_num != modif.rev_num {
@@ -72,24 +82,57 @@ impl Client {
         self.unsent_delta = new_unsent_delta;
         let ide_modifs = to_ide_changes(&ide_delta);
         for modif in ide_modifs {
-            let _ = self.ide.send(MessageIde::IDEUpdate(modif)).await;
+            let _ = self.ide.send(MessageIde::Update(modif)).await;
         }
+    }
+
+    async fn on_request_file(&mut self) {
+        let _ = self.ide.send(MessageIde::RequestFile).await;
+    }
+
+    async fn on_ide_request_file(&mut self) {
+        let _ = self.server.send(MessageServer::RequestFile).await;
+    }
+
+    async fn on_receive_file(&mut self, file: String, version: usize) {
+        let _ = self.ide.send(MessageIde::File(file)).await;
+        self.rev_num = version
+    }
+
+    async fn on_ide_file(&mut self, file: String) {
+        self.rev_num = 0;
+        let _ = self.server.send(MessageServer::File{file, version: 0}).await;
+    }
+
+    async fn on_ide_change(&mut self, change: &TextModification) {
+        let ide_seq = to_operation_seq(&change, &(self.unsent_delta.target_len() as u64));
+        self.unsent_delta = self.unsent_delta.compose(&ide_seq).unwrap();
+        if self.sent_delta.is_noop() && !self.unsent_delta.is_noop() {
+            self.submit_change().await;
+        }
+    }
+
+    async fn on_ide_format(&mut self, format: Format) {
+        self.format = format;
     }
 
     pub async fn on_message_server(&mut self, message: MessageServer) {
         match message {
             MessageServer::ServerUpdate(modif) => self.on_server_change(&modif).await,
             MessageServer::Ack => self.on_ack().await,
+            MessageServer::Error(err) => self.on_server_error(err).await,
+            MessageServer::RequestFile => self.on_request_file().await,
+            MessageServer::File { file, version } => self.on_receive_file(file, version).await,
         }
     }
 
     pub async fn on_message_ide(&mut self, message_ide: MessageIde) {
-        if let MessageIde::IDEUpdate(change) = message_ide {
-            let ide_seq = to_operation_seq(&change, &(self.unsent_delta.target_len() as u64));
-            self.unsent_delta = self.unsent_delta.compose(&ide_seq).unwrap();
-            if self.sent_delta.is_noop() && !self.unsent_delta.is_noop() {
-                self.submit_change().await;
-            }
+        match message_ide {
+            MessageIde::Update(change) => self.on_ide_change(&change).await,
+            MessageIde::Declare(format) => self.on_ide_format(format).await,
+            MessageIde::Error(err) => self.on_ide_error(err).await,
+            MessageIde::RequestFile => self.on_ide_request_file().await,
+            MessageIde::File ( file) => self.on_ide_file(file).await,
         }
     }
 }
