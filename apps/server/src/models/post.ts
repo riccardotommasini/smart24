@@ -12,7 +12,7 @@ export interface ICreatePost {
 export interface IPost extends ICreatePost {
     text: string;
     date: DateTime;
-    image?: string;
+    image: string;
     createdBy: mongoose.Types.ObjectId;
     metrics: mongoose.Types.ObjectId;
 }
@@ -24,6 +24,7 @@ const PostSchema = new Schema<IPost>(
         image: { type: String, required: false },
         createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
         metrics: { type: Schema.Types.ObjectId, ref: 'Metrics' },
+
     },
     options,
 );

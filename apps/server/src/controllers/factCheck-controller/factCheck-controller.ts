@@ -27,7 +27,7 @@ export class FactCheckerController extends AbstractController {
             async (req: AuthRequest<object, ICreateFactCheck>, res: Response, next: NextFunction) => {
                 try {
                     res.status(StatusCodes.CREATED).send(
-                        await this.factCheckService.createAssignFactCheck(req.user?.username ?? '', req.body),
+                        await this.factCheckService.createAssignFactCheck(req.user?._id ?? '', req.body),
                     );
                 } catch (e) {
                     next(e);
