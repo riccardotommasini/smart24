@@ -24,4 +24,14 @@ export class RatingsUntrustService {
 
         return ratingsUntrust;
     }
+
+    async removeRatingsUntrust(userId: string, postId: string): Promise<void> {
+        await this.userService.getUser(userId);
+        await this.postService.getPost(postId);
+
+        await RatingsUntrust.findOneAndDelete({
+            user: new Types.ObjectId(userId),
+            item: new Types.ObjectId(postId),
+        });
+    }
 }

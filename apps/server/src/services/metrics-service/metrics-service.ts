@@ -7,6 +7,8 @@ import { RatingsLikesService } from '../ratings-services/ratings-likes-service';
 import { RatingsDislikesService } from '../ratings-services/ratings-dislikes-service';
 import { RatingsTrustService } from '../ratings-services/ratings-trust-service';
 import { RatingsUntrustService } from '../ratings-services/ratings-untrust-service';
+import { HttpException } from '../../models/http-exception';
+import { StatusCodes } from 'http-status-codes';
 
 @singleton()
 export class MetricsService {
@@ -35,15 +37,22 @@ export class MetricsService {
 
     async likePost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
+        const userIdObj = toObjectId(userId);
 
-        if (metrics.likedBy.includes(toObjectId(userId))) {
-            console.log('User already liked the post');
-        } else {
-            metrics.likedBy.push(toObjectId(userId));
+        if (metrics.likedBy.includes(userIdObj)) {
+            metrics.likedBy = metrics.likedBy.filter((id) => !id.equals(userIdObj));
+            metrics.nbLikes -= 1;
+            await metrics.save();
+
+            await this.ratingsLikesService.removeRatingsLikes(userId.toString(), postId.toString());
+        } else if (!metrics.dislikedBy.includes(userIdObj)) {
+            metrics.likedBy.push(userIdObj);
             metrics.nbLikes += 1;
             await metrics.save();
 
             await this.ratingsLikesService.createRatingsLikes(userId.toString(), postId.toString());
+        } else {
+            throw new HttpException(StatusCodes.BAD_REQUEST, `User dislikes this post`);
         }
 
         return metrics;
@@ -51,15 +60,22 @@ export class MetricsService {
 
     async dislikePost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
+        const userIdObj = toObjectId(userId);
 
-        if (metrics.dislikedBy.includes(toObjectId(userId))) {
-            console.log('User already disliked the post');
-        } else {
-            metrics.dislikedBy.push(toObjectId(userId));
+        if (metrics.dislikedBy.includes(userIdObj)) {
+            metrics.dislikedBy = metrics.dislikedBy.filter((id) => !id.equals(userIdObj));
+            metrics.nbDislikes -= 1;
+            await metrics.save();
+
+            await this.ratingsDislikesService.removeRatingsDislikes(userId.toString(), postId.toString());
+        } else if (!metrics.likedBy.includes(userIdObj)) {
+            metrics.dislikedBy.push(userIdObj);
             metrics.nbDislikes += 1;
             await metrics.save();
 
             await this.ratingsDislikesService.createRatingsDislikes(userId.toString(), postId.toString());
+        } else {
+            throw new HttpException(StatusCodes.BAD_REQUEST, `User likes this post`);
         }
 
         return metrics;
@@ -67,15 +83,22 @@ export class MetricsService {
 
     async trustPost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
+        const userIdObj = toObjectId(userId);
 
-        if (metrics.trustedBy.includes(toObjectId(userId))) {
-            console.log('User already trusted the post');
-        } else {
-            metrics.trustedBy.push(toObjectId(userId));
+        if (metrics.trustedBy.includes(userIdObj)) {
+            metrics.trustedBy = metrics.trustedBy.filter((id) => !id.equals(userIdObj));
+            metrics.nbTrusts -= 1;
+            await metrics.save();
+
+            await this.ratingsTrustService.removeRatingsTrust(userId.toString(), postId.toString());
+        } else if (!metrics.untrustedBy.includes(userIdObj)) {
+            metrics.trustedBy.push(userIdObj);
             metrics.nbTrusts += 1;
             await metrics.save();
 
             await this.ratingsTrustService.createRatingsTrust(userId.toString(), postId.toString());
+        } else {
+            throw new HttpException(StatusCodes.BAD_REQUEST, `User untrusts this post`);
         }
 
         return metrics;
@@ -83,15 +106,22 @@ export class MetricsService {
 
     async untrustPost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
+        const userIdObj = toObjectId(userId);
 
-        if (metrics.untrustedBy.includes(toObjectId(userId))) {
-            console.log('User already untrusted the post');
-        } else {
-            metrics.untrustedBy.push(toObjectId(userId));
+        if (metrics.untrustedBy.includes(userIdObj)) {
+            metrics.untrustedBy = metrics.untrustedBy.filter((id) => !id.equals(userIdObj));
+            metrics.nbUntrusts -= 1;
+            await metrics.save();
+
+            await this.ratingsUntrustService.removeRatingsUntrust(userId.toString(), postId.toString());
+        } else if (!metrics.trustedBy.includes(userIdObj)) {
+            metrics.untrustedBy.push(userIdObj);
             metrics.nbUntrusts += 1;
             await metrics.save();
 
             await this.ratingsUntrustService.createRatingsUntrust(userId.toString(), postId.toString());
+        } else {
+            throw new HttpException(StatusCodes.BAD_REQUEST, `User trusts this post`);
         }
 
         return metrics;

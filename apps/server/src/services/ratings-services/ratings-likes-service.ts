@@ -24,4 +24,14 @@ export class RatingsLikesService {
 
         return ratingsLikes;
     }
+
+    async removeRatingsLikes(userId: string, postId: string): Promise<void> {
+        await this.userService.getUser(userId);
+        await this.postService.getPost(postId);
+
+        await RatingsLikes.findOneAndDelete({
+            user: new Types.ObjectId(userId),
+            item: new Types.ObjectId(postId),
+        });
+    }
 }
