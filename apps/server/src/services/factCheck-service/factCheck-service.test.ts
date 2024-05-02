@@ -26,6 +26,8 @@ describe('FactCheckService', () => {
         const username = 'fuckyou';
         const passwordHash = 'yoyoyoyo';
         user = new User({
+            name: 'a',
+            surname: 'b',
             username,
             mail: 'a@gmail.com',
             passwordHash,
@@ -34,6 +36,8 @@ describe('FactCheckService', () => {
         });
 
         notAFactChecker = new User({
+            name: 'toto',
+            surname: 'toto',
             username: 'toto',
             mail: 'toto@yahoo.fr',
             passwordHash,

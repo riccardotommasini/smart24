@@ -35,6 +35,10 @@ export const useTokenStore = defineStore({
     isLoggedIn(): boolean {
       return this.token !== null;
     },
+    async register(infos: any) {  // Bad typing here :(
+      const response = await axios.post('/signup', infos);
+      return response;
+    },
     logout() {
       this.token = null
       localStorage.removeItem('token');

@@ -5,6 +5,8 @@ import mongoose, { Document } from 'mongoose';
 import User, { IUser } from '../../models/user';
 
 const DEFAULT_USER = {
+    name: 'joe',
+    surname: 'mama',
     username: 'joe',
     mail: 'joe@mama.com',
     passwordHash: 'hola',

@@ -76,7 +76,6 @@ export class UserService {
                 throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or mail already exists');
             }
         }
-
         const updatedUser = await User.findByIdAndUpdate(userObjectId, update, { new: true });
         return updatedUser;
     }
@@ -103,11 +102,11 @@ export class UserService {
 
     async getUserProfile(otherUserId: NonStrictObjectId) {
         const userData = await this.getUser(otherUserId);
-        const lastPosts = await Post.aggregate([
-            { $match: { createdBy: otherUserId } },
-            { $sort: { date: -1 } },
-            { $limit: 50 },
-        ]);
+        const lastPosts = await Post.find({ createdBy: otherUserId })
+            .sort({ date: -1 })
+            .limit(50)
+            .populate('createdBy', 'username mail')
+            .populate('metrics');
 
         return {
             userData,
