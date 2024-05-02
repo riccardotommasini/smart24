@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geographic Distribution of Volcanoes by Height</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <header style="font-size: 30px; text-align: center;">
+        Geographic Distribution of Volcanoes by Height
+    </header>
+    <div style="margin: 10px; max-width: 800px;">
+        <div style="font-size: 20px;">Minimum Volcano Height</div>
+        Meters <input id="meter" type="number" value="2000" step="1"> Feet
+        <input id="feet" type="number" value="6561.7">
+        <div id="map"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('meter').addEventListener('input', updatePlot);
+            document.getElementById('feet').addEventListener('input', updatePlot);
+            updatePlot();
+        });
+
+        function updatePlot() {
+            var meter = document.getElementById('meter').value;
+            var feet = document.getElementById('feet').value;
+
+            fetch('/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    meter: meter,
+                    feet: feet
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('meter').value = data.meter;
+                document.getElementById('feet').value = data.feet;
+                Plotly.newPlot('map', JSON.parse(data.graph));
+            });
+        }
+    </script>
+</body>
+</html>
