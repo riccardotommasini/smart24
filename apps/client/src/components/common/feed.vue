@@ -9,13 +9,12 @@ const props = defineProps([
 </script>
 
 <template>
-    <div class="feed-main">
+    <div class="panel feed-main">
         <!-- eslint-disable-next-line vue/require-v-for-key -->
         <div v-for="(item) in  props.postList" key="index">
             <post :info="item"></post>
         </div>
     </div>
-
 </template>
 
 <style scoped>
@@ -24,11 +23,6 @@ const props = defineProps([
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-
-    width: 100%;
-    height : 120px;
-
-    background-color: rgb(208, 208, 100);
 }
 
 </style>
