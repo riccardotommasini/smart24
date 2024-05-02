@@ -11,7 +11,7 @@ export const useTokenStore = defineStore({
         const response = await axios.post('/login', credentials);
             
         const token = response.data.token
-        this.token = token;
+        console.log("generated token : " + token);
         localStorage.setItem('token', token);
 
         return response;
@@ -20,5 +20,8 @@ export const useTokenStore = defineStore({
       this.token = null
       localStorage.removeItem('token')
     }
+  },
+  getters : {
+    getToken: (state) => { return state.token }
   }
 });

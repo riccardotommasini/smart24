@@ -35,7 +35,7 @@ export class UserService {
                 expiresIn: '2 days',
             });
 
-            return { user: { name: foundUser.name, surname: foundUser.surname, username: foundUser.username }, token: token };
+            return { user: { id: foundUser._id, name: foundUser.name, surname: foundUser.surname, username: foundUser.username }, token: token };
         } else {
             throw new Error('Password is not correct');
         }
