@@ -14,8 +14,8 @@ console.log("posts", props.posts);
 </script>
 
 <template>
-    <div class="center">
-        <div v-for="(item) in  props.posts" key="index">
+    <div class="feed">
+        <div class="posts" v-for="(item) in  props.posts" key="index">
             <post :info="item"></post>
         </div>
     </div>
