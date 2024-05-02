@@ -6,7 +6,7 @@ const tokenstore = useTokenStore();
 
 const name = ref('')
 const surname = ref('')
-const pseudo = ref('')
+const username = ref('')
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
@@ -15,7 +15,7 @@ async function register(){
   if (
     !name.value ||
     !surname.value ||
-    !pseudo.value ||
+    !username.value ||
     !email.value ||
     !password.value ||
     !confirmPassword.value
@@ -29,16 +29,20 @@ async function register(){
     return
   }
 
+  if (password.value.length < 5){
+    alert("Password's length must be at least 5")
+  }
+
   console.log('Form submitted:', {
     name: name.value,
     surname: surname.value,
-    pseudo: pseudo.value,
+    pseudo: username.value,
     email: email.value,
     password: password.value,
     confirmPassword: confirmPassword.value
   })
 
-  await tokenstore.register({username: pseudo.value, mail: email.value, password: password.value})
+  await tokenstore.register({name: name.value, surname: surname.value, username: username.value, mail: email.value, password: password.value})
   window.location.href = '/login'
 }
 </script>
@@ -48,7 +52,7 @@ async function register(){
     <form class="login-form" @submit.prevent="register">
       <input type="text" class="input-field" placeholder="Name" v-model="name" />
       <input type="text" class="input-field" placeholder="Surname" v-model="surname" />
-      <input type="text" class="input-field" placeholder="Pseudo" v-model="pseudo" />
+      <input type="text" class="input-field" placeholder="Username" v-model="username" />
       <input type="email" class="input-field" placeholder="Email" v-model="email" />
       <input type="password" class="input-field" placeholder="Password" v-model="password" />
       <input

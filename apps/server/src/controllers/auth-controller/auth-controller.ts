@@ -35,6 +35,8 @@ export class AuthController extends AbstractController {
 
         router.post(
             '/signup',
+            body('name', 'is required').trim().notEmpty(),
+            body('surname', 'is required').trim().notEmpty(),
             body('username', 'is required').trim().notEmpty(),
             body('mail', 'is required').trim().notEmpty(),
             body('mail', 'must be a valid email').isEmail(),

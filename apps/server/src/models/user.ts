@@ -27,8 +27,8 @@ export interface IUserSession {
 }
 
 const UserSchema: Schema<IUser> = new Schema<IUser>({
-    name: { type: String, required: false, maxlength: 100 },
-    surname: { type: String, required: false, maxlength: 100 },
+    name: { type: String, required: true, maxlength: 100 },
+    surname: { type: String, required: true, maxlength: 100 },
     birthday: { type: Date, required: false },
     mail: { type: String, required: true, maxLength: 100, unique: true },
     username: { type: String, required: true, maxLength: 100, unique: true },
