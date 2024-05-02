@@ -16,6 +16,10 @@ export const useTokenStore = defineStore({
 
         return response;
     },
+    async register(infos) {
+      const response = await axios.post('/signup', infos);
+      return response;
+    },
     logout() {
       this.token = null
       localStorage.removeItem('token')
