@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <!-- eslint-disable vue/require-v-for-key -->
 <script setup>
 import post from '../post.vue'
@@ -9,8 +10,8 @@ const props = defineProps([
 
 <template>
     <div class="feed-main">
-        // eslint-disable-next-line vue/require-v-for-key
-        <div v-for="(item, index) in  props.postList" :key="index">
+        <!-- eslint-disable-next-line vue/require-v-for-key -->
+        <div v-for="(item) in  props.postList" key="index">
             <post :info="item"></post>
         </div>
     </div>
@@ -27,7 +28,7 @@ const props = defineProps([
     width: 100%;
     height : 120px;
 
-    background-color: rgb(208, 208, 208);
+    background-color: rgb(208, 208, 100);
 }
 
 </style>

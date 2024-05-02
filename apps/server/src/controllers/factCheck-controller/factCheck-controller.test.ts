@@ -36,6 +36,8 @@ describe('FactCheckController', () => {
         const username = 'fuckyou';
         const passwordHash = 'yoyoyoyo';
         user = new User({
+            name: 'coucou',
+            surname: 'toto',
             username,
             mail: 'a@gmail.com',
             passwordHash,

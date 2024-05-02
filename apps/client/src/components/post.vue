@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script>
 export default {
   props: {
@@ -5,7 +6,7 @@ export default {
     // info: {
     //     text: string,
     //     date: DateTime,
-    //     image?: string,
+    //     image: string,
     //     createdBy: mongoose.Types.ObjectId,
     //     metrics: mongoose.Types.ObjectId
     // }

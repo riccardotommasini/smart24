@@ -32,6 +32,8 @@ describe('PostController', () => {
         const username = 'michel';
         const passwordHash = 'yoyoyoyo';
         user = new User({
+            name: 'michel',
+            surname: 'dupont',
             username,
             mail: 'a',
             passwordHash,
