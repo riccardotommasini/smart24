@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useTokenStore } from '../stores/auth';
 import { ref } from 'vue'
+import '../assets/RegisterView.css';
 
 const tokenstore = useTokenStore();
 
