@@ -26,7 +26,7 @@ const props = defineProps([
     width: 100%;
     height : 120px;
 
-    background-color: rgb(208, 208, 208);
+    background-color: rgb(208, 208, 100);
 }
 
 </style>

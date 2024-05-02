@@ -34,15 +34,6 @@ onMounted( () => {
 
 </template>
 
-<style scoped>
 
-.content {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+<!-- eslint-disable vue/require-v-for-key -->
 
-    width: 100%;
-    height: 100%;
-}
-
-</style>

@@ -6,6 +6,8 @@
 
     <div class="container">
         <form class="login-form">
+            <input type="text" class="input-field" placeholder="Name">
+            <input type="text" class="input-field" placeholder="Surname">
             <input type="text" class="input-field" placeholder="Pseudo">
             <input type="email" class="input-field" placeholder="Email">
             <input type="password" class="input-field" placeholder="Password">
