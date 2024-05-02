@@ -8,16 +8,25 @@ use serde::{Deserialize, Serialize};
 pub enum MessageServer {
     ServerUpdate(ModifRequest),
     Ack,
+    Error(String),
+    RequestFile,
+    File{
+        file: String,
+        version: usize
+    },
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "action", rename_all = "snake_case")]
 pub enum MessageIde {
-    IDEUpdate(TextModification),
+    Update(TextModification),
+    Declare(Format),
+    Error(String),
+    RequestFile,
+    File(String),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
-#[serde(tag = "update_type", rename_all = "snake_case")]
 pub struct TextModification {
     pub offset: u64,
     pub delete: u64,
@@ -25,7 +34,6 @@ pub struct TextModification {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "modifrequest", rename_all = "snake_case")]
 pub struct ModifRequest {
     pub delta: OperationSeq,
     pub rev_num: usize,
@@ -46,6 +54,14 @@ enum State {
     Ins,
     Del,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "offset_format", rename_all = "snake_case")]
+pub enum Format {
+    Bytes,
+    Chars,
+}
+
 
 pub fn to_ide_changes(delta: &OperationSeq) -> Vec<TextModification> {
     let mut modifs: Vec<TextModification> = vec![];

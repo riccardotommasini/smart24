@@ -18,7 +18,7 @@ function M.set_text(offset, deleted, text)
     vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col, text)
 end
 
-local handle = vim.fn.jobstart("./client 127.0.0.1:4903", {
+local handle = vim.fn.jobstart("./client 192.168.165.193:4903", {
     on_stdout = function(_job_id, data, event)
         for _, json_object in ipairs(data) do
             if json_object ~= nil and json_object ~= '' then
