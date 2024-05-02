@@ -40,7 +40,7 @@ onMounted( () => {
     username.value = userInfo.username!;
     name.value = userInfo.name!;
     surname.value = userInfo.surname!;
-
+    console.log(props.profileId)
     fetchPosts(props.profileId);
 });
 
