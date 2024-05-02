@@ -68,7 +68,6 @@ export class UserService {
                 throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or mail already exists');
             }
         }
-
         const updatedUser = await User.findByIdAndUpdate(userObjectId, update, { new: true });
         return updatedUser;
     }

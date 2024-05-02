@@ -7,7 +7,7 @@ const props = defineProps([
 ])
 
 const redirectUserProfile = () => {
-    window.location.href = "/profile";
+    window.location.href = "/settings";
 }
 
 </script>
