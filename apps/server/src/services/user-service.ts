@@ -5,9 +5,9 @@ import { StatusCodes } from 'http-status-codes';
 import { HttpException } from '../models/http-exception';
 import { Document, UpdateQuery, Types } from 'mongoose';
 import { NonStrictObjectId } from 'src/utils/objectid';
-import bcryptjs from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import { env } from '../utils/env'
+import bcryptjs from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { env } from '../utils/env';
 
 @singleton()
 export class UserService {
@@ -20,7 +20,7 @@ export class UserService {
 
         return user;
     }
-  
+
     public async login(username: string, password: string) {
         const foundUser = await User.findOne({ username });
 
@@ -35,7 +35,15 @@ export class UserService {
                 expiresIn: '2 days',
             });
 
-            return { user: { id: foundUser._id, name: foundUser.name, surname: foundUser.surname, username: foundUser.username }, token: token };
+            return {
+                user: {
+                    id: foundUser._id,
+                    name: foundUser.name,
+                    surname: foundUser.surname,
+                    username: foundUser.username,
+                },
+                token: token,
+            };
         } else {
             throw new Error('Password is not correct');
         }
@@ -94,11 +102,11 @@ export class UserService {
 
     async getUserProfile(otherUserId: NonStrictObjectId) {
         const userData = await this.getUser(otherUserId);
-        const lastPosts = await Post.aggregate([
-            { $match: { createdBy: otherUserId } },
-            { $sort: { date: -1 } },
-            { $limit: 50 },
-        ]);
+        const lastPosts = await Post.find({ createdBy: otherUserId })
+            .sort({ date: -1 })
+            .limit(50)
+            .populate('createdBy', 'username mail')
+            .populate('metrics');
 
         return {
             userData,

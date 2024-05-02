@@ -4,6 +4,7 @@ import PageAccueil from '../views/PageAccueil.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import UserSettingsView from '@/views/UserSettingsView.vue'
 import Feed from '../components/common/feed.vue'
+import UserProfileView from '@/views/UserProfileView.vue'
 
 
 const router = createRouter({
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/feed',
       name: 'feed',
       component: Feed
+    },{
+      path: '/profile/:profileId',
+      name:'profile',
+      component: UserProfileView,
+      props: true
     }
   ]
 })
