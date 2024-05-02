@@ -1,6 +1,5 @@
 <script setup>
 import { useUserInfoStore } from '@/stores/userInfo';
-import '../assets/HomeView.css'
 import { useTokenStore } from '../stores/auth.ts'
 import { ref } from 'vue';
 
