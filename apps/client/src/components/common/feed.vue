@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/require-v-for-key -->
 <script setup>
-
+import post from '../post.vue'
 const props = defineProps([
     'postList'
 ])
