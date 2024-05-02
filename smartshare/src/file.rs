@@ -15,7 +15,7 @@ impl File {
         }
     }
 
-    pub fn apply(&mut self, seq: OperationSeq) -> anyhow::Result<()> {
+    pub fn apply(&mut self, seq: &OperationSeq) -> anyhow::Result<()> {
         ensure!(
             seq.base_len() == self.content.len_chars(),
             "Operation base len does not match file len"
@@ -40,6 +40,10 @@ impl File {
 
         Ok(())
     }
+
+    pub fn len_chars(&self) -> usize {
+        self.content.len_chars()
+    }
 }
 
 impl Display for File {
@@ -63,7 +67,7 @@ mod test {
         let mut ops = OperationSeq::default();
         ops.retain(11);
 
-        let res = file.apply(ops);
+        let res = file.apply(&ops);
 
         assert!(res.is_ok());
 
@@ -77,7 +81,7 @@ mod test {
         ops.retain(5);
         ops.delete(6);
 
-        let res = file.apply(ops);
+        let res = file.apply(&ops);
 
         assert!(res.is_ok());
 
@@ -90,7 +94,7 @@ mod test {
         let mut ops = OperationSeq::default();
         ops.insert("Hello world");
 
-        let res = file.apply(ops);
+        let res = file.apply(&ops);
 
         assert!(res.is_ok());
 
@@ -106,7 +110,7 @@ mod test {
         ops.insert("Smart");
         ops.delete(5);
 
-        let res = file.apply(ops);
+        let res = file.apply(&ops);
 
         assert!(res.is_ok());
 
