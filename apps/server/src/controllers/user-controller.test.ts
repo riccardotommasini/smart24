@@ -7,11 +7,15 @@ import { StatusCodes } from 'http-status-codes';
 import { AuthService } from '../services/auth-service/auth-service';
 
 const DEFAULT_USER = {
+    name: 'richard',
+    surname: 'dupont',
     username: 'richard',
     mail: 'richard@richard.com',
     passwordHash: 'bouetteentabarnak',
 };
 const DEFAULT_USER_2 = {
+    name: 'joelle',
+    surname: 'gendre',
     username: 'joellegendre',
     mail: 'joellegendre@tva.ca',
     passwordHash: 'dansleparc',

@@ -1,14 +1,15 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script>
 export default {
   props: {
     // Définition de la propriété info
-    info: {
-        text: string,
-        date: DateTime,
-        image?: string,
-        createdBy: mongoose.Types.ObjectId,
-        metrics: mongoose.Types.ObjectId
-    }
+    // info: {
+    //     text: string,
+    //     date: DateTime,
+    //     image: string,
+    //     createdBy: mongoose.Types.ObjectId,
+    //     metrics: mongoose.Types.ObjectId
+    // }
   }
 }
 </script>
