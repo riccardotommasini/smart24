@@ -1,5 +1,5 @@
 <script>
-export default {
+/* export default {
   props: {
     // Définition de la propriété info
     info: {
@@ -10,7 +10,7 @@ export default {
         metrics: mongoose.Types.ObjectId
     }
   }
-}
+} */
 </script>
 
 <template>
