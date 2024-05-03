@@ -1,32 +1,44 @@
 <!-- eslint-disable vue/multi-word-component-names -->
-<script>
+<script setup>
 
+import axios from "axios";
+import { computed, onMounted, ref } from "vue";
 
-export default {
-  props: {
+ const props=defineProps({
     info: {
         date: Date,
         createdBy: Object,
-        metrics: Object
-    }
-  }
+        metrics: Object,
+        image: String,
+        content: String,
+    },
+    likedBy: Boolean,
+    unlikedBy: Boolean,
+    trustedBy: Boolean,
+    untrustedBy: Boolean,
+    username: String,
+});
+
+const dateInstance = new Date(props.info.date);
+
+const year=dateInstance.getFullYear();
+const month=dateInstance.getMonth();
+const day=dateInstance.getDate();
+const hour=dateInstance.getHours();
+const minute=dateInstance.getMinutes();
+const metrics=ref('');
+
+onMounted(async () => {
+
+metrics.value=await getMetrics();
+
+
+});
+
+async function getMetrics(){
+    const res = await axios.get(`/posts/${props.info._id}/metrics`);
+    return res.data;
 }
-
-// // Sélectionnez tous les boutons avec la classe 'myButton'
-// const button_verified_user = document.getElementById('.red');
-// const button_remove_moderator = document.getElementById('.red');
-// const button_thumb_up = document.getElementById('.red');
-// const button_thumb_down = document.getElementById('.red');
-// const button_comment = document.getElementById('.red');
-// const button_send = document.getElementById('.red');
-
-// console.log(buttons);
-// // Parcourir tous les boutons et ajouter un écouteur d'événements à chacun
-//   button.addEventListener('click', function() {
-//     // Ajoute la classe "button-clicked" au bouton cliqué
-//     button.style.color="red";
-//   });
-
 
 
 </script>
@@ -42,8 +54,8 @@ export default {
     <div class="  ">
         <div class="post">
             <div class="post-header">
-                <h2 class="createdBy">{{ info.createdBy }}</h2>
-                <h3 class="date">{{ info.date }}</h3>  
+                <h2 class="createdBy">{{username}}</h2>
+                <h3 class="date">{{ day }}-{{ month }}-{{ year }} {{hour}}:{{minute}}</h3>  
 
             </div>
             <div class="post-content">
@@ -53,22 +65,53 @@ export default {
                 <img v-if="info.image" :src="info.image" alt="post-image" class="post-image">
             </div>
             <div class="post-footer">
-                <div class="post-footer-left">
-                    <button id="verified_user" class="material-symbols-outlined button-post green">
-                        verified_user
-                    </button>     
-                    <button class="material-symbols-outlined button-post red">
-                        remove_moderator
-                    </button>  
-                    <button class="material-symbols-outlined button-post green">
-                        thumb_up
-                    </button>                   
-                    <button class="material-symbols-outlined button-post red">
-                        thumb_down
-                    </button>  
-                    <button class="material-symbols-outlined button-post">
+                <div class="post-footer-left">                          
+                    <div class="comment-icon-container">
+                        <button v-if="trustedBy" class="material-symbols-outlined button-post green">
+                            verified_user
+                        </button> 
+                        <button v-else class="material-symbols-outlined button-post ">
+                            verified_user
+                        </button>  
+                        <div class="comment-count-bubble">{{metrics.nbTrusts}}</div>
+                    </div>
+                    <div class="comment-icon-container">
+                        <button v-if="untrustedBy" class="material-symbols-outlined button-post red">
+                            remove_moderator
+                        </button> 
+                        <button v-else class="material-symbols-outlined button-post">
+                            remove_moderator
+                        </button>  
+                        <div class="comment-count-bubble">{{metrics.nbUntrusts}}</div>
+                    </div> 
+                    <div class="comment-icon-container">
+                        <button v-if="likedBy" class="material-symbols-outlined button-post green">
+                            thumb_up
+                        </button>
+                        <button v-else class="material-symbols-outlined button-post">
+                            thumb_up
+                        </button>
+                        <div class="comment-count-bubble">{{metrics.nbLikes}}</div>
+                    </div>
+                      
+                    <div class="comment-icon-container">
+                        <button v-if="unlikedBy" class="material-symbols-outlined button-post red">
+                            thumb_down
+                        </button>  
+                        <button v-else class="material-symbols-outlined button-post">
+                            thumb_down
+                        </button> 
+                        <div class="comment-count-bubble">{{metrics.nbDislikes}}</div>
+                    </div>
+
+                    <div class="comment-icon-container">
+                        <button class="material-symbols-outlined button-post">
                         comment
-                    </button>  
+                        </button>  
+                        <div class="comment-count-bubble">{{metrics.nbComments}}</div>
+                    </div>
+
+                  
                     <button class="material-symbols-outlined button-post">
                         send
                     </button>  

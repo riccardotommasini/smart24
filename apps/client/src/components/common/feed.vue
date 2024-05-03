@@ -4,9 +4,9 @@
 import post from '../post.vue'
 import '../../assets/PageAccueil.css'
 
-
 const props = defineProps({
-    posts: Array // Déclarez le type de la prop 'posts' comme un tableau d'objets
+    posts: Array,
+    username: String,
 })
 
 console.log("posts", props.posts);
@@ -16,8 +16,8 @@ console.log("posts", props.posts);
 
 <template>
     <div class="feed">
-        <div class="posts" v-for="(item) in  props.posts" key="index">
-            <post :info="item"></post>
+        <div class="posts" v-for="(item,index) in  props.posts[0]" key="index">
+            <post :username="username":info="item" :likedBy="props.posts[1][index]" :unlikedBy="props.posts[2][index]" :trustedBy="props.posts[3][index]" :untrustedBy="props.posts[4][index]"></post>
         </div>
     </div>
 </template>
