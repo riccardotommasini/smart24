@@ -1,10 +1,12 @@
-<!-- eslint-disable vue/multi-word-component-names -->
+
+
 <script setup>
-
 import axios from "axios";
-import { computed, onMounted, ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useUserInfoStore } from "../stores/userInfo";
 
- const props=defineProps({
+const props = defineProps({
+    posts: Array,
     info: {
         date: Date,
         createdBy: Object,
@@ -12,67 +14,105 @@ import { computed, onMounted, ref } from "vue";
         image: String,
         text: String,
     },
-    likedBy: Boolean,
-    unlikedBy: Boolean,
-    trustedBy: Boolean,
-    untrustedBy: Boolean,
     username: String,
 });
 
-const dateInstance = new Date(props.info.date);
+const store = useUserInfoStore();
 
-const year=dateInstance.getFullYear();
-const month=dateInstance.getMonth();
-const day=dateInstance.getDate();
-const hour=dateInstance.getHours();
-const minute=dateInstance.getMinutes();
-const metrics=ref('');
-console.log("likedBy", props.likedBy);
+const metric = ref('');
+const likedBy = ref(false);
+const unlikedBy = ref(false);
+const trustedBy = ref(false);
+const untrustedBy = ref(false);
+
+const dateInstance = new Date(props.info.date);
+const year = dateInstance.getFullYear();
+const month = dateInstance.getMonth();
+const day = dateInstance.getDate();
+const hour = dateInstance.getHours();
+const minute = dateInstance.getMinutes();
 
 onMounted(async () => {
-
-metrics.value=await getMetrics();
-
-
+    
+    metric.value = await getMetrics();
+    checkIfUserHasLiked(metric.value);
 });
 
-async function getMetrics(){
+async function getMetrics() {
     const res = await axios.get(`/posts/${props.info._id}/metrics`);
     return res.data;
 }
 
-
-async function likePost(){
-    const res = await axios.post(`/posts/${props.info._id}/metrics/like`);
-    metrics.value=await getMetrics();
-    console.log(res.data);
+async function likePost() {
+    await axios.post(`/posts/${props.info._id}/metrics/like`);
+    
+    metric.value = await getMetrics();
+    checkIfUserHasLiked(metric.value);
 }
 
-async function dislikePost(){
-    const res = await axios.post(`/posts/${props.info._id}/metrics/dislike`);
-    metrics.value=await getMetrics();
-    console.log(res.data);
+async function dislikePost() {
+    await axios.post(`/posts/${props.info._id}/metrics/dislike`);
+    metric.value = await getMetrics();
+    checkIfUserHasLiked(metric.value);
 }
 
-async function trustPost(){
-    const res = await axios.post(`/posts/${props.info._id}/metrics/trust`);
-    metrics.value=await getMetrics();
-    console.log(res.data);
+async function trustPost() {
+    await axios.post(`/posts/${props.info._id}/metrics/trust`);
+    metric.value = await getMetrics();
+    checkIfUserHasLiked(metric.value);
 }
 
-async function untrustPost(){
-    const res = await axios.post(`/posts/${props.info._id}/metrics/untrust`);
-    metrics.value=await getMetrics();
-    console.log(res.data);
+async function untrustPost() {
+    await axios.post(`/posts/${props.info._id}/metrics/untrust`);
+    metric.value = await getMetrics();
+    checkIfUserHasLiked(metric.value);
 }
 
-async function factCheckPost(){
-    const res = await axios.post("/factCheck/create")
-    metrics.value=await getMetrics();
-    console.log(res.data);
+async function factCheckPost() {
+    await axios.post("/factCheck/create")
+    metric.value = await getMetrics();
 }
 
+function checkIfUserHasLiked(list) {
+    // Récupérer les informations de l'utilisateur
+    const userInfo = store.getUserInfo;
+    const id = userInfo._id;
+    // Initialiser les indicateurs de like à false
+        
+    likedBy.value=false;
+    unlikedBy.value=false;
+    trustedBy.value=false;
+    untrustedBy.value=false;
+
+
+    
+    // Récupérer les informations de like pour le post actuel
+    let likedBySet = new Set(list.likedBy);
+    let dislikedBySet = new Set(list.dislikedBy);
+    let trustedBySet = new Set(list.trustedBy);
+    let untrustedBySet = new Set(list.untrustedBy);
+
+    // Vérifier si l'utilisateur a aimé le post
+    if (likedBySet.has(id)) {
+        likedBy.value = true;
+    }
+    // Vérifier si l'utilisateur a désaimé le post
+    if (dislikedBySet.has(id)) {
+        unlikedBy.value = true;
+    }
+    // Vérifier si l'utilisateur a fait confiance au post
+    if (trustedBySet.has(id)) {
+        trustedBy.value = true;
+    }
+    // Vérifier si l'utilisateur n'a pas fait confiance au post
+    if (untrustedBySet.has(id)) {
+        untrustedBy.value = true;
+    }
+
+ 
+}
 </script>
+
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0');
@@ -100,51 +140,51 @@ async function factCheckPost(){
                         <button  class="material-symbols-outlined button-post" @click="factCheckPost">
                             verified
                         </button> 
-                        <div class="comment-count-bubble">{{metrics.nbFactChecks}}</div>
+                        <div class="comment-count-bubble">{{metric.nbFactChecks}}</div>
                     </div>
                     <div class="comment-icon-container">
-                        <button v-if="trustedBy" class="material-symbols-outlined button-post green">
+                        <button v-if="trustedBy" class="material-symbols-outlined button-post green" @click="trustPost">
                             verified_user
                         </button> 
                         <button v-else class="material-symbols-outlined button-post " @click="trustPost">
                             verified_user
                         </button>  
-                        <div class="comment-count-bubble">{{metrics.nbTrusts}}</div>
+                        <div class="comment-count-bubble">{{metric.nbTrusts}}</div>
                     </div>
                     <div class="comment-icon-container">
-                        <button v-if="untrustedBy" class="material-symbols-outlined button-post red">
+                        <button v-if="untrustedBy" class="material-symbols-outlined button-post red" @click="untrustPost">
                             remove_moderator
                         </button> 
                         <button v-else class="material-symbols-outlined button-post" @click="untrustPost">
                             remove_moderator
                         </button>  
-                        <div class="comment-count-bubble">{{metrics.nbUntrusts}}</div>
+                        <div class="comment-count-bubble">{{metric.nbUntrusts}}</div>
                     </div> 
                     <div class="comment-icon-container">
-                        <button v-if="likedBy" class="material-symbols-outlined button-post green">
+                        <button v-if="likedBy" class="material-symbols-outlined button-post green" @click="likePost">
                             thumb_up
                         </button>
                         <button v-else class="material-symbols-outlined button-post" @click="likePost">
                             thumb_up
                         </button>
-                        <div class="comment-count-bubble">{{metrics.nbLikes}}</div>
+                        <div class="comment-count-bubble">{{metric.nbLikes}}</div>
                     </div>
                       
                     <div class="comment-icon-container">
-                        <button v-if="unlikedBy" class="material-symbols-outlined button-post red">
+                        <button v-if="unlikedBy" class="material-symbols-outlined button-post red" @click="dislikePost">
                             thumb_down
                         </button>  
                         <button v-else class="material-symbols-outlined button-post" @click="dislikePost">
                             thumb_down
                         </button> 
-                        <div class="comment-count-bubble">{{metrics.nbDislikes}}</div>
+                        <div class="comment-count-bubble">{{metric.nbDislikes}}</div>
                     </div>
 
                     <div class="comment-icon-container">
                         <button class="material-symbols-outlined button-post">
                         comment
                         </button>  
-                        <div class="comment-count-bubble">{{metrics.nbComments}}</div>
+                        <div class="comment-count-bubble">{{metric.nbComments}}</div>
                     </div>
 
                   
