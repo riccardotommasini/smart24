@@ -108,45 +108,43 @@ function attach()
                 return
             end
 
-            vim.schedule(function()
-                local column_end
-                if new_row == 0 then
-                    column_end = startcolumn + new_column
-                else
-                    column_end = new_column
-                end
+            local column_end
+            if new_row == 0 then
+                column_end = startcolumn + new_column
+            else
+                column_end = new_column
+            end
 
-                local row_end = startrow + new_row
-                local max_line = math.max(0, vim.api.nvim_buf_line_count(buf) - 1)
+            local row_end = startrow + new_row
+            local max_line = math.max(0, vim.api.nvim_buf_line_count(buf) - 1)
 
-                if row_end > max_line then
-                    byte_offset = byte_offset - 1
-                    startrow, startcolumn = M.get_line_column_from_byte_offset(byte_offset)
-                    local new_byte_offset = byte_offset + new_byte_len
-                    row_end, column_end = M.get_line_column_from_byte_offset(new_byte_offset)
-                end
+            if row_end > max_line then
+                byte_offset = byte_offset - 1
+                startrow, startcolumn = M.get_line_column_from_byte_offset(byte_offset)
+                local new_byte_offset = byte_offset + new_byte_len
+                row_end, column_end = M.get_line_column_from_byte_offset(new_byte_offset)
+            end
 
-                local replaced = old_byte_len
-                if byte_offset < 0 then
-                    byte_offset = 0
-                    replaced = replaced - 1
-                end
+            local replaced = old_byte_len
+            if byte_offset < 0 then
+                byte_offset = 0
+                replaced = replaced - 1
+            end
 
-                local message = {
-                    action = "update",
-                    changes = {
-                        {
-                            offset = byte_offset,
-                            delete = replaced,
-                            text = table.concat(
-                                vim.api.nvim_buf_get_text(buf, startrow, startcolumn, row_end, column_end, {}), '\n')
-                        }
+            local message = {
+                action = "update",
+                changes = {
+                    {
+                        offset = byte_offset,
+                        delete = replaced,
+                        text = table.concat(
+                            vim.api.nvim_buf_get_text(buf, startrow, startcolumn, row_end, column_end, {}), '\n')
                     }
                 }
+            }
 
-                ack_waiting = ack_waiting + 1
-                send_message(message)
-            end)
+            ack_waiting = ack_waiting + 1
+            send_message(message)
         end
     })
 end
