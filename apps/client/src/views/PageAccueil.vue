@@ -1,12 +1,10 @@
 <script setup lang="ts">
 
-import bandeau from "../components/common/bandeau.vue"
-import feed from "../components/common/feed.vue"
 import '../assets/PageAccueil.css'
 import { useUserInfoStore } from "../stores/userInfo";
 import { onMounted, ref } from "vue";
 import axios from "axios";
-import { useTokenStore } from "../stores/auth.ts";
+import { useTokenStore } from "../stores/auth";
 
 const store = useUserInfoStore();
 const tokenStore= useTokenStore(); 
