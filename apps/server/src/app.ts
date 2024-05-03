@@ -9,6 +9,7 @@ import { PostController } from './controllers/post-controller/post-controller';
 import { MetricsController } from './controllers/metrics-controller/metrics-controller';
 import { FactCheckerController } from './controllers/factCheck-controller/factCheck-controller';
 import { AuthController } from './controllers/auth-controller/auth-controller';
+import { AlgoController } from './controllers/algo-controller/algo-controller';
 
 @singleton()
 export class Application {
@@ -20,6 +21,7 @@ export class Application {
         private postController: PostController,
         private metricsController: MetricsController,
         private factCheckerController: FactCheckerController,
+        private algoController: AlgoController,
         private readonly databaseService: DatabaseService,
     ) {
         this.app = express();
@@ -53,6 +55,7 @@ export class Application {
         this.postController.use(this.app);
         this.metricsController.use(this.app);
         this.factCheckerController.use(this.app);
+        this.algoController.use(this.app);
 
         this.app.use('**', (req, res, next) => {
             next(new HttpException(404, `${req.method} ${req.baseUrl} not found`));
