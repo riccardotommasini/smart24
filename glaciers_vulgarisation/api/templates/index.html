@@ -30,12 +30,13 @@
   </header>
   <nav>
     <ul>
-      <li><a href="#prologue">Prologue</a></li>
-      <li><a href="#section_1">Partie I</a></li>
-      <li><a href="#section_2">Partie II</a></li>
-      <li><a href="#section_3">Partie III</a></li>
-      <li><a href="#section_4">Partie IV</a></li>
-      <li><a href="#section_5">Partie V</a></li>
+      <li><a href="#section_1">Introduction</a></li>
+      <li><a href="#section_2">Prologue</a></li>
+      <li><a href="#section_3">Partie I</a></li>
+      <li><a href="#section_4">Partie II</a></li>
+      <li><a href="#section_5">Partie III</a></li>
+      <li><a href="#section_6">Partie IV</a></li>
+      <li><a href="#section_7">Partie V</a></li>
 
       <div class="options">
         <label class="temperature-option">
@@ -64,7 +65,7 @@
 
   <div class="container">
     <main>
-      <section class="section-container" id="prologue">
+      <section id="section_1" class="section-container">
         <p>Il n’est jamais facile de rédiger une accroche, notamment sur un site internet. Ce n’est pas un livre, un mémoire, ou encore une thèse. Pourtant, celui-ci mérite son introduction autant que les supports précédemment cités. Que diriez-vous d’une belle histoire, celle que l’on raconte aux jeunes enfants ? L’histoire que nous allons vous raconter est destinée à vous, lecteur que vous soyez enfants, adolescents, adultes ou en encore à la retraite, ouvrez grands vos yeux.
           <div class="illustration-container">
             <img src="{{ url_for('static', filename='images/livre.jpg') }}" alt="Illustration">
@@ -119,6 +120,9 @@
         <p>
           Mais avant de parler du futur établissons le prologue.
         </p>
+      </section>
+
+      <section id="section_2" class="section-container">
         <h2>Prologue</h2>
         <div class="two-columns">
           <div class="left-part">
@@ -153,164 +157,152 @@
           <legend>add a legend</legend>
         </div>
       </section>
-      <section id="section_1" class="section-container">
+      <section id="section_3" class="section-container">
       <h2>Le recul des glaciers</h2>
-      <div class="two-columns">
-        <div class="left-part">
-          <p>
-            Les glaciers ne sont pas éternels. En tout cas, pas si nous continuons sur
-            cette lancée. Les glaciologues les plus aguerris planchent sur une disparition de ceux-ci sur l’ensemble du
-            globe pour dans cinq siècles. Ce qui à l’échelle de la terre, vielle de 5Mds d’années est ridiculement peu
-            élevé.
-            <br>
-            Tout à l’heure, je vous ai expliqué que les glaciers vivent, c’est vrai. Tout au long de l’année, s’ensuit
-            divers périodes qui seront plus propices à l’accumulation (précipitations, dépôt porté par le vent), ou à la
-            réduction. Dans un premier, j’aimerai vous parler de la fonte.
-          </p>
-        </div>
-        <div class="right-part">
-          <p>
-            Si l’on considère les années passées, il est juste de remarquer que le phénomène se veut de plus en plus
-            présent. Un des indicateurs les plus importants lorsque l’on fait ce type d’affirmation est celui de la
-            balance massique*. Jusqu’à aujourd’hui les quantités impliquées sont décroissantes, cela peut s’expliquer par
-            une quantité accumulé moindre ou une quantité perdue de plus en plus importante. Plus tôt, je vous parlais du
-            futur, venez-avec moi découvrir le futur d’un glacier alpin.
-          </p>
-        </div>
+      <div style="display: flex;">
+        <p style="width: 50%;padding:0 20px;">Les glaciers ne sont pas éternels. En tout cas, pas si nous continuons sur
+          cette lancée. Les glaciologues les plus aguerris planchent sur une disparition de ceux-ci sur l’ensemble du
+          globe pour dans cinq siècles. Ce qui à l’échelle de la terre, vielle de 5Mds d’années est ridiculement peu
+          élevé.
+          Tout à l’heure, je vous ai expliqué que les glaciers vivent, c’est vrai. Tout au long de l’année, s’ensuit
+          divers périodes qui seront plus propices à l’accumulation (précipitations, dépôt porté par le vent), ou à la
+          réduction. Dans un premier, j’aimerai vous parler de la fonte.
+        </p>
+        <p style="width: 50%;">
+          Si l’on considère les années passées, il est juste de remarquer que le phénomène se veut de plus en plus
+          présent. Un des indicateurs les plus importants lorsque l’on fait ce type d’affirmation est celui de la
+          balance massique*. Jusqu’à aujourd’hui les quantités impliquées sont décroissantes, cela peut s’expliquer par
+          une quantité accumulé moindre ou une quantité perdue de plus en plus importante. Plus tôt, je vous parlais du
+          futur, venez-avec moi découvrir le futur d’un glacier alpin.
+        </p>
       </div>
-      <p>
-        Même si cela reste dans le domaine de l’hypothèse, le résultat se veut plutôt intéressant. Il suit la tendance
+      <p>Même si cela reste dans le domaine de l’hypothèse, le résultat se veut plutôt intéressant. Il suit la tendance
         actuelle, qui ne se veut pas bienveillante. Mais pour vous donner une image voilà ce que je vous dirai : la
         vitesse à laquelle décroit la balance de masse correspondrait à celle de la consommation de lait dans le monde.
-        Une diminution qui se veut deux fois plus importante.
-      </p>
-      <p>
-        Prenons, un autre exemple, celui de la mer de glace. Cela ne doit pas vous être étranger la mer de glace est en
+        Une diminution qui se veut deux fois plus importante. </p>
+      <p>Prenons, un autre exemple, celui de la mer de glace. Cela ne doit pas vous être étranger la mer de glace est en
         forte récession. Vous pouvez voir ci-dessus, l’espace laissé vacant par le glacier qui se veut de moins en moins
         prépondérant.
       <p>
       <div id="evolution_container_1" class="anim-container">
         <h3>Evolution de la mer de glace de 2010 à 2100 (+1.5°C)</h3>
-        <div class="illustration-container">
-          {% include 'evolution_mer_de_glace/evolution_mer_de_glace_1_5.html' %}
-          <legend>add a legend</legend>
-        </div>
+        {% include 'evolution_mer_de_glace/evolution_mer_de_glace_1_5.html' %}
       </div>
       <div id="evolution_container_2" class="anim-container">
         <h3>Evolution de la mer de glace de 2010 à 2100 (+2°C)</h3>
-        <div class="illustration-container">
-          {% include 'evolution_mer_de_glace/evolution_mer_de_glace_2.html' %}
-          <legend>add a legend</legend>
-        </div>
+        {% include 'evolution_mer_de_glace/evolution_mer_de_glace_2.html' %}
       </div>
       <div id="evolution_container_3" class="anim-container">
         <h3>Evolution de la mer de glace de 2010 à 2100 (+3°C)</h3>
-        <div class="illustration-container">
-          {% include 'evolution_mer_de_glace/evolution_mer_de_glace_3.html' %}
-          <legend>add a legend</legend>
-        </div>
+        {% include 'evolution_mer_de_glace/evolution_mer_de_glace_3.html' %}
       </div>
       <div id="evolution_container_4" class="anim-container">
         <h3>Evolution de la mer de glace de 2010 à 2100 (+4°C)</h3>
-        <div class="illustration-container">
-          {% include 'evolution_mer_de_glace/evolution_mer_de_glace_4.html' %}
-          <legend>add a legend</legend>
-        </div>
+        {% include 'evolution_mer_de_glace/evolution_mer_de_glace_4.html' %}
       </div>
 
-      <p> Quand est-il de son volume global ? Voyons ensemble :</p>
-      <div class="two-columns">
-        <div class="left-part">
-          <div class="sticky-text-wrapper">
-            <div class="sticky-text">
-              <p>
-                Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
-                jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
-                siècle, la mer de glace perdrait 80% de son volume.
-              </p>
-              <p>
-                Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
-                jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
-                siècle, la mer de glace perdrait 80% de son volume.
-              </p>
-              <p>
-                Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
-                jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
-                siècle, la mer de glace perdrait 80% de son volume.
-              </p>
-              <p>
-                Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
-                jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
-                siècle, la mer de glace perdrait 80% de son volume.
-              </p>
-              <p>
-                Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
-                jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
-                siècle, la mer de glace perdrait 80% de son volume.
-              </p>
+        <p> Quand est-il de son volume global ? Voyons ensemble :</p>
+        <div class="two-columns">
+          <div class="left-part">
+            <div class="sticky-text-wrapper">
+              <div class="sticky-text">
+                <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.</p>
+                <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.</p>
+                <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.</p>
+                <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.</p>
+                <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="right-part">
-          <div class="anim-slide">
-            <div class="slide-wrapper">
-              <div id="volume_container1" class="slide-container">
-                <h3>Volume selon le scénario SSP126</h3>
-                <div class="illustration-container">
-                  {% include 'volume_mer_de_glace/mdg_volume_scenario_1_ssp126.html' %}
-                  <legend>add a legend</legend>
-                </div>
-              </div>
-            </div>
-            <div class="slide-wrapper">
-              <div id="volume_container2" class="slide-container">
-                <h3>Volume selon le scénario SSP370</h3>
-                <div class="illustration-container">
-                  {% include 'volume_mer_de_glace/mdg_volume_scenario_2_ssp370.html' %}
-                  <legend>add a legend</legend>
-                </div>
-              </div>
-            </div>
 
-            <div class="slide-wrapper">
-              <div id="volume_container3" class="slide-container">
-                <h3>Volume selon le scénario SSP585</h3>
-                <div class="illustration-container">
-                  {% include 'volume_mer_de_glace/mdg_volume_scenario_3_ssp585.html' %}
-                  <legend>add a legend</legend>
+          <div class="right-part">
+            <div class="anim-slide">
+              <div class="slide-wrapper">
+                <div id="volume_container1" class="slide-container">
+                  <illustration_title>Volume selon le scénario SSP126</illustration_title>
+                  <div class="illustration-container">
+                    {% include 'volume_mer_de_glace/mdg_volume_scenario_1_ssp126.html' %}
+                    <legend>add a legend</legend>
+                  </div>
+                </div>
+              </div>
+              <div class="slide-wrapper">
+                <div id="volume_container2" class="slide-container">
+                  <illustration_title>Volume selon le scénario SSP370</illustration_title>
+                  <div class="illustration-container">
+                    {% include 'volume_mer_de_glace/mdg_volume_scenario_2_ssp370.html' %}
+                    <legend>add a legend</legend>
+                  </div>
+                </div>
+              </div>
+              <div class="slide-wrapper">
+                <div id="volume_container3" class="slide-container">
+                  <illustration_title>Volume selon le scénario SSP585</illustration_title>
+                  <div class="illustration-container">
+                    {% include 'volume_mer_de_glace/mdg_volume_scenario_3_ssp585.html' %}
+                    <legend>add a legend</legend>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="anim-slide">
-        <div class="slide-wrapper">
-          <div id="correlation_evolution1" class="slide-container">
-            <h3>Evolution similaire entre le volume de la mer de glace et la consommation de lait</h3>
-            <div class="illustration-container">
-              <img
-                src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_milk-consumption.svg') }}"
-                alt="Illustration">
-              <legend>add a legend</legend>
+        <p> Toutes correlations est à prendre avec des pincettes :</p>
+        <div class="two-columns">
+          <div class="left-part">
+            <div class="anim-slide">
+              <div class="slide-wrapper">
+                <div id="correlation_evolution1" class="slide-container">
+                  <illustration_title>Evolution similaire entre le volume de la mer de glace et la consommation de lait
+                  </illustration_title>
+                  <div class="illustration-container">
+                    <img
+                      src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_milk-consumption.svg') }}"
+                      alt="Illustration">
+                    <legend>add a legend</legend>
+                  </div>
+                </div>
+              </div>
+              <div class="slide-wrapper">
+                <div id="correlation_evolution2" class="slide-container">
+                  <illustration_title>Evolution similaire entre le volume de la mer de glace et la naissance de triplet
+                    (ou
+                    plus)</illustration_title>
+                  <div class="illustration-container">
+                    <img
+                      src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_us-birth-rates-of-triplets-or-more.svg') }}"
+                      alt="Illustration">
+                    <legend>add a legend</legend>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="right-part">
+            <div class="sticky-text-wrapper">
+              <div class="sticky-text">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus perferendis similique incidunt
+                  tempore distinctio consectetur ipsam, officiis quisquam commodi tenetur quo error quasi sit, illum,
+                  cumque itaque inventore esse. Molestias.</p>
+              </div>
             </div>
           </div>
         </div>
-        <div class="slide-wrapper">
-          <div id="correlation_evolution2" class="slide-container">
-            <h3>Evolution similaire entre le volume de la mer de glace et la naissance de triplet (ou plus)</h3>
-            <div class="illustration-container">
-              <img
-                src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_us-birth-rates-of-triplets-or-more.svg') }}"
-                alt="Illustration">
-              <legend>add a legend</legend>
-            </div>
-          </div>
-        </div>
-      </div>
       </section>
-      <section id="section_2" class="section-container">
+
+      <br>
+
+      <section id="section_4" class="section-container">
         <h2>Un drame en deux actes</h2>
         <div class="two-columns">
           <div class="left-part">
@@ -352,7 +344,8 @@
           marquons le une bonne fois pour toute. L’eau issue des glaciers va dans la mer, étant de plus importante, il y
           a surplus résultat : l’eau monte. Cela provient en majorité des calottes glaciaires, elle représente pas moins
           de 90% de l’ensemble des glaciers, pour un volume global de . Si tout les glaciers venaient à fondre, le
-          niveau de la mer augmenterait d’environ 8 m. Même si ce nombre peut paraître négligeable, nombreux serait les
+          niveau de la mer augmenterait d’environ 8 m. Même si ce nombre peut paraître négligeable, nombreux serait
+          les
           zones submergées, rien qu’en France, une grande partie des littoraux se verrait frappé de plein fouet. A
           l’échelle, mondiale, cela provoquerait des déplacements migratoires sans précédents.
         </p>
@@ -368,7 +361,7 @@
         </p>
       </section>
 
-      <section id="section_3" class="section-container">
+      <section id="section_5" class="section-container">
         <h2>Partie III</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
           malesuada
@@ -381,25 +374,27 @@
           ut. </p>
         <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
         <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
-          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur
+          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris,
+          consectetur
           id
           nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
           maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
           Integer
-          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa
+          tincidunt,
           non
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
         <div id="animation_container_2" class="anim-container">
-          <h3>Titre de l'illustration</h3>
+          <illustration_title>Titre de l'illustration</illustration_title>
           {% include 'animation2.html' %}
         </div>
       </section>
 
       <br>
 
-      <section id="section_4" class="section-container">
+      <section id="section_6" class="section-container">
         <h2>Partie IV</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
           malesuada
@@ -412,24 +407,26 @@
           ut. </p>
         <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
         <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
-          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur
+          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris,
+          consectetur
           id
           nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
           maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
           Integer
-          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa
+          tincidunt,
           non
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
         <div id="animation_container_3" class="anim-container">
-          <h3>Titre de l'illustration</h3>
+          <illustration_title>Titre de l'illustration</illustration_title>
         </div>
       </section>
 
       <br>
 
-      <section id="section_5" class="section-container">
+      <section id="section_7" class="section-container">
         <h2>Partie V</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
           malesuada
@@ -442,18 +439,20 @@
           ut. </p>
         <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
         <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
-          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur
+          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris,
+          consectetur
           id
           nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
           maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
           Integer
-          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa
+          tincidunt,
           non
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
         <div id="animation_container_4" class="anim-container">
-          <h3>Titre de l'illustration</h3>
+          <illustration_title>Titre de l'illustration</illustration_title>
         </div>
       </section>
     </main>

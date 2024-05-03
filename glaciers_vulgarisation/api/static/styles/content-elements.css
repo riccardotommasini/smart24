@@ -13,7 +13,8 @@
 
 .two-columns {
   display: flex;
-  justify-content: center; /* Aligne les éléments au centre horizontalement */
+  column-gap: 2rem;
+  justify-content: start; /* Aligne les éléments au centre horizontalement */
   /*align-items: center; /* Aligne les éléments au centre verticalement */
   flex-wrap: wrap; /* Permet aux éléments de passer à la ligne lorsque l'espace est insuffisant */
 }
