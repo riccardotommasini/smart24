@@ -55,7 +55,11 @@ export abstract class AlgoSuggestionComputer<
         ]);
 
         // Get items that are liked by top k similar users but not seen by user
-        const items = _.difference(_.unique(allItems), positiveRatings, negativeRatings);
+        const items = _.difference(
+            _.unique(allItems.map(String)),
+            positiveRatings.map(String),
+            negativeRatings.map(String),
+        ).map((i) => new Types.ObjectId(i));
 
         logger.debug(this.constructor.name, 'computeForUser', `Found ${items.length} items from top users`);
 

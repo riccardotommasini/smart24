@@ -33,14 +33,6 @@ const DEFAULT_USER_3 = {
     surname: 'Fortin',
 };
 
-// const DEFAULT_USER_4 = {
-//     username: 'mikewards',
-//     mail: 'mike@leborder.com',
-//     passwordHash: 'ripjeremy',
-//     name: 'Mike',
-//     surname: 'Wards',
-// };
-
 describe('AlgoFieldComputer', () => {
     let algoFieldComputer: AlgoFieldComputer;
     let user1: IUser & Document;
