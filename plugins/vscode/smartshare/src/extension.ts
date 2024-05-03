@@ -11,7 +11,13 @@ let disposable: vscode.Disposable | undefined;
 let exePath = __dirname + '/../../../../smartshare/target/debug/';
 let statusBarItem: vscode.StatusBarItem;
 let context: vscode.ExtensionContext;
+let init = true;
 let ignoreNextEvent = false;
+
+function procWrite(proc: ChildProcessWithoutNullStreams, message: any): void {
+    logClient.debug("Send message", message);
+    proc.stdin.write(JSON.stringify(message)+'\n');
+}
 
 async function applyChange(change: TextModification): Promise<boolean> {
     //changes_to_discard.push(JSON.stringify(change));
@@ -26,7 +32,7 @@ function clientStdoutHandler(): (chunk: any) => void {
         for (let line of lines) {
             data_line += line;
             if (data_line.length > 0) {
-                logClient.debug(data_line);
+                logClient.debug("recieved data", data_line);
                 const data = JSON.parse(data_line);
                 if (!isMessage(data)) {
                     logClient.error("invalid action " + data.action)
@@ -47,8 +53,9 @@ function handleMessage(data: Message) {
             if (!waitingAcks) {
                 for (const change of update.changes) {
                     applyChange(change).then((success) => {
-                        if (success) {
-                            clientProc?.stdin.write(JSON.stringify({ action: "ack" }))
+                        if (success && clientProc) {
+                            //clientProc?.stdin.write(JSON.stringify({ action: "ack" }))
+                            procWrite(clientProc,{ action: "ack" })
                         }
                     })
                 }
@@ -63,14 +70,21 @@ function handleMessage(data: Message) {
             logClient.error("From client: ", error)
         },
         (_: RequestFile) => {
-            clientProc?.stdin.write(JSON.stringify({
+            if(!clientProc){
+                return;
+            }
+            procWrite(clientProc, {
                 action: "file",
                 file: vscode.window.activeTextEditor?.document.getText()
-            }) + '\n');
+            })
+            init = false;
         },
         (file: File) => {
-            applyChange(new TextModification(0, editor?.document.getText().length || 0, file.file))
+            ignoreNextEvent = false;
+            new TextModification(0, editor?.document.getText().length || 0, file.file)
+                .write()
                 .catch(err => logClient.error(err));
+            init = false;
         },
         (_: Ack) => {
             if (!waitingAcks) {
@@ -83,7 +97,16 @@ function handleMessage(data: Message) {
 }
 
 function changeDocumentHandler(event: vscode.TextDocumentChangeEvent): any {
-    console.log(event);
+
+    if(event.document.uri.path.startsWith("extension-output")) {
+        return;
+    }
+
+    console.log(event.document.uri);
+
+    if(init) {
+        return;
+    }
 
     for (let change of event.contentChanges) {
 
@@ -96,8 +119,6 @@ function changeDocumentHandler(event: vscode.TextDocumentChangeEvent): any {
             ]
         };
 
-        logClient.debug("Sending message", message);
-
         // if (changes_to_discard[changes_to_discard.length - 1] == JSON.stringify(message)) {
         //     changes_to_discard.pop();
         // } else {
@@ -107,9 +128,10 @@ function changeDocumentHandler(event: vscode.TextDocumentChangeEvent): any {
         // }
         if (ignoreNextEvent) {
             ignoreNextEvent = false;
-        } else {
+        } else if (clientProc) {
             console.log(JSON.stringify(message));
-            clientProc?.stdin.write(JSON.stringify(message) + '\n');
+            //clientProc?.stdin.write(JSON.stringify(message) + '\n');
+            procWrite(clientProc, message);
             waitingAcks++;
         }
     }
@@ -126,7 +148,10 @@ function startClient(addr: string) {
 
     statusBarItem.text = "Connected";
     clientProc.stdout.setEncoding('utf8');
-    clientProc.stdin.write(JSON.stringify({ action: "declare", offset_format: "chars" }) + "\n");
+    const message = { action: "declare", offset_format: "chars" };
+    //logClient.debug(message);
+    //clientProc.stdin.write(JSON.stringify(message));
+    procWrite(clientProc, message);
     clientProc.on('close', () => {
         vscode.window.showErrorMessage("Client closed");
         vscode.commands.executeCommand('smartshare.disconnect');
