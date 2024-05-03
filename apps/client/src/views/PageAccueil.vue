@@ -1,17 +1,14 @@
 <script setup lang="ts">
 
-import BandeauHomepage from "../components/common/bandeau-homepage.vue"
 import feed from "../components/common/feed.vue"
 import '../assets/PageAccueil.css'
 import { useUserInfoStore } from "../stores/userInfo";
 import axios from "axios";
 import { useTokenStore } from "../stores/auth.ts";
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const store = useUserInfoStore();
-const tokenStore= useTokenStore(); 
 
-const id = ref('');
 const username = ref('');
 const name = ref('');
 const surname = ref('');
