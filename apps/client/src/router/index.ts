@@ -80,7 +80,7 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   const tokenStore = useTokenStore();
 
   if (to.meta.isPrivate && !tokenStore.isLoggedIn()) {

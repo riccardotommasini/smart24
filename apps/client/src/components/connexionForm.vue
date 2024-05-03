@@ -1,6 +1,5 @@
 <script setup>
 import { useUserInfoStore } from '@/stores/userInfo';
-import '../assets/HomeView.css'
 import { useTokenStore } from '../stores/auth.ts'
 import { ref } from 'vue';
 
@@ -16,6 +15,9 @@ async function login() {
     window.location.href = '/homepage';
 }
 
+function redirectToRegister() {
+    window.location.href = '/register';
+}
 </script>
 
 <template>
@@ -33,7 +35,7 @@ async function login() {
             </div>
 
             
-            <button type="button" class="login-button">Create an account</button>
+            <button type="button" class="login-button" @click="redirectToRegister">Create an account</button>
         </form>
     </div>
 
