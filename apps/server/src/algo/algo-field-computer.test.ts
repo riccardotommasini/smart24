@@ -3,7 +3,6 @@ import { AlgoFieldComputer } from './algo-field-computer';
 import { RatingsLikes } from '../models/ratings/ratings-likes';
 import { RatingsDislikes } from '../models/ratings/ratings-dislikes';
 import { IUser, User } from '../models/user';
-import { IPost } from '../models/post';
 import mongoose, { Document } from 'mongoose';
 import { container } from 'tsyringe';
 import { PostService } from '../services/post-service/post-service';
@@ -47,10 +46,6 @@ describe('AlgoFieldComputer', () => {
     let user1: IUser & Document;
     let user2: IUser & Document;
     let user3: IUser & Document;
-    let post1: IPost & Document;
-    let post2: IPost & Document;
-    let post3: IPost & Document;
-    let post4: IPost & Document;
 
     beforeEach(() => {
         algoFieldComputer = new AlgoFieldComputer(AlgoSimilar, RatingsLikes, RatingsDislikes);
@@ -68,14 +63,12 @@ describe('AlgoFieldComputer', () => {
         const postService = container.resolve(PostService);
         const metricsService = container.resolve(MetricsService);
 
-        post1 = await postService.publishPost(user3._id, { text: 'post1' });
-        post2 = await postService.publishPost(user3._id, { text: 'post2' });
-        post3 = await postService.publishPost(user3._id, { text: 'post3' });
-        post4 = await postService.publishPost(user3._id, { text: 'post4' });
+        const post1 = await postService.publishPost(user3._id, { text: 'post1' });
+        const post2 = await postService.publishPost(user3._id, { text: 'post2' });
+        const post3 = await postService.publishPost(user3._id, { text: 'post3' });
 
         await metricsService.likePost(user1._id, post1._id);
         await metricsService.likePost(user1._id, post2._id);
-        await metricsService.likePost(user1._id, post4._id);
 
         await metricsService.likePost(user2._id, post1._id);
         await metricsService.likePost(user2._id, post2._id);
