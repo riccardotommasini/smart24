@@ -1,15 +1,15 @@
 <!-- eslint-disable vue/multi-word-component-names -->
-<script>
+<script setup>
 
+const props = defineProps([
+    'post'
+]);
 
-export default {
-  props: {
-    info: {
-        date: Date,
-        createdBy: Object,
-        metrics: Object
-    }
-  }
+const postComments = ref();
+
+async function displayComments() {
+
+    postComments.value = await axios.get('/')
 }
 
 // // Sélectionnez tous les boutons avec la classe 'myButton'
@@ -27,8 +27,6 @@ export default {
 //     button.style.color="red";
 //   });
 
-
-
 </script>
 
 <style>
@@ -42,15 +40,15 @@ export default {
     <div class="  ">
         <div class="post">
             <div class="post-header">
-                <h2 class="createdBy">{{ info.createdBy }}</h2>
-                <h3 class="date">{{ info.date }}</h3>  
+                <h2 class="createdBy">{{ post.createdBy }}</h2>
+                <h3 class="date">{{ post.date }}</h3>  
 
             </div>
             <div class="post-content">
                 <p class="std"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
-                <img v-if="info.image" :src="info.image" alt="post-image" class="post-image">
+                <img v-if="post.image" :src="post.image" alt="post-image" class="post-image">
             </div>
             <div class="post-footer">
                 <div class="post-footer-left">
@@ -66,12 +64,15 @@ export default {
                     <button class="material-symbols-outlined button-post red">
                         thumb_down
                     </button>  
-                    <button class="material-symbols-outlined button-post">
+                    <button class="material-symbols-outlined button-post" @click="displayComments()">
                         comment
                     </button>  
                     <button class="material-symbols-outlined button-post">
                         send
-                    </button>  
+                    </button>
+                    <button class="material-symbols-outlined button-post">
+                        See comments
+                    </button>
                 </div>
                
             </div>

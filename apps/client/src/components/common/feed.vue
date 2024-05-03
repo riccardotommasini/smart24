@@ -9,9 +9,6 @@ const props = defineProps({
     posts: Array // Déclarez le type de la prop 'posts' comme un tableau d'objets
 })
 
-console.log("posts", props.posts);
-
-
 </script>
 
 <template>

@@ -6,6 +6,9 @@ import { useUserInfoStore } from "../stores/userInfo";
 import axios from "axios";
 import { useTokenStore } from "../stores/auth.ts";
 import { onMounted, ref } from "vue";
+import modal from "@/components/pop-ups/modal.vue";
+import comments from "@/components/FeedComment.vue";
+import bandeauHomepage from "@/components/common/bandeau-homepage.vue";
 
 const store = useUserInfoStore();
 
@@ -28,9 +31,6 @@ onMounted(async () => {
     } catch (error) {
         console.error("Erreur lors de la récupération des posts :", error);
     }});
-
-    
-
 
 async function getPosts() {
     const idPost = "66333d0f22fdb44ff5afc20b";
@@ -56,22 +56,16 @@ async function getPosts() {
     return postsArray;
 }
 
-
-
 </script>
 
 <template>
     <div class="mainFeed">
         <header>        
-                <BandeauHomepage :username="username" :fistname="name" :lastname="surname"/>
+            <bandeauHomepage :username="username" :fistname="name" :lastname="surname"/>
         </header>
         <div class="screen">
             <feed :posts="posts"></feed>
         </div>
     </div>
-
-   
-
-
 </template>
 
