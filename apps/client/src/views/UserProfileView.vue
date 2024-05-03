@@ -18,16 +18,25 @@ const props = defineProps({
 
 const store = useUserInfoStore();
 
-const id = ref('');
-const username = ref('');
-const name = ref('');
-const surname = ref('');
+let currentUserId = ref('');
+let currentUserUsername = ref('');
+let currentUserName = ref('');
+let currentUserSurname = ref('');
+
+
+let userProfileId: string = props.profileId;
+let userProfileUsername = ref('');
+let userProfileName = ref('');
+let userProfileSurname = ref('');
 
 const posts = ref<any[]>([]);
 
-const fetchPosts = async (userId: string) => {
+const fetchInfos = async (userId: string) => {
   try {
     const response = await axios.get(`user/${userId}/profile`);
+    userProfileUsername.value = JSON.stringify(response.data.userData.username).replace(/"/g, '');
+    userProfileName.value = JSON.stringify(response.data.userData.name).replace(/"/g, '');
+    userProfileSurname.value = JSON.stringify(response.data.userData.surname).replace(/"/g, '');
     posts.value.push(response.data);
   } catch (error) {
     console.error(error);
@@ -38,12 +47,11 @@ const fetchPosts = async (userId: string) => {
 onMounted( () => {
     //retrieve session information
     const userInfo = computed(()=>store.getUserInfo).value;
-    id.value = userInfo._id!;
-    username.value = userInfo.username!;
-    name.value = userInfo.name!;
-    surname.value = userInfo.surname!;
-    console.log(props.profileId)
-    fetchPosts(props.profileId);
+    currentUserId.value = userInfo._id!;
+    currentUserUsername.value = userInfo.username!;
+    currentUserName.value = userInfo.name!;
+    currentUserSurname.value = userInfo.surname!;
+    fetchInfos(userProfileId);
 });
 
 async function buttonTrustUser() {
@@ -63,6 +71,7 @@ async function buttonUnTrustUser() {
   if(unTrusted[0].hasAttribute('id')){
     unTrusted[0].removeAttribute('id');
   } else {
+    unTrustUser();
     unTrusted[0].setAttribute('id', 'unTrusted')
   }
   let trusted = document.getElementsByClassName('trust');
@@ -70,12 +79,12 @@ async function buttonUnTrustUser() {
 }
 
 async function trustUser(){
-  await store.trustUser({from: 'toto', to:'toto'})
+  await store.trustUser({user: currentUserId.value, otherUserId: props.profileId});
 }
-// async function unTrustUser(){
-//   await tokenstore.register({name: name.value, surname: surname.value, username: username.value, mail: email.value, password: password.value})
-//   window.location.href = '/login'
-// }
+
+async function unTrustUser(){
+  await store.unTrustUser({user: currentUserId.value, otherUserId: props.profileId});
+}
 // async function ClearTrustUser(){
 //   await tokenstore.register({name: name.value, surname: surname.value, username: username.value, mail: email.value, password: password.value})
 //   window.location.href = '/login'
@@ -93,14 +102,14 @@ async function trustUser(){
 
 <template>
   <div class="content">
-    <bandeau :username="username" :firstname="name" :lastname="surname" />
+    <bandeau :username="currentUserUsername" :firstname="currentUserName" :lastname="currentUserSurname" />
     <div class="user-profile-container">
       <div class="user-profile-infos">
         <ul class="info-list">
-          <li id="user-infos-id" class="label">{{ id }}</li>
-          <li id="user-infos-username" class="label">{{ username }}</li>
-          <li id="user-infos-name" class="label">{{ name }}</li>
-          <li id="user-infos-surname" class="label">{{ surname }}</li>
+          <li id="user-infos-id" class="label">{{ userProfileId }}</li>
+          <li id="user-infos-username" class="label">{{ userProfileUsername }}</li>
+          <li id="user-infos-name" class="label">{{ userProfileName }}</li>
+          <li id="user-infos-surname" class="label">{{ userProfileSurname }}</li>
         </ul>
       </div>
       <div class="user-profile-buttons">

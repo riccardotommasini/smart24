@@ -23,18 +23,18 @@ export const useUserInfoStore = defineStore({
         localStorage.removeItem('surname');
         localStorage.removeItem('name');
     },
-    async trustUser(infos: {from: string, to: string}){
+    async trustUser(infos: {user: string, otherUserId: string}){
       const response = await axios.post('/user/trustUser', infos);
       return response;
     },
-    async unTrustUser(infos: {from: string, to: string}){
+    async unTrustUser(infos: {user: string, otherUserId: string}){
       const response = await axios.post('/user/unTrustUser', infos);
       return response;
     },
-    async clearTrustUser(infos: {from: string, to: string}){
+    async clearTrustUser(infos: {user: string, otherUserId: string}){
       //TODO: to do
     },
-    async clearUntrustUser(infos: {from: string, to: string}){
+    async clearUntrustUser(infos: {user: string, otherUserId: string}){
       //TODO: to do
     },
   },
