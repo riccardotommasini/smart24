@@ -1,10 +1,12 @@
 use operational_transform::OperationSeq;
 use smartshare::protocol::msg::{
-    to_ide_changes, to_operation_seq, MessageIde, MessageServer, ModifRequest, TextModification, Format
+    to_ide_changes, to_operation_seq, Format, MessageIde, MessageServer, ModifRequest,
+    TextModification,
 };
 
 use crate::ide::Ide;
 use crate::server::Server;
+use tracing::warn;
 
 pub struct Client {
     server_state: OperationSeq,
@@ -14,7 +16,7 @@ pub struct Client {
     server: Server,
     ide: Ide,
     client_id: usize,
-    format: Format,
+    format: Option<Format>,
 }
 
 impl Client {
@@ -27,7 +29,7 @@ impl Client {
             server,
             ide,
             client_id,
-            format: Format::Chars,
+            format: None,
         }
     }
 
@@ -60,10 +62,6 @@ impl Client {
         let _ = self.ide.send(MessageIde::Error(err)).await;
     }
 
-    async fn on_ide_error(&mut self, err: String) {
-        let _ = self.server.send(MessageServer::Error(err)).await;
-    }
-
     async fn on_server_change(&mut self, modif: &ModifRequest) {
         self.rev_num += 1;
         if self.rev_num != modif.rev_num {
@@ -87,11 +85,16 @@ impl Client {
     }
 
     async fn on_request_file(&mut self) {
+        if self.format.is_none() {
+            let _ = self
+                .ide
+                .send(MessageIde::Error(
+                    "Error: Offset format was not set by IDE".into(),
+                ))
+                .await;
+            return;
+        }
         let _ = self.ide.send(MessageIde::RequestFile).await;
-    }
-
-    async fn on_ide_request_file(&mut self) {
-        let _ = self.server.send(MessageServer::RequestFile).await;
     }
 
     async fn on_receive_file(&mut self, file: String, version: usize) {
@@ -101,10 +104,22 @@ impl Client {
 
     async fn on_ide_file(&mut self, file: String) {
         self.rev_num = 0;
-        let _ = self.server.send(MessageServer::File{file, version: 0}).await;
+        let _ = self
+            .server
+            .send(MessageServer::File { file, version: 0 })
+            .await;
     }
 
     async fn on_ide_change(&mut self, change: &TextModification) {
+        if self.format.is_none() {
+            let _ = self
+                .ide
+                .send(MessageIde::Error(
+                    "Error: Offset format was not set by IDE".into(),
+                ))
+                .await;
+            return;
+        }
         let ide_seq = to_operation_seq(&change, &(self.unsent_delta.target_len() as u64));
         self.unsent_delta = self.unsent_delta.compose(&ide_seq).unwrap();
         if self.sent_delta.is_noop() && !self.unsent_delta.is_noop() {
@@ -113,7 +128,7 @@ impl Client {
     }
 
     async fn on_ide_format(&mut self, format: Format) {
-        self.format = format;
+        self.format = Some(format);
     }
 
     pub async fn on_message_server(&mut self, message: MessageServer) {
@@ -130,9 +145,9 @@ impl Client {
         match message_ide {
             MessageIde::Update(change) => self.on_ide_change(&change).await,
             MessageIde::Declare(format) => self.on_ide_format(format).await,
-            MessageIde::Error(err) => self.on_ide_error(err).await,
-            MessageIde::RequestFile => self.on_ide_request_file().await,
-            MessageIde::File ( file) => self.on_ide_file(file).await,
+            MessageIde::File(file) => self.on_ide_file(file).await,
+            MessageIde::RequestFile => warn!("IDE sent RequestFile"),
+            MessageIde::Error(_) => warn!("IDE sent error"),
         }
     }
 }
