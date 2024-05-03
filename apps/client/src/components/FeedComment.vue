@@ -1,56 +1,41 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
+import { onMounted, ref } from 'vue';
 import Comment from './Comment.vue'
+import axios from 'axios';
 
 const props = defineProps([
-    "perentPostId"
+    "parentPostId"
 ]);
-    // methods: {
-    //     async fetchPosts() {
-    //     try {
-    //         const response = await axios.get(`posts/comments`, { parent: this.parentPostId});
-    //         this.posts.push(response.data);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    //     console.log(this.posts);
-    //     },
-    // },
-    // data() {
-    //     return {
-    //         posts: [],
-    //     };
-    // },
 
-const comments = [
-    {
-        createdBy: "John Doe",
-        date: "2021-09-01",
-        title: "This is a comment",
-    },
-    {
-        createdBy: "Jane Doe",
-        date: "2021-09-02",
-        title: "Suspendisse vel felis. Ut lorem lorem, interdum eu, tincidunt sit amet, laoreet vitae, arcu. Aenean faucibus pede eu ante. Praesent enim elit, rutrum at, molestie non, nonummy vel, nisl. Ut lectus eros, malesuada sit amet, fermentum eu, sodales cursus, magna. Donec eu purus. Quisque vehicula, urna sed ultricies auctor, pede lorem egestas dui, et convallis elit erat sed nulla. Donec luctus. Curabitur et nunc. Aliquam dolor odio, commodo pretium, ultricies non, pharetra in, velit. Integer arcu est, nonummy in, fermentum faucibus, egestas vel, odio.",
-    },
-    {
-        createdBy: "John Doe",
-        date: "2021-09-03",
-        title: "This is a comment 3",
-    }
-]
+const comments = ref();
+let commentText;
+
+const loadComments = ref(false);
+
+async function sendComment() {
+    const resp = (await axios.post('/posts/comment', { text : commentText.value, parentPostId : props.parentPostId}));
+    console.log(resp);
+}
+
+onMounted( async () => {
+    comments.value = (await axios.get(`/posts/${props.parentPostId}/comments`)).data;
+    console.log(comments.value)
+    loadComments.value = true;
+})
+
 </script>
 
 <template>
     <div class="comments">
-        <div class="comments-content">
+        <div v-if="loadComments" class="comments-content">
             <div v-for="comment in comments" :key="comment.title" class="comment">
                 <Comment :comment="comment"></Comment>
             </div>
         </div>
         <div class="comment-form">
-            <textarea class="comment-input" placeholder="Write a comment"></textarea>
-            <button class="comment-button">Send</button>
+            <textarea v-model="commentText" class="comment-input" placeholder="Write a comment"></textarea>
+            <button class="comment-button" @click="sendComment">Send</button>
         </div>
     </div>
 </template>

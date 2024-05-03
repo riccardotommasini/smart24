@@ -1,16 +1,26 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+import modal from './pop-ups/modal.vue';
+import FeedComment from './FeedComment.vue';
+
 const props = defineProps([
     'post'
 ]);
 
 const postComments = ref();
 
-async function displayComments() {
+const loadComments = ref();
 
-    postComments.value = await axios.get('/')
+async function displayComments() {
+    loadComments.value = true;
 }
+
+onMounted( () => {
+    console.log(props.post);
+})
 
 // // Sélectionnez tous les boutons avec la classe 'myButton'
 // const button_verified_user = document.getElementById('.red');
@@ -40,9 +50,8 @@ async function displayComments() {
     <div class="  ">
         <div class="post">
             <div class="post-header">
-                <h2 class="createdBy">{{ post.createdBy }}</h2>
-                <h3 class="date">{{ post.date }}</h3>  
-
+                <h2 class="createdBy">{{ props.post.createdBy }}</h2>
+                <h3 class="date">{{ props.post.date }}</h3>
             </div>
             <div class="post-content">
                 <p class="std"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
@@ -70,17 +79,17 @@ async function displayComments() {
                     <button class="material-symbols-outlined button-post">
                         send
                     </button>
-                    <button class="material-symbols-outlined button-post">
+                    <button>
                         See comments
                     </button>
                 </div>
                
             </div>
         </div>
-        
+    </div>
+    <div v-if="loadComments">
+        <modal><FeedComment :parentPostId="post._id"></FeedComment></modal>
     </div>
 
 
 </template>
-
-

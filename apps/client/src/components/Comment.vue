@@ -8,11 +8,11 @@ const props = defineProps([
 
 <template>
     <div class="comment-header">
-        <h2 class="createdBy">{{ comment.createdBy }}</h2>
+        <h2 class="createdBy">{{ comment.createdBy.username }}</h2>
         <p class="date">{{ comment.date }}</p>
     </div>
     <div class="comment-content">
-        <p class="std">{{ comment.title }}</p>
+        <p class="std">{{ comment.text }}</p>
     </div>
     <div class="comment-footer">
         <div class="comment-footer-left">

@@ -56,9 +56,9 @@ export class PostController extends AbstractController {
             },
         );
 
-        router.get('/comments', auth, async (req: AuthRequest<object>, res: Response, next: NextFunction) => {
+        router.get('/:id/comments', auth, async (req: AuthRequest<{id: string}>, res: Response, next: NextFunction) => {
             try {
-                res.status(StatusCodes.OK).send(await this.postService.getPostComments(req.body.parent));
+                res.status(StatusCodes.OK).send(await this.postService.getPostComments(req.params.id));
             } catch (error) {
                 next(error);
             }
