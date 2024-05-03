@@ -25,6 +25,11 @@ export class PostService {
             metrics: metrics._id,
         });
 
+
+        const user = await this.userService.getUser(userId);
+        user.posts.push(post.id);
+
+        await user.save();
         await post.save();
 
         return post;

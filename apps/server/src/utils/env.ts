@@ -8,4 +8,8 @@ export const env = cleanEnv(process.env, {
     SECRET_KEY: str({
         default: '1',
     }),
+    LOG_LEVEL: num({
+        default: 1, // 1 = INFO
+        devDefault: 0, // 0 = DEBUG
+    }),
 });

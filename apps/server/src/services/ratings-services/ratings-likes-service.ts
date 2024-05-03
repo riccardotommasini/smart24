@@ -1,8 +1,9 @@
 import { Document, Types } from 'mongoose';
 import { singleton } from 'tsyringe';
-import { RatingsLikes, IRatingsLikes } from '../../models/ratings/ratings-likes';
+import { RatingsLikes } from '../../models/ratings/ratings-likes';
 import { PostService } from '../post-service/post-service';
 import { UserService } from '../user-service';
+import { IRatings } from 'src/models/ratings/ratings';
 
 @singleton()
 export class RatingsLikesService {
@@ -11,7 +12,7 @@ export class RatingsLikesService {
         private readonly postService: PostService,
     ) {}
 
-    async createRatingsLikes(userId: string, postId: string): Promise<Document & IRatingsLikes> {
+    async createRatingsLikes(userId: string, postId: string): Promise<Document & IRatings> {
         await this.userService.getUser(userId);
         await this.postService.getPost(postId);
 

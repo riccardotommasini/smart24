@@ -55,8 +55,8 @@ const handlePostStatus = (status: string) => {
 
 <template>
     <div class="mainFeed">
-        <header>   
-                <BandeauHomepage :username="username"/>
+        <header>        
+            <BandeauHomepage :username="username"/>
         </header>
         <div class="screen">
             <button class="btn btn-primary b" @click="switchShowCreateNewPost">Post</button>

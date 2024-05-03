@@ -1,8 +1,9 @@
 import { Document, Types } from 'mongoose';
 import { singleton } from 'tsyringe';
-import { RatingsUntrust, IRatingsUntrust } from '../../models/ratings/ratings-untrust';
 import { PostService } from '../post-service/post-service';
 import { UserService } from '../user-service';
+import { RatingsUntrust } from '../../models/ratings/ratings-untrust';
+import { IRatings } from '../../models/ratings/ratings';
 
 @singleton()
 export class RatingsUntrustService {
@@ -11,7 +12,7 @@ export class RatingsUntrustService {
         private readonly postService: PostService,
     ) {}
 
-    async createRatingsUntrust(userId: string, postId: string): Promise<Document & IRatingsUntrust> {
+    async createRatingsUntrust(userId: string, postId: string): Promise<Document & IRatings> {
         await this.userService.getUser(userId);
         await this.postService.getPost(postId);
 
