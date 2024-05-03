@@ -1,6 +1,6 @@
 use operational_transform::OperationSeq;
 use smartshare::protocol::msg::{
-    to_ide_changes, to_operation_seq, Format, MessageIde, MessageServer, ModifRequest,
+    modifs_to_operation_seq, to_ide_changes, Format, MessageIde, MessageServer, ModifRequest,
     TextModification,
 };
 
@@ -59,7 +59,7 @@ impl Client {
     }
 
     async fn on_server_error(&mut self, err: String) {
-        let _ = self.ide.send(MessageIde::Error(err)).await;
+        self.ide.send(MessageIde::Error(err)).await;
     }
 
     async fn on_server_change(&mut self, modif: &ModifRequest) {
@@ -79,14 +79,12 @@ impl Client {
         self.sent_delta = new_sent_delta;
         self.unsent_delta = new_unsent_delta;
         let ide_modifs = to_ide_changes(&ide_delta);
-        for modif in ide_modifs {
-            let _ = self.ide.send(MessageIde::Update(modif)).await;
-        }
+        self.ide.send(MessageIde::Update(ide_modifs)).await;
     }
 
     async fn on_request_file(&mut self) {
         if self.format.is_none() {
-            let _ = self
+            self
                 .ide
                 .send(MessageIde::Error(
                     "Error: MessageIde::RequestFile was sent by IDE but offset format is not set".into(),
@@ -98,7 +96,7 @@ impl Client {
     }
 
     async fn on_receive_file(&mut self, file: String, version: usize) {
-        let _ = self.ide.send(MessageIde::File(file)).await;
+        self.ide.send(MessageIde::File(file)).await;
         self.rev_num = version
     }
 
@@ -110,18 +108,19 @@ impl Client {
             .await;
     }
 
-    async fn on_ide_change(&mut self, change: &TextModification) {
-        if self.format.is_none() {
-            let _ = self
-                .ide
-                .send(MessageIde::Error(
-                    "Error: MessageIde::Update was sent by IDE but offset format is not set".into(),
-                ))
-                .await;
-            return;
-        }
-        let ide_seq = to_operation_seq(&change, &(self.unsent_delta.target_len() as u64));
-        self.unsent_delta = self.unsent_delta.compose(&ide_seq).unwrap();
+    async fn on_ide_change(&mut self, change: &Vec<TextModification>) {
+        let ide_seq =
+            match modifs_to_operation_seq(&change, &(self.unsent_delta.target_len() as u64)) {
+                Ok(seq) => seq,
+                Err(err) => {
+                    self.ide.send(MessageIde::Error(err.to_string())).await;
+                    return;
+                }
+            };
+        self.unsent_delta = self
+            .unsent_delta
+            .compose(&ide_seq)
+            .expect("modifs_to_operation_seq result should be length compatible with op_seq");
         if self.sent_delta.is_noop() && !self.unsent_delta.is_noop() {
             self.submit_change().await;
         }

@@ -10,16 +10,13 @@ pub enum MessageServer {
     Ack,
     Error(String),
     RequestFile,
-    File{
-        file: String,
-        version: usize
-    },
+    File { file: String, version: usize },
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "action", rename_all = "snake_case")]
 pub enum MessageIde {
-    Update(TextModification),
+    Update(Vec<TextModification>),
     Declare(Format),
     Error(String),
     RequestFile,
@@ -39,13 +36,37 @@ pub struct ModifRequest {
     pub rev_num: usize,
 }
 
-pub fn to_operation_seq(modif: &TextModification, src_length: &u64) -> OperationSeq {
+pub fn modifs_to_operation_seq(modifs: &Vec<TextModification>, src_length: &u64) -> Result<OperationSeq, anyhow::Error> {
+    let op_seq = match modifs.get(0) {
+        Some(modif) => modif_to_operation_seq(modif, src_length)?,
+        None => {
+            let mut noop = OperationSeq::default();
+            noop.retain(*src_length);
+            return Ok(noop);
+        },
+    };
+    for modif in &modifs[1..] {
+        op_seq.compose(&modif_to_operation_seq(
+            modif,
+            &(op_seq.target_len() as u64),
+        )?).expect("modif_to_operation_seq result should be length compatible with op_seq");
+    }
+    Ok(op_seq)
+}
+
+fn modif_to_operation_seq(
+    modif: &TextModification,
+    src_length: &u64,
+) -> Result<OperationSeq, anyhow::Error> {
+    let rem_length = src_length
+        .checked_sub(modif.offset + modif.delete)
+        .ok_or(anyhow::anyhow!("invalid offset and/or delete"))?;
     let mut seq = OperationSeq::default();
     seq.retain(modif.offset);
     seq.delete(modif.delete);
     seq.insert(modif.text.as_str());
-    seq.retain(src_length - modif.offset - modif.delete);
-    seq
+    seq.retain(rem_length);
+    Ok(seq)
 }
 
 #[derive(Debug)]
@@ -61,7 +82,6 @@ pub enum Format {
     Bytes,
     Chars,
 }
-
 
 pub fn to_ide_changes(delta: &OperationSeq) -> Vec<TextModification> {
     let mut modifs: Vec<TextModification> = vec![];
