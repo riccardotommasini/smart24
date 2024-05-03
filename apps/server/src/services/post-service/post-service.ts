@@ -1,12 +1,12 @@
+import { StatusCodes } from 'http-status-codes';
 import { Document } from 'mongoose';
 import { singleton } from 'tsyringe';
+import { Comment, CommentDocument, ICreateComment } from '../../models/comment';
+import { HttpException } from '../../models/http-exception';
 import { Metrics } from '../../models/metrics';
 import { ICreatePost, IPost, Post } from '../../models/post';
-import { UserService } from '../user-service';
 import { NonStrictObjectId } from '../../utils/objectid';
-import { ICreateComment, Comment } from '../../models/comment';
-import { HttpException } from '../../models/http-exception';
-import { StatusCodes } from 'http-status-codes';
+import { UserService } from '../user-service';
 
 @singleton()
 export class PostService {
@@ -60,8 +60,21 @@ export class PostService {
         return post;
     }
 
-    async getPostComments(postId: NonStrictObjectId): Promise<(Document & IPost)[]> {
-        return Comment.find({ parentPostId: postId });
+    async getPostComments(postId: NonStrictObjectId): Promise<(Document & CommentDocument)[]> {
+        const commentsQuery = Comment.find({ parentPostId: postId })
+            .sort({ date: -1 })
+            .limit(50)
+            .populate('createdBy', 'username _id')
+            .populate('metrics');
+
+        const res = await commentsQuery.exec();
+        for (let i = 0; i < res.length; i++) {
+            const comment = res[i].toObject(); 
+            comment.comments = await this.getPostComments(comment._id);
+            res[i] = comment;
+        }
+
+        return res;
     }
 
     async getMetricsId(postId: NonStrictObjectId): Promise<string> {
