@@ -11,7 +11,7 @@ import { IAlgoField, IAlgoFieldOther } from '../../models/algo/algo-field';
 import _ from 'underscore';
 import { IRatings } from 'src/models/ratings/ratings';
 
-export const ALGO_SUGGESTION_TYPES = ['default', 'reconf1', 'reconf2'] as const;
+export const ALGO_SUGGESTION_TYPES = ['default', 'reconf1', 'reconf2', 'reco-divers'] as const;
 
 export type AlgoSuggestionType = (typeof ALGO_SUGGESTION_TYPES)[number];
 export type AlgoSuggestionsDict = { [key in AlgoSuggestionType]: AlgoSuggestionComputer };

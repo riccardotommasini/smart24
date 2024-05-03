@@ -14,6 +14,7 @@ import { IAlgoField } from '../../models/algo/algo-field';
 import { AlgoSuggestionType, AlgoSuggestionsDict } from '../../algo/algo-suggestion/algo-suggestions-computer';
 import { AlgoSuggestionDefaultComputer } from '../../algo/algo-suggestion/algo-suggestions-default-computer';
 import { AlgoSuggestionReconfComputer } from '../../algo/algo-suggestion/algo-suggestions-reconf-computer';
+import { AlgoSuggestionsRecoDiversComputer } from '../../algo/algo-suggestion/algo-suggestions-reco-divers-computer';
 
 @singleton()
 export class AlgoService {
@@ -46,6 +47,15 @@ export class AlgoService {
                 positiveRatingsModel: RatingsTrust,
                 negativeRatingsModel: RatingsUntrust,
                 selectUserType: 'confidence',
+            }),
+            'reco-divers': new AlgoSuggestionsRecoDiversComputer({
+                kTopUsers: 10,
+                similarityCoefficient: 1,
+                confidenceCoefficient: 1,
+                positiveRatingsModel: RatingsLikes,
+                negativeRatingsModel: RatingsDislikes,
+                selectUserType: 'similar',
+                diversityCoefficient: 0.8,
             }),
         };
     }
