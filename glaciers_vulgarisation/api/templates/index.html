@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/menu-elements.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/font.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/global-elements.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/defilement-content.css') }}">
 </head>
 
 <body>
@@ -160,41 +161,63 @@
             <legend>add a legend</legend>
           </div>
         </div>
+
         <p> Quand est-il de son volume global ? Voyons ensemble :</p>
-
-        <div class="anim-slide">
-          <div class="slide-wrapper">
-            <div id="volumeContainer1" class="slide-container">
-              <h3>Volume selon le scénario SSP126</h3>
-              <div class="illustration-container">
-                {% include 'volume_mer_de_glace/mdg_volume_scenario_1_ssp126.html' %}
-                <legend>add a legend</legend>
+        <div class="two-columns">
+          <div class="left-part">
+            <div class="sticky-text-wrapper">
+              <div class="sticky-text">
+                <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.</p>
+                <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.</p>
+                <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.</p>
+                <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.</p>
+                <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.</p>
               </div>
             </div>
           </div>
-          <div class="slide-wrapper">
-            <div id="volumeContainer2" class="slide-container">
-              <h3>Volume selon le scénario SSP370</h3>
-              <div class="illustration-container">
-                {% include 'volume_mer_de_glace/mdg_volume_scenario_2_ssp370.html' %}
-                <legend>add a legend</legend>
+          <div class="right-part">
+            <div class="anim-slide">
+              <div class="slide-wrapper">
+                <div id="volumeContainer1" class="slide-container">
+                  <h3>Volume selon le scénario SSP126</h3>
+                  <div class="illustration-container">
+                    {% include 'volume_mer_de_glace/mdg_volume_scenario_1_ssp126.html' %}
+                    <legend>add a legend</legend>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+              <div class="slide-wrapper">
+                <div id="volumeContainer2" class="slide-container">
+                  <h3>Volume selon le scénario SSP370</h3>
+                  <div class="illustration-container">
+                    {% include 'volume_mer_de_glace/mdg_volume_scenario_2_ssp370.html' %}
+                    <legend>add a legend</legend>
+                  </div>
+                </div>
+              </div>
 
-          <div class="slide-wrapper">
-            <div id="volumeContainer3" class="slide-container">
-              <h3>Volume selon le scénario SSP585</h3>
-              <div class="illustration-container">
-                {% include 'volume_mer_de_glace/mdg_volume_scenario_3_ssp585.html' %}
-                <legend>add a legend</legend>
+              <div class="slide-wrapper">
+                <div id="volumeContainer3" class="slide-container">
+                  <h3>Volume selon le scénario SSP585</h3>
+                  <div class="illustration-container">
+                    {% include 'volume_mer_de_glace/mdg_volume_scenario_3_ssp585.html' %}
+                    <legend>add a legend</legend>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait jamais
-          être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e siècle, la mer de
-          glace perdrait 80% de son volume.</p>
 
         <div class="anim-slide">
           <div class="slide-wrapper">
