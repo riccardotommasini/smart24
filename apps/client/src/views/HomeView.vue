@@ -20,8 +20,8 @@
   </template>
   
   <script>
-  import comments from "../components/comments.vue"
-  import modal from "../components/common/modal.vue"
+  import comments from "../components/FeedComment.vue"
+  import modal from "../components/pop-ups/modal.vue"
   
   export default {
     name: 'HomeView',

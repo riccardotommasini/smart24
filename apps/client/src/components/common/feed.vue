@@ -9,16 +9,13 @@ const props = defineProps({
     posts: Array // Déclarez le type de la prop 'posts' comme un tableau d'objets
 })
 
-console.log("posts", props.posts);
-
-
 </script>
 
 <template>
     <div class="feed">
         <!-- eslint-disable-next-line vue/require-v-for-key -->
-        <div class="posts" v-for="(item) in  props.posts" key="index">
-            <post :info="item"></post>
+        <div class="posts" v-for="(item) in props.posts" key="index">
+            <post :post="item"></post>
         </div>
     </div>
 </template>

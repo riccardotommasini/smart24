@@ -1,47 +1,50 @@
 <!-- ModalComponent.vue -->
 <template>
   <div class="modal">
-    <div class="modal-content">
+    <div class="modal-popup">
       <button @click="$emit('close')" class="modal-button">X</button>
-      <slot></slot>
+      <div class="modal-content-passed">
+        <slot></slot>
+      </div>
       
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ModalComponent'
-}
+<script setup>
 </script>
 
 <style scoped>
 .modal {
-  position: absolute;
-  border-radius: 15px;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+
+  background-color: rgba(0, 0, 0, 0.2);
+
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.modal-content{
-  position: relative;
-  display: -ms-flexbox;
+
+.modal-popup{
   display: flex;
-  -ms-flex-direction: column;
   flex-direction: column;
+
   width: 70%;
+  padding: 1em;
+
   pointer-events: auto;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, .2);
-  border-radius: 1.5rem;
-  outline: 0;
+  
+  border-radius: 1rem;
 }
+
+.modal-content-passed {
+  width: 98%;
+  margin: 2em 0 0 2%;
+}
+
 .modal-button{
   border: none;
   background-color: transparent;

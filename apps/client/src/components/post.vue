@@ -1,16 +1,26 @@
 <!-- eslint-disable vue/multi-word-component-names -->
-<script>
+<script setup>
 
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+import modal from './pop-ups/modal.vue';
+import FeedComment from './FeedComment.vue';
 
-export default {
-  props: {
-    info: {
-        date: Date,
-        createdBy: Object,
-        metrics: Object
-    }
-  }
+const props = defineProps([
+    'post'
+]);
+
+const postComments = ref();
+
+const loadComments = ref();
+
+async function displayComments() {
+    loadComments.value = true;
 }
+
+onMounted( () => {
+    console.log(props.post);
+})
 
 // // Sélectionnez tous les boutons avec la classe 'myButton'
 // const button_verified_user = document.getElementById('.red');
@@ -27,8 +37,6 @@ export default {
 //     button.style.color="red";
 //   });
 
-
-
 </script>
 
 <style>
@@ -42,15 +50,14 @@ export default {
     <div class="  ">
         <div class="post">
             <div class="post-header">
-                <h2 class="createdBy">{{ info.createdBy }}</h2>
-                <h3 class="date">{{ info.date }}</h3>  
-
+                <h2 class="createdBy">{{ props.post.createdBy }}</h2>
+                <h3 class="date">{{ props.post.date }}</h3>
             </div>
             <div class="post-content">
                 <p class="std"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
-                <img v-if="info.image" :src="info.image" alt="post-image" class="post-image">
+                <img v-if="post.image" :src="post.image" alt="post-image" class="post-image">
             </div>
             <div class="post-footer">
                 <div class="post-footer-left">
@@ -66,20 +73,23 @@ export default {
                     <button class="material-symbols-outlined button-post red">
                         thumb_down
                     </button>  
-                    <button class="material-symbols-outlined button-post">
+                    <button class="material-symbols-outlined button-post" @click="displayComments()">
                         comment
                     </button>  
                     <button class="material-symbols-outlined button-post">
                         send
-                    </button>  
+                    </button>
+                    <button>
+                        See comments
+                    </button>
                 </div>
                
             </div>
         </div>
-        
+    </div>
+    <div v-if="loadComments">
+        <modal><FeedComment :parentPostId="post._id"></FeedComment></modal>
     </div>
 
 
 </template>
-
-
