@@ -30,12 +30,16 @@ function connect(addr)
                 if json_object ~= nil and json_object ~= '' then
                     local message = vim.json.decode(json_object)
 
-                    if message.action == "update" --[[ and ack_waiting == 0 ]] then
+                    if message.action == "update" and ack_waiting == 0 then
 
                         for _,change in ipairs(message.changes) do
                             is_user_input = false
                             M.set_text(change.offset, change.delete, vim.fn.split(change.text, "\n", 1))
                         end
+
+                        send_message({
+                            action = "ack"
+                        })
                     end
 
                     if message.action == "request_file" then 

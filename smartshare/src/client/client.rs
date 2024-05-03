@@ -115,8 +115,8 @@ impl Client {
 
         if matches!(self.format.as_ref().unwrap(), Format::Bytes) {
             for ide_modif in ide_modifs.iter_mut() {
-                ide_modif.offset = self.file.as_mut().unwrap().char_to_byte(ide_modif.offset);
-                ide_modif.delete = self.file.as_mut().unwrap().char_to_byte(ide_modif.delete);
+                // ide_modif.offset = self.file.as_mut().unwrap().char_to_byte(ide_modif.offset);
+                // ide_modif.delete = self.file.as_mut().unwrap().char_to_byte(ide_modif.delete);
             }
         }
 
@@ -142,14 +142,6 @@ impl Client {
     }
 
     async fn on_request_file(&mut self) {
-        if self.format.is_none() {
-            self.ide
-                .send(MessageIde::Error{error:                    "Error: MessageIde::RequestFile was sent by IDE but offset format is not set"
-                    .into(),
-                })
-                .await;
-            return;
-        }
         let _ = self.ide.send(MessageIde::RequestFile).await;
     }
 
@@ -201,8 +193,8 @@ impl Client {
 
         if matches!(self.format.as_ref().unwrap(), Format::Bytes) {
             for change in changes.iter_mut() {
-                change.offset = self.file.as_mut().unwrap().byte_to_char(change.offset);
-                change.delete = self.file.as_mut().unwrap().byte_to_char(change.delete);
+                // change.offset = self.file.as_mut().unwrap().byte_to_char(change.offset);
+                // change.delete = self.file.as_mut().unwrap().byte_to_char(change.delete);
             }
         }
         let ide_seq =
@@ -264,7 +256,7 @@ impl Client {
                 })
                 .await;
         } else {
-            if self.ide_unsent_delta.is_noop() {
+            if !self.ide_unsent_delta.is_noop() {
                 self.submit_ide_change().await;
             } else {
                 self.ide_sent_delta = OperationSeq::default();
