@@ -1,0 +1,37 @@
+\documentclass{beamer}
+
+\usetheme{Madrid}
+
+\title[Projet compilation]{Projet compilation}
+\author[Hexanomnom]{Théo Choné, Ewan Chorynski, Clément Giraudon, Zyad Haddad, Noham Martin, Clément Vial}
+\institute[INSA Lyon]{INSA Lyon}
+\date{2024}
+\logo{\includegraphics[width=1cm]{logo.png}}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.geometric}
+
+\lstset{%
+basicstyle=\ttfamily,
+breaklines = true,
+language=C,
+numbers=left,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue}\ttfamily,
+stringstyle=\color{red}\ttfamily,
+commentstyle=\color{green}\ttfamily,
+morecomment=[l][\color{magenta}]{\#},
+xleftmargin=2em,frame=single,framexleftmargin=1.5em
+}
+
+\newcommand*{\thead}[1]{\multicolumn{1}{|c|}{\bfseries #1}}
+\newcommand*{\local}[1]{\lstinline|\_#1|}
+
+\begin{document}
+
+\end{document}

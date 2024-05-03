@@ -1,12 +1,12 @@
-name: Docs to PDF
+name: Compile latex slides
 # This workflow is triggered on pushes to the repository.
 on:
   push:
     branches:
-      - master
+      - main
     # Paths can be used only to trigger actions when you have edited certain files, such as a file within the /docs directory
     paths:
-      - '*.md'
+      - 'rendu/**'
      # - 'images/**'
  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -15,14 +15,13 @@ jobs:
   makepdfs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: mkrakowitzer/actions-makepdfs@master
-      if: github.ref == 'refs/heads/master'
-      with:
-        markdown_dir: ./
-        output_dir: pdfs
-        media_dir: images
-    - uses: actions/upload-artifact@v1
-      with:
-        name: platform-architecture-docs
-        path: pdfs
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - uses: xu-cheng/latex-action@v3
+        with:
+          root_file: presentation.tex
+          working_directory: rendu
+      - uses: actions/upload-artifact@v4
+        with:
+          name: presentation
+          path: rendu/presentation.pdf
