@@ -2,7 +2,7 @@ env/
 __pycache__
 venv
 .venv
-oggm_env
+oggm_venv
 src
 notebooks/ar6
 notebooks/World_ELE_GISdata_GlobalSolarAtlas-v2_GEOTIFF
