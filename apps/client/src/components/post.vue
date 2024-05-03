@@ -10,7 +10,7 @@ import { computed, onMounted, ref } from "vue";
         createdBy: Object,
         metrics: Object,
         image: String,
-        content: String,
+        text: String,
     },
     likedBy: Boolean,
     unlikedBy: Boolean,
@@ -28,6 +28,7 @@ const hour=dateInstance.getHours();
 const minute=dateInstance.getMinutes();
 const metrics=ref('');
 
+
 onMounted(async () => {
 
 metrics.value=await getMetrics();
@@ -40,6 +41,30 @@ async function getMetrics(){
     return res.data;
 }
 
+
+async function likePost(){
+    const res = await axios.post(`/posts/${props.info._id}/metrics/like`);
+    metrics.value=await getMetrics();
+    console.log(res.data);
+}
+
+async function dislikePost(){
+    const res = await axios.post(`/posts/${props.info._id}/metrics/dislike`);
+    metrics.value=await getMetrics();
+    console.log(res.data);
+}
+
+async function trustPost(){
+    const res = await axios.post(`/posts/${props.info._id}/metrics/trust`);
+    metrics.value=await getMetrics();
+    console.log(res.data);
+}
+
+async function untrustPost(){
+    const res = await axios.post(`/posts/${props.info._id}/metrics/untrust`);
+    metrics.value=await getMetrics();
+    console.log(res.data);
+}
 
 </script>
 
@@ -59,8 +84,7 @@ async function getMetrics(){
 
             </div>
             <div class="post-content">
-                <p class="std"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                <p class="std"> {{info.text}}
                 </p>
                 <img v-if="info.image" :src="info.image" alt="post-image" class="post-image">
             </div>
@@ -70,7 +94,7 @@ async function getMetrics(){
                         <button v-if="trustedBy" class="material-symbols-outlined button-post green">
                             verified_user
                         </button> 
-                        <button v-else class="material-symbols-outlined button-post ">
+                        <button v-else class="material-symbols-outlined button-post " @click="trustPost">
                             verified_user
                         </button>  
                         <div class="comment-count-bubble">{{metrics.nbTrusts}}</div>
@@ -79,7 +103,7 @@ async function getMetrics(){
                         <button v-if="untrustedBy" class="material-symbols-outlined button-post red">
                             remove_moderator
                         </button> 
-                        <button v-else class="material-symbols-outlined button-post">
+                        <button v-else class="material-symbols-outlined button-post" @click="untrustPost">
                             remove_moderator
                         </button>  
                         <div class="comment-count-bubble">{{metrics.nbUntrusts}}</div>
@@ -88,7 +112,7 @@ async function getMetrics(){
                         <button v-if="likedBy" class="material-symbols-outlined button-post green">
                             thumb_up
                         </button>
-                        <button v-else class="material-symbols-outlined button-post">
+                        <button v-else class="material-symbols-outlined button-post" @click="likePost">
                             thumb_up
                         </button>
                         <div class="comment-count-bubble">{{metrics.nbLikes}}</div>
@@ -98,7 +122,7 @@ async function getMetrics(){
                         <button v-if="unlikedBy" class="material-symbols-outlined button-post red">
                             thumb_down
                         </button>  
-                        <button v-else class="material-symbols-outlined button-post">
+                        <button v-else class="material-symbols-outlined button-post" @click="dislikePost">
                             thumb_down
                         </button> 
                         <div class="comment-count-bubble">{{metrics.nbDislikes}}</div>
