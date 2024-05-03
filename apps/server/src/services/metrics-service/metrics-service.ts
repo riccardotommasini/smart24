@@ -7,8 +7,7 @@ import { RatingsLikesService } from '../ratings-services/ratings-likes-service';
 import { RatingsDislikesService } from '../ratings-services/ratings-dislikes-service';
 import { RatingsTrustService } from '../ratings-services/ratings-trust-service';
 import { RatingsUntrustService } from '../ratings-services/ratings-untrust-service';
-import { HttpException } from '../../models/http-exception';
-import { StatusCodes } from 'http-status-codes';
+import { UserService } from '../user-service';
 
 @singleton()
 export class MetricsService {
@@ -18,6 +17,7 @@ export class MetricsService {
         private readonly ratingsDislikesService: RatingsDislikesService,
         private readonly ratingsTrustService: RatingsTrustService,
         private readonly ratingsUntrustService: RatingsUntrustService,
+        private readonly userService: UserService,
     ) {}
 
     async getMetricsByPostId(postId: NonStrictObjectId): Promise<Document & IMetrics> {
@@ -37,6 +37,7 @@ export class MetricsService {
 
     async likePost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
+        await this.userService.getUser(userId);
         const userIdObj = toObjectId(userId);
 
         if (metrics.likedBy.includes(userIdObj)) {
@@ -51,8 +52,15 @@ export class MetricsService {
             await metrics.save();
 
             await this.ratingsLikesService.createRatingsLikes(userId.toString(), postId.toString());
-        } else {
-            throw new HttpException(StatusCodes.BAD_REQUEST, `User dislikes this post`);
+        } else if (metrics.dislikedBy.includes(userIdObj)) {
+            metrics.likedBy.push(userIdObj);
+            metrics.nbLikes += 1;
+            metrics.dislikedBy = metrics.dislikedBy.filter((id) => !id.equals(userIdObj));
+            metrics.nbDislikes -= 1;
+            await metrics.save();
+
+            await this.ratingsLikesService.createRatingsLikes(userId.toString(), postId.toString());
+            await this.ratingsDislikesService.removeRatingsDislikes(userId.toString(), postId.toString());
         }
 
         return metrics;
@@ -61,6 +69,7 @@ export class MetricsService {
     async dislikePost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
         const userIdObj = toObjectId(userId);
+        await this.userService.getUser(userId);
 
         if (metrics.dislikedBy.includes(userIdObj)) {
             metrics.dislikedBy = metrics.dislikedBy.filter((id) => !id.equals(userIdObj));
@@ -74,8 +83,15 @@ export class MetricsService {
             await metrics.save();
 
             await this.ratingsDislikesService.createRatingsDislikes(userId.toString(), postId.toString());
-        } else {
-            throw new HttpException(StatusCodes.BAD_REQUEST, `User likes this post`);
+        } else if (metrics.likedBy.includes(userIdObj)) {
+            metrics.dislikedBy.push(userIdObj);
+            metrics.nbDislikes += 1;
+            metrics.likedBy = metrics.likedBy.filter((id) => !id.equals(userIdObj));
+            metrics.nbLikes -= 1;
+            await metrics.save();
+
+            await this.ratingsDislikesService.createRatingsDislikes(userId.toString(), postId.toString());
+            await this.ratingsLikesService.removeRatingsLikes(userId.toString(), postId.toString());
         }
 
         return metrics;
@@ -84,6 +100,7 @@ export class MetricsService {
     async trustPost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
         const userIdObj = toObjectId(userId);
+        await this.userService.getUser(userId);
 
         if (metrics.trustedBy.includes(userIdObj)) {
             metrics.trustedBy = metrics.trustedBy.filter((id) => !id.equals(userIdObj));
@@ -97,8 +114,15 @@ export class MetricsService {
             await metrics.save();
 
             await this.ratingsTrustService.createRatingsTrust(userId.toString(), postId.toString());
-        } else {
-            throw new HttpException(StatusCodes.BAD_REQUEST, `User untrusts this post`);
+        } else if (metrics.untrustedBy.includes(userIdObj)) {
+            metrics.trustedBy.push(userIdObj);
+            metrics.nbTrusts += 1;
+            metrics.untrustedBy = metrics.untrustedBy.filter((id) => !id.equals(userIdObj));
+            metrics.nbUntrusts -= 1;
+            await metrics.save();
+
+            await this.ratingsTrustService.createRatingsTrust(userId.toString(), postId.toString());
+            await this.ratingsUntrustService.removeRatingsUntrust(userId.toString(), postId.toString());
         }
 
         return metrics;
@@ -107,6 +131,7 @@ export class MetricsService {
     async untrustPost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
         const userIdObj = toObjectId(userId);
+        await this.userService.getUser(userId);
 
         if (metrics.untrustedBy.includes(userIdObj)) {
             metrics.untrustedBy = metrics.untrustedBy.filter((id) => !id.equals(userIdObj));
@@ -120,8 +145,15 @@ export class MetricsService {
             await metrics.save();
 
             await this.ratingsUntrustService.createRatingsUntrust(userId.toString(), postId.toString());
-        } else {
-            throw new HttpException(StatusCodes.BAD_REQUEST, `User trusts this post`);
+        } else if (metrics.trustedBy.includes(userIdObj)) {
+            metrics.untrustedBy.push(userIdObj);
+            metrics.nbUntrusts += 1;
+            metrics.trustedBy = metrics.trustedBy.filter((id) => !id.equals(userIdObj));
+            metrics.nbTrusts -= 1;
+            await metrics.save();
+
+            await this.ratingsUntrustService.createRatingsUntrust(userId.toString(), postId.toString());
+            await this.ratingsTrustService.removeRatingsTrust(userId.toString(), postId.toString());
         }
 
         return metrics;

@@ -34,4 +34,14 @@ export class RatingsLikesService {
             item: new Types.ObjectId(postId),
         });
     }
+
+    async hasLikedPost(userId: string, postId: string): Promise<boolean> {
+        await this.userService.getUser(userId);
+        await this.postService.getPost(postId);
+
+        return !!(await RatingsLikes.findOne({
+            user: new Types.ObjectId(userId),
+            item: new Types.ObjectId(postId),
+        }));
+    }
 }
