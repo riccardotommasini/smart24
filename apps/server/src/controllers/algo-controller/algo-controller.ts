@@ -15,7 +15,7 @@ export class AlgoController extends AbstractController {
     }
 
     protected configureRoutes(router: Router): void {
-        router.post('/', auth, query('type').isIn(ALGO_SUGGESTION_TYPES).default('default'), async (req, res, next) => {
+        router.post('/', auth, query('type').default('default').isIn(ALGO_SUGGESTION_TYPES), async (req, res, next) => {
             try {
                 const validErrors = validationResult(req);
                 if (!validErrors.isEmpty()) {
@@ -37,7 +37,7 @@ export class AlgoController extends AbstractController {
         router.post(
             '/:userId',
             auth,
-            query('type').isIn(ALGO_SUGGESTION_TYPES).default('default'),
+            query('type').default('default').isIn(ALGO_SUGGESTION_TYPES),
             async (req, res, next) => {
                 try {
                     const validErrors = validationResult(req);
