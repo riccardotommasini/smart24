@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
+import { logClient } from './utils';
 
-export type Message = Update | Declare | Error | RequestFile | File;
+export type Message = Update | Declare | Error | RequestFile | File | Ack;
 
 export class Update {
     readonly action: "update"
@@ -26,20 +27,19 @@ export class Update {
         );
     }
 
-    write(): void {
+    async write(): Promise<boolean> {
         const editor = vscode.window.activeTextEditor;
         if (editor) {
             //editor.selections = [...editor.selections, new vscode.Selection(0,0,0,1)]
-            editor.edit((editBuilder: vscode.TextEditorEdit) => {
+            const success = await editor.edit((editBuilder: vscode.TextEditorEdit) => {
                 editBuilder.replace(this.range(), this.text);
-            }).then(success => {
-                if (success) {
-                    vscode.window.showInformationMessage('Text inserted');
-                } else {
-                    vscode.window.showErrorMessage('Failed to insert text');
-                }
             });
+            if (!success) {
+                logClient.error("Unable to apply change", this)
+            }
+            return success;
         }
+        return false;
     }
 }
 
@@ -62,8 +62,12 @@ export interface File {
     file: string
 }
 
+export interface Ack {
+    action: "ack"
+}
+
 export function isMessage(object: any): object is Message {
-    return object.action in ["update", "declare", "error", "requestFile", "file"];
+    return object.action in ["update", "declare", "error", "requestFile", "file", "ack"];
 }
 
 export function matchMessage(message: Message): any {
@@ -72,7 +76,8 @@ export function matchMessage(message: Message): any {
         onDeclare: (x: Declare) => any,
         onError: (x: Error) => any,
         onRequestFile: (x: RequestFile) => any,
-        onFile: (x: File) => any
+        onFile: (x: File) => any,
+        onAck: (x: Ack) => any
     ) => {
         switch (message.action) {
             case "update":
@@ -85,6 +90,8 @@ export function matchMessage(message: Message): any {
                 return onRequestFile(message);
             case "file":
                 return onFile(message);
+            case "ack":
+                return onAck(message);
         }
     }
 }
