@@ -263,6 +263,7 @@ impl Client {
             } else {
                 self.ide_sent_delta = OperationSeq::default();
             }
+            self.ide_ack = true;
         }
     }
 
