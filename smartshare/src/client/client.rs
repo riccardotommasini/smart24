@@ -239,7 +239,7 @@ impl Client {
                 .await;
         } else {
             self.server_unsent_delta = self.server_unsent_delta.compose(&ide_seq).unwrap();
-            
+            self.ide.send(MessageIde::Ack).await;
             if self.server_sent_delta.is_noop() && !self.server_unsent_delta.is_noop() {
                 self.submit_server_change().await;
             }
