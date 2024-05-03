@@ -20,7 +20,7 @@ margin-bottom: 10px;
 font-weight: 650;
 }
 
-.anim-container h3 {
+.illustration-container h3 {
 margin-bottom: -10px;
 }
 
@@ -40,6 +40,21 @@ margin: 1rem 0;
 line-height: 1.6;
 font-weight: 300;
 text-align: justify;
+}
+
+img {
+max-width: 100%;
+height: auto;
+display: block;
+align-self: center;
+}
+
+legend {
+line-height: 1.2;
+font-weight: 150;
+font-style: italic;
+text-align : center;
+margin: 1rem 0;
 }
 
 @media only screen and (max-width: 1200px) {

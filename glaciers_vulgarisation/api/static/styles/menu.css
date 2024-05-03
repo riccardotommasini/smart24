@@ -1,6 +1,6 @@
 nav {
       white-space: nowrap;
-      background: rgba(255, 220, 195, 0.900);
+      background: #f6e7cf;
 }
 nav ul {
       list-style: none;
@@ -21,7 +21,7 @@ nav ul li a {
       text-decoration: none;
 }
 nav ul li a.current {
-      background: #f6e7cf;
+      background:  #fff7ea;
 }
 
 nav ul label {

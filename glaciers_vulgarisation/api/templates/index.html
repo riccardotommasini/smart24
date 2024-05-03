@@ -14,13 +14,14 @@
 
 <body>
   <header>
-    <h1>Les glaciers :<br>Entre Evolution & Conséquences</h1>
+    <h1>Les glaciers :</h1>
+    <h1>Entre Evolution & Conséquences</h1>
   </header>
   <nav>
     <ul>
-      <li><a href="#section1">Partie I</a></li>
-      <li><a href="#section2">Partie II</a></li>
-      <li><a href="#section3">Partie III</a></li>
+      <li><a href="#section1">Introduction</a></li>
+      <li><a href="#section2">Le recul des glaciers</a></li>
+      <li><a href="#section3">Un drame en deux actes</a></li>
       <li><a href="#section4">Partie IV</a></li>
       <li><a href="#section5">Partie V</a></li>
 
@@ -57,7 +58,10 @@
           cités. Que diriez-vous d’une belle histoire, celle que l’on raconte aux jeunes enfants ? L’histoire que nous
           allons vous raconter est destinée à vous, lecteur que vous soyez enfants, adolescents, adultes ou en encore à
           la retraite, ouvrez grands vos yeux.</p>
-        <img width="20%" src="{{ url_for('static', filename='images/cartoon-eyes.svg') }}" alt="Illustration">
+        <div class="illustration-container">
+          <img width="20%" src="{{ url_for('static', filename='images/cartoon-eyes.svg') }}" alt="Illustration">
+          <legend>add a legend</legend>
+        </div>
         <p>Savez-vous ce qui fascine les peuples au plus au point ? L’éternel. La vie éternelle (ou le don
           d’immortalité) afin de vaincre la mort et ses périls. Aujourd’hui, j’aimerai vous présenter les champions dans
           ce domaine, inégalés depuis des générations : les glaciers. Les glaciers sont des êtres bien fascinant
@@ -88,45 +92,71 @@
           scénarios dès que vous le désirez.</p>
         <p>Mais avant d’aller plus loin pourquoi ne pas profiter d’une petite mise en jambe afin de découvrir les
           différents glaciers du monde et quelques informations qui les composent ?</p>
-        <img src="{{ url_for('static', filename='images/wgms_rgi_map.png') }}" alt="Illustration">
+        <div class="illustration-container">
+          <img src="{{ url_for('static', filename='images/wgms_rgi_map.png') }}" alt="Illustration">
+          <legend>add a legend</legend>
+        </div>
+      </section>
+      <section id="section2" class="section-container">
         <h2>Le recul des glaciers</h2>
         <p>Les glaciers ne sont pas éternels. En tout cas, pas si nous continuons dans cette lancée. Les glaciologues
-          les plus aguerris planchent sur une disparition de ceux-ci sur l’ensemble du globe pour dans cinq siècles. Ce
+          les plus aguerris planchent sur une disparition de ceux-ci sur l’ensemble du globe pour dans cinq siècles.
+          Ce
           qui à l’échelle de la terre, vielle de 5Mds d’années est ridiculement peu élevé.
           Tout à l’heure, je vous ai expliqué que les glaciers vivent, c’est vrai. Tout au long de l’année, s’ensuit
           divers périodes qui seront plus propices à l’accumulation (précipitations, dépôt porté par le vent), ou à la
           réduction. Dans un premier, j’aimerai vous parler de la fonte. Si l’on considère les années passées, il est
           juste de remarquer que le phénomène se veut de plus en plus présent. Un des indicateurs les plus importants
           lorsque l’on fait ce type d’affirmation est celui de la balance massique*. Jusqu’à aujourd’hui les quantités
-          impliquées sont décroissantes, cela peut s’expliquer par une quantité accumulé moindre ou une quantité perdue
-          de plus en plus importante. Plus tôt, je vous parlais du futur, venez-avec moi découvrir le futur d’un glacier
+          impliquées sont décroissantes, cela peut s’expliquer par une quantité accumulé moindre ou une quantité
+          perdue
+          de plus en plus importante. Plus tôt, je vous parlais du futur, venez-avec moi découvrir le futur d’un
+          glacier
           alpin.
         </p>
-        {% include 'glass.html' %}
+        <div class="illustration-container">
+          {% include 'glass.html' %}
+          <legend>add a legend</legend>
+        </div>
         <p>Même si cela reste dans le domaine de l’hypothèse, le résultat se veut plutôt intéressant. Il suit la
           tendance actuelle, qui ne se veut pas bienveillante. Mais pour vous donner une image voilà ce que je vous
           dirai : la vitesse à laquelle décroit la balance de masse correspondrait à celle de la consommation de lait
           dans le monde. Une diminution qui se veut deux fois plus importante. </p>
-        <p>Prenons, un autre exemple, celui de la mer de glace. Cela ne doit pas vous être étranger la mer de glace est
-          en forte récession. Vous pouvez voir ci-dessus, l’espace laissé vacant par le glacier qui se veut de moins en
+        <p>Prenons, un autre exemple, celui de la mer de glace. Cela ne doit pas vous être étranger la mer de glace
+          est
+          en forte récession. Vous pouvez voir ci-dessus, l’espace laissé vacant par le glacier qui se veut de moins
+          en
           moins prépondérant.
         <p>
 
-        <div id="evolutionContainer1" class="anim-container">
+        <div id="evolutionContainer1" class="illustration-container">
           <h3>Evolution de la mer de glace de 2010 à 2100 (+1.5°C)</h3>
-          {% include 'evolution_mer_de_glace/evolution_mer_de_glace_1_5.html' %}
+
+          <div class="illustration-container">
+            {% include 'evolution_mer_de_glace/evolution_mer_de_glace_1_5.html' %}
+            <legend>add a legend</legend>
+          </div>
         </div>
-        <div id="evolutionContainer2" class="anim-container">
+        <div id="evolutionContainer2" class="illustration-container">
           <h3>Evolution de la mer de glace de 2010 à 2100 (+2°C)</h3>
-          {% include 'evolution_mer_de_glace/evolution_mer_de_glace_2.html' %}
+          <div class="illustration-container">
+            {% include 'evolution_mer_de_glace/evolution_mer_de_glace_2.html' %}
+            <legend>add a legend</legend>
+          </div>
         </div>
-        <div id="evolutionContainer3" class="anim-container">
+        <div id="evolutionContainer3" class="illustration-container">
           <h3>Evolution de la mer de glace de 2010 à 2100 (+3°C)</h3>
-          {% include 'evolution_mer_de_glace/evolution_mer_de_glace_3.html' %}
+          <div class="illustration-container">
+            {% include 'evolution_mer_de_glace/evolution_mer_de_glace_3.html' %}
+            <legend>add a legend</legend>
+          </div>
         </div>
-        <div id="evolutionContainer4" class="anim-container">
+        <div id="evolutionContainer4" class="illustration-container">
           <h3>Evolution de la mer de glace de 2010 à 2100 (+4°C)</h3>
-          {% include 'evolution_mer_de_glace/evolution_mer_de_glace_4.html' %}
+          <div class="illustration-container">
+            {% include 'evolution_mer_de_glace/evolution_mer_de_glace_4.html' %}
+            <legend>add a legend</legend>
+          </div>
         </div>
         <p> Quand est-il de son volume global ? Voyons ensemble :</p>
 
@@ -134,20 +164,29 @@
           <div class="slide-wrapper">
             <div id="volumeContainer1" class="slide-container">
               <h3>Volume selon le scénario SSP126</h3>
-              {% include 'volume_mer_de_glace/mdg_volume_scenario_1_ssp126.html' %}
+              <div class="illustration-container">
+                {% include 'volume_mer_de_glace/mdg_volume_scenario_1_ssp126.html' %}
+                <legend>add a legend</legend>
+              </div>
             </div>
           </div>
           <div class="slide-wrapper">
             <div id="volumeContainer2" class="slide-container">
               <h3>Volume selon le scénario SSP370</h3>
-              {% include 'volume_mer_de_glace/mdg_volume_scenario_2_ssp370.html' %}
+              <div class="illustration-container">
+                {% include 'volume_mer_de_glace/mdg_volume_scenario_2_ssp370.html' %}
+                <legend>add a legend</legend>
+              </div>
             </div>
           </div>
 
           <div class="slide-wrapper">
             <div id="volumeContainer3" class="slide-container">
               <h3>Volume selon le scénario SSP585</h3>
-              {% include 'volume_mer_de_glace/mdg_volume_scenario_3_ssp585.html' %}
+              <div class="illustration-container">
+                {% include 'volume_mer_de_glace/mdg_volume_scenario_3_ssp585.html' %}
+                <legend>add a legend</legend>
+              </div>
             </div>
           </div>
         </div>
@@ -159,17 +198,23 @@
           <div class="slide-wrapper">
             <div id="correlationEvolution1" class="slide-container">
               <h3>Evolution similaire entre le volume de la mer de glace et la consommation de lait</h3>
-              <img
-                src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_milk-consumption.svg') }}"
-                alt="Illustration">
+              <div class="illustration-container">
+                <img
+                  src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_milk-consumption.svg') }}"
+                  alt="Illustration">
+                <legend>add a legend</legend>
+              </div>
             </div>
           </div>
           <div class="slide-wrapper">
             <div id="correlationEvolution2" class="slide-container">
               <h3>Evolution similaire entre le volume de la mer de glace et la naissance de triplet (ou plus)</h3>
-              <img
-                src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_us-birth-rates-of-triplets-or-more.svg') }}"
-                alt="Illustration">
+              <div class="illustration-container">
+                <img
+                  src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_us-birth-rates-of-triplets-or-more.svg') }}"
+                  alt="Illustration">
+                <legend>add a legend</legend>
+              </div>
             </div>
           </div>
         </div>
@@ -180,36 +225,52 @@
       <section id="section3" class="section-container">
         <h2>Un drame en deux actes</h2>
         <p>La quantité perdue ne disparaît pas, l’occasion de ressortir la citation de Lavoisier qui vous permettra de
-          briller en société « Rien ne se perd, rien ne se crée, tout se transforme). La finalité est toujours la fonte,
+          briller en société « Rien ne se perd, rien ne se crée, tout se transforme). La finalité est toujours la
+          fonte,
           mais avant cela elle peut s’être détachée, on nomme cela le vêlage. Cette action est plutôt impressionnante
           notamment lorsqu’il y a création d’iceberg. Elle peut provenir des couches supérieures ou bien inférieures.
-          Ces différents moyens d’éliminations présentent chacune leur spécificités et problèmes. Le vêlage peut causer
+          Ces différents moyens d’éliminations présentent chacune leur spécificités et problèmes. Le vêlage peut
+          causer
           des problèmes lors de la chute de blocs, la fonte de la couche inférieure crée de l’instabilité au sein du
-          glacier, instabilité pouvant mener à des glissements, des coulées… La fonte en tant que telle impacte le cours
-          des ruisseaux notamment sur le débit. Quand bien même la hauteur des rivières bordant les glaciers se veut de
-          plus en plus réduite, le débit n’en ai pas moins changé. Prenons, l’exemple du col de l’Iseran, dont la source
+          glacier, instabilité pouvant mener à des glissements, des coulées… La fonte en tant que telle impacte le
+          cours
+          des ruisseaux notamment sur le débit. Quand bien même la hauteur des rivières bordant les glaciers se veut
+          de
+          plus en plus réduite, le débit n’en ai pas moins changé. Prenons, l’exemple du col de l’Iseran, dont la
+          source
           du ruisseau donne la fameuse plus connue sous le nom de l’Isère. Malgré une hauteur de plus en plus, minime,
           se veut stable au fur et à mesure des années*. Il ne faut pas s’égarer, omettre, la fonte des neiges annexes
-          et les diverses précipitations seraient une grosse erreur. En prenant en compte l’ensemble des paramètres cela
+          et les diverses précipitations seraient une grosse erreur. En prenant en compte l’ensemble des paramètres
+          cela
           démontre, une tendance globale qui ne se veut point avantageuse pour le moins du monde. Mais le comble de
           cette triste histoire survient dès à présent : le recul des glaciers accélère le recul des glaciers. En
           fondant, la glace diminue son effet albédo**, l’énergie absorbée est de plus en plus importante, ce qui
           contribue au réchauffement global de celui-ci. </p>
-        <img src="{{ url_for('static', filename='images/ela.png') }}" alt="Illustration">
+        <div class="illustration-container">
+          <img src="{{ url_for('static', filename='images/ela.png') }}" alt="Illustration">
+          <legend>add a legend</legend>
+        </div>
         <p>Mais cela ne sont que des impacts à court terme, quand est-il de ceux à long terme ?
         </p>
-        <p>Je vois ceux qui se souviennent de leur cours de primaire s’exciter dans le fond. Oui, vous avez raison, mais
-          marquons le une bonne fois pour toute. L’eau issue des glaciers va dans la mer, étant de plus importante, il y
-          a surplus résultat : l’eau monte. Cela provient en majorité des calottes glaciaires, elle représente pas moins
+        <p>Je vois ceux qui se souviennent de leur cours de primaire s’exciter dans le fond. Oui, vous avez raison,
+          mais
+          marquons le une bonne fois pour toute. L’eau issue des glaciers va dans la mer, étant de plus importante, il
+          y
+          a surplus résultat : l’eau monte. Cela provient en majorité des calottes glaciaires, elle représente pas
+          moins
           de 90% de l’ensemble des glaciers, pour un volume global de . Si tout les glaciers venaient à fondre, le
-          niveau de la mer augmenterait d’environ 8 m. Même si ce nombre peut paraître négligeable, nombreux serait les
+          niveau de la mer augmenterait d’environ 8 m. Même si ce nombre peut paraître négligeable, nombreux serait
+          les
           zones submergées, rien qu’en France, une grande partie des littoraux se verrait frappé de plein fouet. A
           l’échelle, mondiale, cela provoquerait des déplacements migratoires sans précédents.
         </p>
         <p>
           Voilà une carte de l’Europe qui vous présente les zones qui seraient impactés.
+        <div class="illustration-container">
+          <img src="{{ url_for('static', filename='images/europe.png') }}" alt="Illustration">
+          <legend>add a legend</legend>
+        </div>
         </p>
-        <img src="{{ url_for('static', filename='images/europe.png') }}" alt="Illustration">
         <p>
           Mais ce problème n’est pas le seul, des problèmes bien plus insidieux pourrait arriver avec la fonte de
           ceux-ci. L’accélération de l’effet de serre par le rejet de gaz emprisonnés (qui comme l’effet albédo va
@@ -231,21 +292,30 @@
           Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
           tincidunt
           ut. </p>
-        <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+        <div class="illustration-container">
+          <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+          <legend>add a legend</legend>
+        </div>
+
         <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
-          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur
+          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris,
+          consectetur
           id
           nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
           maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
           Integer
-          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa
+          tincidunt,
           non
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
-        <div id="animationContainer2" class="anim-container">
+        <div id="animationContainer2" class="illustration-container">
           <h3>Titre de l'illustration</h3>
-          {% include 'animation2.html' %}
+          <div class="illustration-container">
+            {% include 'animation2.html' %}
+            <legend>add a legend</legend>
+          </div>
         </div>
       </section>
 
@@ -262,20 +332,28 @@
           Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
           tincidunt
           ut. </p>
-        <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+        <div class="illustration-container">
+          <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+          <legend>add a legend</legend>
+        </div>
         <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
-          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur
+          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris,
+          consectetur
           id
           nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
           maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
           Integer
-          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa
+          tincidunt,
           non
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
-        <div id="animationContainer3" class="anim-container">
+        <div id="animationContainer3" class="illustration-container">
           <h3>Titre de l'illustration</h3>
+          <div class="illustration-container">
+            <legend>add a legend</legend>
+          </div>
         </div>
       </section>
 
@@ -292,30 +370,30 @@
           Praesent volutpat est quis quam consequat euismod. Quisque tincidunt diam dolor, sit amet sagittis enim
           tincidunt
           ut. </p>
-        <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+        <div class="illustration-container">
+          <img src="{{ url_for('static', filename='images/illustration.jpg') }}" alt="Illustration">
+          {% include 'animation2.html' %}
+        </div>
         <p>Nullam at pulvinar lacus. Ut porttitor augue a ultricies rutrum. Donec volutpat ligula quis lorem faucibus,
-          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris, consectetur
+          ultrices laoreet quam fermentum. Phasellus interdum sed odio eu vehicula. Maecenas ligula mauris,
+          consectetur
           id
           nulla ac, ultricies feugiat nisi. Maecenas porttitor dignissim dolor, vel dapibus lacus pharetra sed. Donec
           maximus arcu sem, sed dapibus odio aliquet nec. Ut hendrerit mollis tortor, ac laoreet lacus pharetra non.
           Integer
-          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa tincidunt,
+          tincidunt orci dolor, sed tristique diam pulvinar sit amet. Duis imperdiet lacus pellentesque massa
+          tincidunt,
           non
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
-        <div id="animationContainer4" class="anim-container">
+        <div id="animationContainer4" class="illustration-container">
           <h3>Titre de l'illustration</h3>
+          <div class="illustration-container">
+            <legend>add a legend</legend>
+          </div>
         </div>
       </section>
-
-      <div id="slideContent">
-        <div id="slideSubtitle" class="line">
-          <div><span>subtitle</span> <span class="scroll"></span></div>
-        </div>
-        <div id="slideText" class="line">
-          <div><span>text</span> <span class="scroll"></span></div>
-        </div>
     </main>
   </div>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
