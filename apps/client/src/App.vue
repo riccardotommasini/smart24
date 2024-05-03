@@ -3,7 +3,9 @@ import { useTokenStore } from './stores/auth';
 
 const tokenStore = useTokenStore();
 
-tokenStore.loadSession();
+if(tokenStore.getToken){
+  tokenStore.loadSession();
+}
 </script>
 
 <template>
