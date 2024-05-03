@@ -46,18 +46,19 @@ onMounted( () => {
     fetchPosts(props.profileId);
 });
 
-async function trustUser() {
+async function buttonTrustUser() {
   let trusted = document.getElementsByClassName('trust');
   if(trusted[0].hasAttribute('id')){
     trusted[0].removeAttribute('id');
   } else {
+    trustUser();
     trusted[0].setAttribute('id', 'trusted')
   }
   let unTrusted = document.getElementsByClassName('untrust');
   unTrusted[0].removeAttribute('id');
 }
 
-async function unTrustUser() {
+async function buttonUnTrustUser() {
   let unTrusted = document.getElementsByClassName('untrust');
   if(unTrusted[0].hasAttribute('id')){
     unTrusted[0].removeAttribute('id');
@@ -68,6 +69,22 @@ async function unTrustUser() {
   trusted[0].removeAttribute('id');
 }
 
+async function trustUser(){
+  await store.trustUser({from: 'toto', to:'toto'})
+}
+// async function unTrustUser(){
+//   await tokenstore.register({name: name.value, surname: surname.value, username: username.value, mail: email.value, password: password.value})
+//   window.location.href = '/login'
+// }
+// async function ClearTrustUser(){
+//   await tokenstore.register({name: name.value, surname: surname.value, username: username.value, mail: email.value, password: password.value})
+//   window.location.href = '/login'
+// }
+// async function ClearUntrustUser(){
+//   await tokenstore.register({name: name.value, surname: surname.value, username: username.value, mail: email.value, password: password.value})
+//   window.location.href = '/login'
+// }
+
 </script>
 
 <style>
@@ -75,68 +92,78 @@ async function unTrustUser() {
 </style>
 
 <template>
-
-    <div class="content">
-        <bandeau :username="username" :firstname="name" :lastname="surname"/>
-        <div class="user-profile-infos">
-          <ul class ="info-list">
-            <li id = "user-infos-id" class = "label">{{ id }}</li>
-            <li id = "user-infos-username" class = "label">{{ username }}</li>
-            <li id="user-infos-name" class = "label">{{ name }}</li>
-            <li id="user-infos-surname" class = "label">{{ surname }}</li>
-          </ul>
-          <button class="material-symbols-outlined button-profile trust" @click="trustUser">
-            verified_user
-          </button>
-          <br/>
-          <button class="material-symbols-outlined button-profile untrust" @click="unTrustUser">
-            remove_moderator
-          </button>
-        </div>
-        <feed :posts="posts" class="posts"></feed>
+  <div class="content">
+    <bandeau :username="username" :firstname="name" :lastname="surname" />
+    <div class="user-profile-container">
+      <div class="user-profile-infos">
+        <ul class="info-list">
+          <li id="user-infos-id" class="label">{{ id }}</li>
+          <li id="user-infos-username" class="label">{{ username }}</li>
+          <li id="user-infos-name" class="label">{{ name }}</li>
+          <li id="user-infos-surname" class="label">{{ surname }}</li>
+        </ul>
+      </div>
+      <div class="user-profile-buttons">
+        <button class="material-symbols-outlined button-profile trust" @click="buttonTrustUser">
+          verified_user
+        </button>
+        <button class="material-symbols-outlined button-profile untrust" @click="buttonUnTrustUser">
+          remove_moderator
+        </button>
+      </div>
     </div>
-
+    <feed :posts="posts" class="posts"></feed>
+  </div>
 </template>
 
 <style scoped>
+  .user-profile-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-image: linear-gradient(to bottom, #f7e1e1 50%, #B9ABAB 100%);
+  }
 
-.button-profile{
+  .user-profile-infos {
+    flex: 1; 
+  }
+
+  .user-profile-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .button-profile {
     background-color: transparent;
     margin-right: 2vh;
     border: none;
     outline: none;
-}
-.button-profile:hover{
-    color:#B9ABAB;
-}
-.button-profile:focus{
+  }
+
+  .button-profile:hover {
+    color: #b9abab;
+  }
+
+  .button-profile:focus {
     outline: none;
-}
+  }
 
-#trusted{
-  color:rgb(39, 39, 195)
-}
+  #trusted {
+    color: rgb(39, 39, 195);
+  }
 
-#unTrusted{
-  color: rgb(228, 37, 37)
-}
+  #unTrusted {
+    color: rgb(228, 37, 37);
+  }
 
-.info-list {
+  .info-list {
     -moz-column-count: 2;
     -moz-column-gap: 2vw;
     -webkit-column-count: 2;
     -webkit-column-gap: 2vw;
     column-count: 2;
     column-gap: 2vw;
-}
-
-/* .content {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-
-    width: 100%;
-    height: 100%;
-} */
-
+    list-style-type: none;
+  }
 </style>
