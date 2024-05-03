@@ -1,11 +1,12 @@
-nav {
-      white-space: nowrap;
-      background: #f6e7cf;
-}
+
 nav ul {
       list-style: none;
       margin: 0;
       padding: 0;
+}
+
+@media only screen and (max-width: 800px) {
+      nav {white-space: normal;}
 }
 /* Only stick if you can fit */
 @media (min-height: 300px) {
@@ -84,18 +85,3 @@ nav ul label {
       display: none;
 }
   
-
-@media only screen and (max-width: 1200px) {
-}
-
-@media only screen and (max-width: 992px) {
-
-}
-
-@media only screen and (max-width: 768px) {
-
-}
-
-@media only screen and (max-width: 576px) {
-
-}

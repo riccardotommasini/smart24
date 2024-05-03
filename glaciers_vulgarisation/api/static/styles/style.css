@@ -1,33 +1,4 @@
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
-header {
-  grid-column: 1 / 3;
-  background-image: url("https://di262mgurvkjm.cloudfront.net/cf9051ed-452f-4449-a7f4-1e8942a9463a/Aiguilles_de_Chamonix_et_Mont-Blanc_105x35~24_xgaplus.jpg");
-	background-size:cover; 
-  color: #160f29;
-  padding: 2rem;
-  text-align: center;
-}
 
-body {
-  background-color: #160f29;
-  color: #f7f7f2;
-  font-family: "Montserrat", sans-serif;
-  margin: 0;
-  
-  display: grid;
-  grid-template-columns: min-content 1fr;
-}
-
-
-.container {
-    margin: 0 12%;
-    text-align: center;
-    flex-direction: column;
-    min-height: 100vh;
-}
 
 .illustration-container {
   margin-left: 8%;
@@ -59,7 +30,7 @@ body {
   max-width: 100%; /* Assurez-vous que l'image ne dépasse pas la largeur de son conteneur */
 }
 
-@media screen and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .divided-by-two {
     flex-direction: column; /* Change la direction de la disposition en colonne sur les écrans plus petits */
     align-items: stretch; /* Les éléments s'étirent pour remplir la largeur */
