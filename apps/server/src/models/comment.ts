@@ -9,6 +9,10 @@ export interface IComment extends IPost {
     parentPostId: Types.ObjectId;
 }
 
+export interface CommentDocument extends IComment {
+    comments: Array<CommentDocument>;
+}
+
 export const CommentSchema = new Schema<IComment>({
     parentPostId: { type: Schema.Types.ObjectId, ref: 'Post' },
 });
