@@ -13,54 +13,62 @@ use tracing::{info, warn};
 
 pub struct Client {
     server_state: OperationSeq,
-    sent_delta: OperationSeq,
-    unsent_delta: OperationSeq,
+    server_sent_delta: OperationSeq,
+    server_unsent_delta: OperationSeq,
+    ide_state: OperationSeq,
+    ide_sent_delta: OperationSeq,
+    ide_unsent_delta: OperationSeq,
     rev_num: usize,
     server: Server,
     ide: Ide,
     client_id: usize,
     format: Option<Format>,
     file: Option<File>,
+    ide_ack: bool,
 }
 
 impl Client {
     pub fn new(server: Server, ide: Ide, client_id: usize) -> Self {
         Self {
             server_state: OperationSeq::default(),
-            sent_delta: OperationSeq::default(),
-            unsent_delta: OperationSeq::default(),
+            server_sent_delta: OperationSeq::default(),
+            server_unsent_delta: OperationSeq::default(),
+            ide_state: OperationSeq::default(),
+            ide_sent_delta: OperationSeq::default(),
+            ide_unsent_delta: OperationSeq::default(),
             rev_num: 0,
             server,
             ide,
             client_id,
             format: None,
             file: None,
+            ide_ack: true,
         }
     }
 
     async fn on_ack(&mut self) {
         self.rev_num += 1;
-        self.server_state = self.server_state.compose(&self.sent_delta).unwrap();
-        self.sent_delta = OperationSeq::default();
-        self.sent_delta
+        self.server_state = self.server_state.compose(&self.server_sent_delta).unwrap();
+        self.server_sent_delta = OperationSeq::default();
+        self.server_sent_delta
             .retain(self.server_state.target_len() as u64);
-        if !self.unsent_delta.is_noop() {
-            self.submit_change().await;
+        if !self.server_unsent_delta.is_noop() {
+            self.submit_server_change().await;
         }
     }
 
-    async fn submit_change(&mut self) {
+    async fn submit_server_change(&mut self) {
         let _ = self
             .server
             .send(MessageServer::ServerUpdate(ModifRequest {
-                delta: self.unsent_delta.clone(),
+                delta: self.server_unsent_delta.clone(),
                 rev_num: self.rev_num,
             }))
             .await;
-        self.sent_delta = self.unsent_delta.clone();
-        self.unsent_delta = OperationSeq::default();
-        self.unsent_delta
-            .retain(self.sent_delta.target_len() as u64);
+        self.server_sent_delta = self.server_unsent_delta.clone();
+        self.server_unsent_delta = OperationSeq::default();
+        self.server_unsent_delta
+            .retain(self.server_sent_delta.target_len() as u64);
     }
 
     async fn on_server_error(&mut self, err: String) {
@@ -95,14 +103,14 @@ impl Client {
         let server_change = &modif.delta;
 
         let new_server_state = self.server_state.compose(server_change).unwrap();
-        let (updated_server_change, new_sent_delta) =
-            server_change.transform(&self.sent_delta).unwrap();
-        let (ide_delta, new_unsent_delta) =
-            updated_server_change.transform(&self.unsent_delta).unwrap();
+        let (updated_server_change, new_server_sent_delta) =
+            server_change.transform(&self.server_sent_delta).unwrap();
+        let (ide_delta, new_server_unsent_delta) = updated_server_change
+            .transform(&self.server_unsent_delta)
+            .unwrap();
 
         self.server_state = new_server_state;
-        self.sent_delta = new_sent_delta;
-        self.unsent_delta = new_unsent_delta;
+
         let mut ide_modifs = to_ide_changes(&ide_delta);
 
         if matches!(self.format.as_ref().unwrap(), Format::Bytes) {
@@ -112,22 +120,46 @@ impl Client {
             }
         }
 
+        self.server_sent_delta = new_server_sent_delta;
+        self.server_unsent_delta = new_server_unsent_delta;
+
+        self.ide_unsent_delta = self.ide_unsent_delta.compose(&modif.delta).unwrap();
+        self.submit_ide_change().await;
+    }
+
+    async fn submit_ide_change(&mut self) {
+        let ide_modifs = to_ide_changes(&self.ide_unsent_delta);
         self.ide
             .send(MessageIde::Update {
                 changes: ide_modifs,
             })
             .await;
+        self.ide_ack = false;
+        self.ide_sent_delta = self.ide_unsent_delta.clone();
+        self.ide_unsent_delta = OperationSeq::default();
+        self.ide_unsent_delta
+            .retain(self.ide_sent_delta.target_len() as u64);
     }
 
     async fn on_request_file(&mut self) {
+        if self.format.is_none() {
+            self.ide
+                .send(MessageIde::Error{error:                    "Error: MessageIde::RequestFile was sent by IDE but offset format is not set"
+                    .into(),
+                })
+                .await;
+            return;
+        }
         let _ = self.ide.send(MessageIde::RequestFile).await;
     }
 
     async fn on_receive_file(&mut self, file: String, version: usize) {
         self.file = Some(File::new(&file));
         self.server_state.retain(file.len() as u64);
-        self.sent_delta.retain(file.len() as u64);
-        self.unsent_delta.retain(file.len() as u64);
+        self.server_sent_delta.retain(file.len() as u64);
+        self.server_unsent_delta.retain(file.len() as u64);
+        self.ide_sent_delta.retain(file.len() as u64);
+        self.ide_unsent_delta.retain(file.len() as u64);
         self.ide.send(MessageIde::File { file }).await;
         self.rev_num = version;
     }
@@ -136,15 +168,17 @@ impl Client {
         self.rev_num = 0;
         self.file = Some(File::new(&file));
         self.server_state.retain(file.len() as u64);
-        self.sent_delta.retain(file.len() as u64);
-        self.unsent_delta.retain(file.len() as u64);
+        self.server_sent_delta.retain(file.len() as u64);
+        self.server_unsent_delta.retain(file.len() as u64);
+        self.ide_sent_delta.retain(file.len() as u64);
+        self.ide_unsent_delta.retain(file.len() as u64);
         let _ = self
             .server
             .send(MessageServer::File { file, version: 0 })
             .await;
     }
 
-    async fn on_ide_change(&mut self, changes: &mut Vec<TextModification>) {
+    async fn on_ide_change(&mut self, mut changes: Vec<TextModification>) {
         if self.format.is_none() {
             let _ = self
                 .ide
@@ -171,9 +205,9 @@ impl Client {
                 change.delete = self.file.as_mut().unwrap().byte_to_char(change.delete);
             }
         }
-
         let ide_seq =
-            match modifs_to_operation_seq(changes, &(self.unsent_delta.target_len() as u64)) {
+            match modifs_to_operation_seq(&changes, &(self.server_unsent_delta.target_len() as u64))
+            {
                 Ok(seq) => seq,
                 Err(err) => {
                     self.ide
@@ -184,17 +218,58 @@ impl Client {
                     return;
                 }
             };
-        self.unsent_delta = self
-            .unsent_delta
-            .compose(&ide_seq)
-            .expect("modifs_to_operation_seq result should be length compatible with op_seq");
-        if self.sent_delta.is_noop() && !self.unsent_delta.is_noop() {
-            self.submit_change().await;
+
+        if !self.ide_ack {
+            let (updated_ide_change, new_ide_sent_delta) =
+                ide_seq.transform(&self.ide_sent_delta).unwrap();
+            let (server_delta, new_ide_unsent_delta) = updated_ide_change
+                .transform(&self.ide_unsent_delta)
+                .unwrap();
+
+            self.server_unsent_delta = self
+                .server_unsent_delta
+                .compose(&ide_seq)
+                .expect("modifs_to_operation_seq result should be length compatible with op_seq");
+
+            self.ide_sent_delta = new_ide_sent_delta;
+            self.ide_unsent_delta = new_ide_unsent_delta;
+
+            /*(self.ide_sent_delta, _) = self.ide_sent_delta.transform(&ide_seq).unwrap();
+            (self.ide_unsent_delta, _) = self.ide_unsent_delta.transform(&ide_seq).unwrap();*/
+
+            self.ide.send(MessageIde::Ack).await;
+            self.ide
+                .send(MessageIde::Update {
+                    changes: to_ide_changes(&self.ide_sent_delta),
+                })
+                .await;
+        } else {
+            self.server_unsent_delta.compose(&ide_seq).unwrap();
+
+            if self.server_sent_delta.is_noop() && !self.server_unsent_delta.is_noop() {
+                self.submit_server_change().await;
+            }
         }
     }
 
     async fn on_ide_format(&mut self, format: Format) {
         self.format = Some(format);
+    }
+
+    async fn on_ide_ack(&mut self) {
+        if self.ide_ack {
+            self.ide
+                .send(MessageIde::Error {
+                    error: "ack not ok".to_owned(),
+                })
+                .await;
+        } else {
+            if self.ide_unsent_delta.is_noop() {
+                self.submit_ide_change().await;
+            } else {
+                self.ide_sent_delta = OperationSeq::default();
+            }
+        }
     }
 
     pub async fn on_message_server(&mut self, message: MessageServer) {
@@ -209,11 +284,12 @@ impl Client {
 
     pub async fn on_message_ide(&mut self, message_ide: MessageIde) {
         match message_ide {
-            MessageIde::Update { mut changes } => self.on_ide_change(&mut changes).await,
+            MessageIde::Update { changes } => self.on_ide_change(changes).await,
             MessageIde::Declare(format) => self.on_ide_format(format).await,
             MessageIde::File { file } => self.on_ide_file(file).await,
             MessageIde::RequestFile => warn!("IDE sent RequestFile"),
             MessageIde::Error { .. } => warn!("IDE sent error"),
+            MessageIde::Ack => self.on_ide_ack().await,
         }
     }
 }
