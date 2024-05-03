@@ -1,8 +1,8 @@
 /* Style des onglets */
 .tab {
     overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
+    border: 1px solid #f7f7f2;
+    background-color: #52708d;
   }
   
   .tab a {
@@ -16,14 +16,14 @@
   }
   
   .tab a:hover {
-    background-color: #ddd;
+    background-color: #a9c4de;
   }
   
   /* Style des contenus des onglets */
   .tabcontent {
     display: none;
     padding: 6px 12px;
-    border: 1px solid #ccc;
+    border: 1px solid #f7f7f2;
     border-top: none;
   }
 

@@ -1,10 +1,7 @@
 
 
 .illustration-container {
-  margin-left: 8%;
-  margin-right: 8%;
-  margin-top: 0%;
-  margin-bottom: 4%;
+  margin: 2%;
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -50,8 +47,12 @@
 .illustration-container div {
   transition: transform 2s;
 }
+
 .scale3d:hover {
-  transform: scale3d(1.5, 1.5, 1.5); 
-  /* translate3d x y z */
+  transform: scale3d(1.5, 1.5, 2);
 }
+.translate3d:hover {
+  transform: scale3d(1.5, 1.5, 3) translate(-10%, -8%); 
+}
+
 

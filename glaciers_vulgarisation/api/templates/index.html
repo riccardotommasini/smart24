@@ -77,13 +77,21 @@
           <legend>add a legend</legend>
         </div>
         </p>
-        <p>
-          Savez-vous ce qui fascine les peuples au plus au point ? L’éternel.
-          <br>
-          (Ci-dessous une représentation de Nicolas Flammel, alchimiste assez connu dans l'imaginaire collectif)
-        <div class="illustration-container">
-          <img width="20%" src="{{ url_for('static', filename='images/nicolas.jpg') }}" />
-          <legend>add a legend</legend>
+        <div class="two-columns">
+
+          <div class="left-part">
+            <p>
+              Savez-vous ce qui fascine les peuples au plus au point ? L’éternel.
+              <br>
+              (Ci-dessous une représentation de Nicolas Flammel, alchimiste assez connu dans l'imaginaire collectif)
+
+          </div>
+          <div class="right-part">
+            <div class="illustration-container">
+              <img src="{{ url_for('static', filename='images/nicolas.jpg') }}" />
+            </div>
+
+          </div>
         </div>
         </p>
         <p>
@@ -98,7 +106,8 @@
         </div>
         </p>
         <p>
-          N’y a-t-il pas quelques choses d’aventureux, d’inexplicable dans le parcours et la découverte du dos de ces
+          N’y a-t-il pas quelques choses d’aventureux, d’inexplicable dans le parcours et la découverte du dos de
+          ces
           géants de ces glaces ? Les alpinistes et autres professionnels confirmés de l’assemblée se reconnaîtront.
         <div class="illustration-container">
           <img src="{{ url_for('static', filename='images/alpinisme.jpg') }}" />
@@ -106,17 +115,20 @@
         </div>
         </p>
         <p>
-          Si cela peut révéler de telles choses dans le cœur des "néophytes", alors quand est-il des spécialistes de la
+          Si cela peut révéler de telles choses dans le cœur des "néophytes", alors quand est-il des spécialistes de
+          la
           question ? Il va s’en dire que ces monolithes glacés sont des objets d’études de premiers choix.
         </p>
         <p>Quel rapport avec l'éternel ?
         <p>
         <p>
           Disons que c’est ce fait qui change toute la donne. Et pourquoi me diriez-vous ? Les glaciers vivent…. Pas
-          dans le sens commun dans lequel on l’entend, bien entendu mais ils vivent. Ils s’épaississent, avancent, se
+          dans le sens commun dans lequel on l’entend, bien entendu mais ils vivent. Ils s’épaississent, avancent,
+          se
           réduisent, diminuent, emprisonnent l’atmosphère actuelle, organismes variés.... Couplé à l’éternel, les
           glaciers deviennent donc des messagers, des détenteurs de notre passé. Mais ce n’est pas l’histoire que
-          j’aimerai vous raconter aujourd’hui. Non l’histoire prend place dans le futur, notre futur, un futur qui ne
+          j’aimerai vous raconter aujourd’hui. Non l’histoire prend place dans le futur, notre futur, un futur qui
+          ne
           dépendra que de nous (espèce humaine) et nos choix.
         <div class="illustration-container">
           <img src="{{ url_for('static', filename='images/futur.avif') }}" alt="Illustration">
@@ -170,25 +182,31 @@
       </section>
       <section id="section_3" class="section-container">
         <h2>Le recul des glaciers</h2>
-        <div style="display: flex;">
-          <p style="width: 50%;padding:0 20px;">Les glaciers ne sont pas éternels. En tout cas, pas si nous continuons
-            sur
-            cette lancée. Les glaciologues les plus aguerris planchent sur une disparition de ceux-ci sur l’ensemble du
-            globe pour dans cinq siècles. Ce qui à l’échelle de la terre, vielle de 5Mds d’années est ridiculement peu
-            élevé.
-            Tout à l’heure, je vous ai expliqué que les glaciers vivent, c’est vrai. Tout au long de l’année, s’ensuit
-            divers périodes qui seront plus propices à l’accumulation (précipitations, dépôt porté par le vent), ou à la
-            réduction. Dans un premier, j’aimerai vous parler de la fonte.
-          </p>
-          <p style="width: 50%;">
-            Si l’on considère les années passées, il est juste de remarquer que le phénomène se veut de plus en plus
-            présent. Un des indicateurs les plus importants lorsque l’on fait ce type d’affirmation est celui de la
-            balance massique*. Jusqu’à aujourd’hui les quantités impliquées sont décroissantes, cela peut s’expliquer
-            par
-            une quantité accumulé moindre ou une quantité perdue de plus en plus importante. Plus tôt, je vous parlais
-            du
-            futur, venez-avec moi découvrir le futur d’un glacier alpin.
-          </p>
+        <div class="two-columns">
+          <div class="left-part">
+            <p>Les glaciers ne sont pas éternels. En tout cas, pas si nous continuons
+              sur
+              cette lancée. Les glaciologues les plus aguerris planchent sur une disparition de ceux-ci sur l’ensemble
+              du
+              globe pour dans cinq siècles. Ce qui à l’échelle de la terre, vielle de 5Mds d’années est ridiculement peu
+              élevé.
+              Tout à l’heure, je vous ai expliqué que les glaciers vivent, c’est vrai. Tout au long de l’année, s’ensuit
+              divers périodes qui seront plus propices à l’accumulation (précipitations, dépôt porté par le vent), ou à
+              la
+              réduction. Dans un premier, j’aimerai vous parler de la fonte.
+            </p>
+          </div>
+          <div class="right-part">
+            <p>
+              Si l’on considère les années passées, il est juste de remarquer que le phénomène se veut de plus en plus
+              présent. Un des indicateurs les plus importants lorsque l’on fait ce type d’affirmation est celui de la
+              balance massique*. Jusqu’à aujourd’hui les quantités impliquées sont décroissantes, cela peut s’expliquer
+              par
+              une quantité accumulé moindre ou une quantité perdue de plus en plus importante. Plus tôt, je vous parlais
+              du
+              futur, venez-avec moi découvrir le futur d’un glacier alpin.
+            </p>
+          </div>
         </div>
         <p>Même si cela reste dans le domaine de l’hypothèse, le résultat se veut plutôt intéressant. Il suit la
           tendance
@@ -196,6 +214,42 @@
           vitesse à laquelle décroit la balance de masse correspondrait à celle de la consommation de lait dans le
           monde.
           Une diminution qui se veut deux fois plus importante. </p>
+        <div class="two-columns">
+          <div class="left-part">
+            <div id="correlation_evolution1" class="illustration-container">
+              <illustration_title>Evolution similaire entre le volume de la mer de glace et la consommation de lait
+              </illustration_title>
+              <div class="translate3d">
+                <img
+                  src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_milk-consumption.svg') }}"
+                  alt="Illustration">
+              </div>
+              <legend>add a legend</legend>
+            </div>
+            <div id="correlation_evolution2" class="illustration-container">
+              <illustration_title>Evolution similaire entre le volume de la mer de glace et la naissance de triplet
+                (ou plus)</illustration_title>
+              <div class="translate3d">
+                <img
+                  src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_us-birth-rates-of-triplets-or-more.svg') }}"
+                  alt="Illustration">
+              </div>
+              <legend>add a legend</legend>
+            </div>
+          </div>
+          <div class="right-part">
+            <div class="sticky-text-wrapper-50">
+              <div class="sticky-text">
+                <p> Toutes correlations est à prendre avec des pincettes :</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus perferendis similique incidunt
+                  tempore distinctio consectetur ipsam, officiis quisquam commodi tenetur quo error quasi sit, illum,
+                  cumque itaque inventore esse. Molestias.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
         <p>Prenons, un autre exemple, celui de la mer de glace. Cela ne doit pas vous être étranger la mer de glace est
           en
           forte récession. Vous pouvez voir ci-dessus, l’espace laissé vacant par le glacier qui se veut de moins en
@@ -241,7 +295,7 @@
         <p> Quand est-il de son volume global ? Voyons ensemble :</p>
         <div class="two-columns">
           <div class="left-part">
-            <div class="sticky-text-wrapper">
+            <div class="sticky-text-wrapper-50">
               <div class="sticky-text">
                 <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
                   jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
@@ -249,9 +303,20 @@
                 <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
                   jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
                   siècle, la mer de glace perdrait 80% de son volume.</p>
+              </div>
+            </div>
+            <div class="sticky-text-wrapper-50">
+              <div class="sticky-text">
                 <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
                   jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
                   siècle, la mer de glace perdrait 80% de son volume.</p>
+                <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.</p>
+              </div>
+            </div>
+            <div class="sticky-text-wrapper-50">
+              <div class="sticky-text">
                 <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
                   jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
                   siècle, la mer de glace perdrait 80% de son volume.</p>
@@ -290,47 +355,6 @@
                     <legend>add a legend</legend>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p> Toutes correlations est à prendre avec des pincettes :</p>
-        <div class="two-columns">
-          <div class="left-part">
-            <div class="anim-slide">
-              <div class="slide-wrapper">
-                <div id="correlation_evolution1" class="slide-container">
-                  <illustration_title>Evolution similaire entre le volume de la mer de glace et la consommation de lait
-                  </illustration_title>
-                  <div class="illustration-container">
-                    <img
-                      src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_milk-consumption.svg') }}"
-                      alt="Illustration">
-                    <legend>add a legend</legend>
-                  </div>
-                </div>
-              </div>
-              <div class="slide-wrapper">
-                <div id="correlation_evolution2" class="slide-container">
-                  <illustration_title>Evolution similaire entre le volume de la mer de glace et la naissance de triplet
-                    (ou
-                    plus)</illustration_title>
-                  <div class="illustration-container">
-                    <img
-                      src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_us-birth-rates-of-triplets-or-more.svg') }}"
-                      alt="Illustration">
-                    <legend>add a legend</legend>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="right-part">
-            <div class="sticky-text-wrapper">
-              <div class="sticky-text">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus perferendis similique incidunt
-                  tempore distinctio consectetur ipsam, officiis quisquam commodi tenetur quo error quasi sit, illum,
-                  cumque itaque inventore esse. Molestias.</p>
               </div>
             </div>
           </div>

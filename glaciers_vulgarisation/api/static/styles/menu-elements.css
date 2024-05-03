@@ -4,6 +4,9 @@ nav ul {
       padding: 0;
 }
 
+nav ul li {
+      padding: 0 0.5rem;
+}
 
 /* Only stick if you can fit */
 @media (min-height: 300px) {
@@ -17,6 +20,7 @@ nav ul li a {
       padding: 1rem 2rem;
       color: #160f29;
       text-decoration: none;
+      border-bottom: 1px solid #160f29;
 }
 nav ul li a.current {
       background:  #a9c4de;
