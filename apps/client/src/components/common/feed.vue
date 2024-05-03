@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <!-- eslint-disable vue/require-v-for-key -->
 <script setup>
 import post from '../post.vue'
@@ -14,15 +15,10 @@ console.log("posts", props.posts);
 </script>
 
 <template>
-    <div class="center">
-        <div v-for="(item) in  props.posts" key="index">
+    <div class="feed">
+        <div class="posts" v-for="(item) in  props.posts" key="index">
             <post :info="item"></post>
         </div>
     </div>
-
 </template>
 
-<style scoped>
-
-
-</style>

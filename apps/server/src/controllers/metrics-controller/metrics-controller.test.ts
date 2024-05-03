@@ -26,6 +26,8 @@ describe('MetricsController', () => {
         const username = 'michel';
         const passwordHash = 'yoyoyoyo';
         user = new User({
+            name: 'michel',
+            surname: 'michmich',
             username,
             mail: 'a',
             passwordHash,

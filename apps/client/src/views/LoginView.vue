@@ -2,7 +2,6 @@
 import slogan from '../components/slogan.vue';
 import connexionForm from '../components/connexionForm.vue';
 import '../assets/HomeView.css'
-import '../assets/main.css'
 
 </script>
 

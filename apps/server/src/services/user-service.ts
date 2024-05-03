@@ -3,11 +3,11 @@ import { Post } from '../models/post';
 import { singleton } from 'tsyringe';
 import { StatusCodes } from 'http-status-codes';
 import { HttpException } from '../models/http-exception';
-import { Document, UpdateQuery } from 'mongoose';
+import { Document, UpdateQuery, Types } from 'mongoose';
 import { NonStrictObjectId } from 'src/utils/objectid';
-import bcryptjs from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import { env } from '../utils/env'
+import bcryptjs from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { env } from '../utils/env';
 
 @singleton()
 export class UserService {
@@ -20,7 +20,7 @@ export class UserService {
 
         return user;
     }
-  
+
     public async login(username: string, password: string) {
         const foundUser = await User.findOne({ username });
 
@@ -35,7 +35,15 @@ export class UserService {
                 expiresIn: '2 days',
             });
 
-            return { user: { name: foundUser.name, surname: foundUser.surname, username: foundUser.username }, token: token };
+            return {
+                user: {
+                    id: foundUser._id,
+                    name: foundUser.name,
+                    surname: foundUser.surname,
+                    username: foundUser.username,
+                },
+                token: token,
+            };
         } else {
             throw new Error('Password is not correct');
         }
@@ -45,7 +53,7 @@ export class UserService {
         const existingUser = await User.findOne({ $or: [{ username: user.username }, { mail: user.mail }] });
 
         if (existingUser) {
-            throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or email already exists');
+            throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or mail already exists');
         }
 
         const newUser = new User({ ...user, passwordHash: user.password });
@@ -54,8 +62,21 @@ export class UserService {
         return newUser;
     }
 
-    async updateUser(userId: NonStrictObjectId, update: UpdateQuery<IUser>): Promise<IUser | null> {
-        const updatedUser = await User.findByIdAndUpdate(userId, update, { new: true });
+    async updateUser(userId: string, update: UpdateQuery<IUser>): Promise<IUser | null> {
+        const userObjectId = new Types.ObjectId(userId);
+
+        if (update.username || update.mail) {
+            const existingUser = await User.findOne({
+                $or: [{ username: update.username }, { mail: update.mail }],
+                _id: { $ne: userObjectId }, // Exclude the current user
+            });
+
+            // If a user with the same username or mail exists, throw an error
+            if (existingUser) {
+                throw new HttpException(StatusCodes.BAD_REQUEST, 'Username or mail already exists');
+            }
+        }
+        const updatedUser = await User.findByIdAndUpdate(userObjectId, update, { new: true });
         return updatedUser;
     }
 
@@ -81,11 +102,11 @@ export class UserService {
 
     async getUserProfile(otherUserId: NonStrictObjectId) {
         const userData = await this.getUser(otherUserId);
-        const lastPosts = await Post.aggregate([
-            { $match: { createdBy: otherUserId } },
-            { $sort: { date: -1 } },
-            { $limit: 50 },
-        ]);
+        const lastPosts = await Post.find({ createdBy: otherUserId })
+            .sort({ date: -1 })
+            .limit(50)
+            .populate('createdBy', 'username mail')
+            .populate('metrics');
 
         return {
             userData,

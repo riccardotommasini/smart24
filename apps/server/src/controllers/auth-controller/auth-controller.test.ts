@@ -7,11 +7,15 @@ import { StatusCodes } from 'http-status-codes';
 import { AuthService } from '../../services/auth-service/auth-service';
 
 const DEFAULT_USER = {
+    name: 'richard',
+    surname: 'dupont',
     username: 'richard',
     mail: 'richard@richard.com',
     passwordHash: 'bouetteentabarnak',
 };
 const DEFAULT_USER_2 = {
+    name: 'joelle',
+    surname: 'gendre',
     username: 'joellegendre',
     mail: 'joellegendre@tva.ca',
     passwordHash: 'dansleparc',
@@ -71,6 +75,8 @@ describe('AuthController', () => {
             return request(app['app'])
                 .post('/signup')
                 .send({
+                    name: DEFAULT_USER_2.name,
+                    surname: DEFAULT_USER_2.surname,
                     username: DEFAULT_USER_2.username,
                     mail: DEFAULT_USER_2.mail,
                     password: DEFAULT_USER_2.passwordHash,
@@ -111,21 +117,36 @@ describe('AuthController', () => {
         it('should not create if body has no username', () => {
             return request(app['app'])
                 .post('/signup')
-                .send({ mail: DEFAULT_USER_2.mail, password: DEFAULT_USER_2.passwordHash })
+                .send({
+                    name: DEFAULT_USER_2.name,
+                    surname: DEFAULT_USER_2.surname,
+                    mail: DEFAULT_USER_2.mail,
+                    password: DEFAULT_USER_2.passwordHash,
+                })
                 .expect(StatusCodes.BAD_REQUEST);
         });
 
         it('should not create if body has no mail', () => {
             return request(app['app'])
                 .post('/signup')
-                .send({ username: DEFAULT_USER_2.username, password: DEFAULT_USER_2.passwordHash })
+                .send({
+                    name: DEFAULT_USER_2.name,
+                    surname: DEFAULT_USER_2.surname,
+                    username: DEFAULT_USER_2.username,
+                    password: DEFAULT_USER_2.passwordHash,
+                })
                 .expect(StatusCodes.BAD_REQUEST);
         });
 
         it('should not create if body has no password', () => {
             return request(app['app'])
                 .post('/signup')
-                .send({ username: DEFAULT_USER_2.username, mail: DEFAULT_USER_2.mail })
+                .send({
+                    name: DEFAULT_USER_2.name,
+                    surname: DEFAULT_USER_2.surname,
+                    username: DEFAULT_USER_2.username,
+                    mail: DEFAULT_USER_2.mail,
+                })
                 .expect(StatusCodes.BAD_REQUEST);
         });
 
@@ -133,6 +154,8 @@ describe('AuthController', () => {
             return request(app['app'])
                 .post('/signup')
                 .send({
+                    name: DEFAULT_USER.name,
+                    surname: DEFAULT_USER.surname,
                     username: DEFAULT_USER.username,
                     mail: DEFAULT_USER_2.mail,
                     password: DEFAULT_USER_2.passwordHash,
@@ -144,6 +167,8 @@ describe('AuthController', () => {
             return request(app['app'])
                 .post('/signup')
                 .send({
+                    name: DEFAULT_USER_2.name,
+                    surname: DEFAULT_USER_2.surname,
                     username: DEFAULT_USER_2.username,
                     mail: DEFAULT_USER_2.mail,
                     password: DEFAULT_USER_2.passwordHash,

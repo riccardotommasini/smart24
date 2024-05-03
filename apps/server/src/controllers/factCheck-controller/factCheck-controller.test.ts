@@ -21,6 +21,7 @@ describe('FactCheckController', () => {
     let app: Application;
     let factCheckService: FactCheckService;
     let user: IUser & Document;
+    let notAFactChecker: IUser & Document;
     let token: string;
     let metrics: IMetrics & Document;
     let post: IPost & Document;
@@ -36,6 +37,8 @@ describe('FactCheckController', () => {
         const username = 'fuckyou';
         const passwordHash = 'yoyoyoyo';
         user = new User({
+            name: 'coucou',
+            surname: 'toto',
             username,
             mail: 'a@gmail.com',
             passwordHash,
@@ -43,7 +46,16 @@ describe('FactCheckController', () => {
             organization: 'le monde',
         });
 
+        notAFactChecker = new User({
+            name: 'toto',
+            surname: 'toto',
+            username: 'toto',
+            mail: 'toto@yahoo.fr',
+            passwordHash,
+        });
+
         await user.save();
+        await notAFactChecker.save();
 
         token = (await container.resolve(AuthService).login(username, passwordHash)).token;
 
@@ -52,7 +64,7 @@ describe('FactCheckController', () => {
 
         post = new Post({
             text: 'je suis un post',
-            createdBy: user._id,
+            createdBy: notAFactChecker._id,
             metrics: metrics._id,
         });
         await post.save();
@@ -77,12 +89,22 @@ describe('FactCheckController', () => {
                 .then(() => mock.verify());
         });
 
-        it('should not create if body has no grade', () => {
+        it('should not create if body is empty', () => {
             sinon.mock(factCheckService);
 
             return request(app['app'])
                 .post('/factCheck/create')
                 .send({})
+                .set('Authorization', 'Bearer ' + token)
+                .expect(StatusCodes.NOT_FOUND);
+        });
+
+        it('should not create if body has no grade', () => {
+            sinon.mock(factCheckService);
+
+            return request(app['app'])
+                .post('/factCheck/create')
+                .send({ postId: post._id.toString() })
                 .set('Authorization', 'Bearer ' + token)
                 .expect(StatusCodes.INTERNAL_SERVER_ERROR);
         });

@@ -23,7 +23,12 @@ export class AuthService {
 
         if (isMatch) {
             return {
-                user: { _id: foundUser._id.toString(), mail: foundUser.mail, username: foundUser.username },
+                user: {
+                    _id: foundUser._id.toString(),
+                    name: foundUser.name,
+                    surname: foundUser.surname,
+                    username: foundUser.username,
+                },
                 token: this.createSessionToken(foundUser),
             };
         } else {
@@ -42,7 +47,12 @@ export class AuthService {
         const createdUser = await this.userService.createUser(user);
 
         return {
-            user: { _id: createdUser._id.toString(), mail: createdUser.mail, username: createdUser.username },
+            user: {
+                _id: createdUser._id.toString(),
+                name: createdUser.name,
+                surname: createdUser.surname,
+                username: createdUser.username,
+            },
             token: this.createSessionToken(createdUser),
         };
     }

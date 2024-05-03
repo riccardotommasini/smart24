@@ -27,6 +27,11 @@ export class FactCheckService {
     async createAssignFactCheck(userId: string, newFactCheck: ICreateFactCheck): Promise<Document & IFactCheck> {
         const userObjectId = new Types.ObjectId(userId);
         const user = await this.userService.getUser(userObjectId);
+        const post = await this.postService.getPost(newFactCheck.postId);
+
+        if (post.createdBy.toString() == userId) {
+            throw new HttpException(StatusCodes.BAD_REQUEST, `User is the creator of this post`);
+        }
 
         if (!user.factChecker) {
             throw new HttpException(StatusCodes.UNAUTHORIZED, `User is not a fact checker`);
@@ -49,10 +54,7 @@ export class FactCheckService {
 
         const postId = new Types.ObjectId(newFactCheck.postId);
         const metricsId = await this.postService.getMetricsId(postId);
-        await this.metricsService.updateMetrics(metricsId, {
-            $inc: { nbFactChecks: 1 },
-            $push: { factChecks: factCheck._id },
-        });
+        await this.metricsService.addFactCheck(metricsId, factCheck._id, factCheck.grade);
 
         return factCheck;
     }
