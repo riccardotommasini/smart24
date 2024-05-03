@@ -13,10 +13,8 @@ body {
 
 header {
       grid-column: 1 / 3;
-      background-image: url("https://di262mgurvkjm.cloudfront.net/cf9051ed-452f-4449-a7f4-1e8942a9463a/Aiguilles_de_Chamonix_et_Mont-Blanc_105x35~24_xgaplus.jpg");
-      background-size:cover; 
       color: #160f29;
-      padding: 2rem;
+      padding: 0;
       text-align: center;
 }
 
@@ -50,8 +48,14 @@ header img {
       margin:0;
 }
 
+main{
+      display: block;
+      background: #f6e7cf;
+      padding: 50px;
+}
+
 .container {
-      margin: 2% 12%;
+      margin: 0% 12%;
       text-align: center;
       min-height: 100vh;
 }
@@ -69,4 +73,12 @@ nav {
 
 @media only screen and (max-width: 800px) {
       nav {white-space: normal;}
+}
+
+img{
+      max-width: 100%;
+      height: auto;
+      display: block;
+      align-self: center;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }

@@ -34,13 +34,6 @@ p {
       text-align: justify;
 }
 
-img{
-      max-width: 100%;
-      height: auto;
-      display: block;
-      align-self: center;
-}
-
 legend 
 {
 line-height: 1.2;
