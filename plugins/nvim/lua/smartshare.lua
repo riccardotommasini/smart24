@@ -28,9 +28,9 @@ local handle = vim.fn.jobstart("./client 127.0.0.1:4903", {
                 local message = vim.json.decode(json_object)
 
                 if message.action == "update" then
-                    is_user_input = false
 
-                    for change in message.changes do
+                    for _,change in ipairs(message.changes) do
+                        is_user_input = false
                         M.set_text(change.offset, change.delete, vim.fn.split(change.text, "\n", 1))
                     end
                 end

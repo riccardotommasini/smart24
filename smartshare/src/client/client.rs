@@ -6,7 +6,7 @@ use smartshare::protocol::msg::{
 
 use crate::ide::Ide;
 use crate::server::Server;
-use tracing::warn;
+use tracing::{info, warn};
 
 pub struct Client {
     server_state: OperationSeq,
@@ -91,12 +91,18 @@ impl Client {
     }
 
     async fn on_receive_file(&mut self, file: String, version: usize) {
+        self.server_state.retain(file.len() as u64);
+        self.sent_delta.retain(file.len() as u64);
+        self.unsent_delta.retain(file.len() as u64);
         self.ide.send(MessageIde::File { file }).await;
-        self.rev_num = version
+        self.rev_num = version;
     }
 
     async fn on_ide_file(&mut self, file: String) {
         self.rev_num = 0;
+        self.server_state.retain(file.len() as u64);
+        self.sent_delta.retain(file.len() as u64);
+        self.unsent_delta.retain(file.len() as u64);
         let _ = self
             .server
             .send(MessageServer::File { file, version: 0 })
@@ -105,7 +111,7 @@ impl Client {
 
     async fn on_ide_change(&mut self, change: &Vec<TextModification>) {
         let ide_seq =
-            match modifs_to_operation_seq(&change, &(self.unsent_delta.target_len() as u64)) {
+            match modifs_to_operation_seq(change, &(self.unsent_delta.target_len() as u64)) {
                 Ok(seq) => seq,
                 Err(err) => {
                     self.ide
