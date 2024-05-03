@@ -35,7 +35,7 @@ export const useTokenStore = defineStore({
     isLoggedIn(): boolean {
       return this.token !== null;
     },
-    async register(infos: any) {  // Bad typing here :(
+    async register(infos: { name: string, surname: string, username: string, mail: string, password: string }) {  //TODO: Should be moved out from tokenStore ?
       const response = await axios.post('/signup', infos);
       return response;
     },
