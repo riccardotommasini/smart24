@@ -20,7 +20,6 @@ const redirectSettings = () => {
             <p class="info-user std title3">{{ props.username }}</p>
         </div>
         <div class="right-box">
-            <button class="btn btn-primary b" @click="post">Post</button>
             <button class="btn btn-primary b" @click="redirectSettings">Settings</button>
         </div>
     </nav>
