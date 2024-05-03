@@ -85,14 +85,6 @@ async function trustUser(){
 async function unTrustUser(){
   await store.unTrustUser({user: currentUserId.value, otherUserId: props.profileId});
 }
-// async function ClearTrustUser(){
-//   await tokenstore.register({name: name.value, surname: surname.value, username: username.value, mail: email.value, password: password.value})
-//   window.location.href = '/login'
-// }
-// async function ClearUntrustUser(){
-//   await tokenstore.register({name: name.value, surname: surname.value, username: username.value, mail: email.value, password: password.value})
-//   window.location.href = '/login'
-// }
 
 </script>
 
@@ -105,13 +97,15 @@ async function unTrustUser(){
     <bandeau :username="currentUserUsername" :firstname="currentUserName" :lastname="currentUserSurname" />
     <div class="user-profile-container">
       <div class="user-profile-infos">
-        <ul class="info-list">
-          <li id="user-infos-id" class="label">{{ userProfileId }}</li>
-          <li id="user-infos-username" class="label">{{ userProfileUsername }}</li>
-          <li id="user-infos-name" class="label">{{ userProfileName }}</li>
-          <li id="user-infos-surname" class="label">{{ userProfileSurname }}</li>
-        </ul>
+        <strong>
+          <span id="userIdentity" class="label">{{ userProfileName }} {{ userProfileSurname }}</span>
+        </strong>
+        <br/>
+        <em>
+          <span id="username">@{{ userProfileUsername }}</span>
+        </em>
       </div>
+      <
       <div class="user-profile-buttons">
         <button class="material-symbols-outlined button-profile trust" @click="buttonTrustUser">
           verified_user
