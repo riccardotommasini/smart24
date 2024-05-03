@@ -23,69 +23,69 @@ const temperatureOptions = document.querySelectorAll(".temperature-option input[
 // Fonction pour afficher l'animation correspondante à l'option sélectionnée
 function afficherAnimation() {
     if (this.value === "1.5") {
-        evolutionContainer11.style.display = "block";
-        evolutionContainer21.style.display = "block";
-        evolutionContainer31.style.display = "block";
+        // evolutionContainer11.style.display = "block";
+        // evolutionContainer21.style.display = "block";
+        // evolutionContainer31.style.display = "block";
 
-        evolutionContainer12.style.display = "none";
-        evolutionContainer22.style.display = "none";
-        evolutionContainer32.style.display = "none";
+        // evolutionContainer12.style.display = "none";
+        // evolutionContainer22.style.display = "none";
+        // evolutionContainer32.style.display = "none";
 
-        evolutionContainer13.style.display = "none";
-        evolutionContainer23.style.display = "none";
-        evolutionContainer33.style.display = "none";
+        // evolutionContainer13.style.display = "none";
+        // evolutionContainer23.style.display = "none";
+        // evolutionContainer33.style.display = "none";
 
-        evolutionContainer14.style.display = "none";
-        evolutionContainer24.style.display = "none";
-        evolutionContainer34.style.display = "none";
+        // evolutionContainer14.style.display = "none";
+        // evolutionContainer24.style.display = "none";
+        // evolutionContainer34.style.display = "none";
     } else if (this.value === "2") {
-        evolutionContainer11.style.display = "none";
-        evolutionContainer21.style.display = "none";
-        evolutionContainer31.style.display = "none";
+        // evolutionContainer11.style.display = "none";
+        // evolutionContainer21.style.display = "none";
+        // evolutionContainer31.style.display = "none";
 
-        evolutionContainer12.style.display = "block";
-        evolutionContainer22.style.display = "block";
-        evolutionContainer32.style.display = "block";
+        // evolutionContainer12.style.display = "block";
+        // evolutionContainer22.style.display = "block";
+        // evolutionContainer32.style.display = "block";
 
-        evolutionContainer13.style.display = "none";
-        evolutionContainer23.style.display = "none";
-        evolutionContainer33.style.display = "none";
+        // evolutionContainer13.style.display = "none";
+        // evolutionContainer23.style.display = "none";
+        // evolutionContainer33.style.display = "none";
 
-        evolutionContainer14.style.display = "none";
-        evolutionContainer24.style.display = "none";
-        evolutionContainer34.style.display = "none";
+        // evolutionContainer14.style.display = "none";
+        // evolutionContainer24.style.display = "none";
+        // evolutionContainer34.style.display = "none";
     } else if (this.value === "3") {
-      volutionContainer11.style.display = "none";
-        evolutionContainer21.style.display = "none";
-        evolutionContainer31.style.display = "none";
+        // evolutionContainer11.style.display = "none";
+        // evolutionContainer21.style.display = "none";
+        // evolutionContainer31.style.display = "none";
 
-        evolutionContainer12.style.display = "none";
-        evolutionContainer22.style.display = "none";
-        evolutionContainer32.style.display = "none";
+        // evolutionContainer12.style.display = "none";
+        // evolutionContainer22.style.display = "none";
+        // evolutionContainer32.style.display = "none";
 
-        evolutionContainer13.style.display = "block";
-        evolutionContainer23.style.display = "block";
-        evolutionContainer33.style.display = "block";
+        // evolutionContainer13.style.display = "block";
+        // evolutionContainer23.style.display = "block";
+        // evolutionContainer33.style.display = "block";
 
-        evolutionContainer14.style.display = "none";
-        evolutionContainer24.style.display = "none";
-        evolutionContainer34.style.display = "none";
+        // evolutionContainer14.style.display = "none";
+        // evolutionContainer24.style.display = "none";
+        // evolutionContainer34.style.display = "none";
     }else if (this.value === "4") {
-      volutionContainer11.style.display = "none";
-        evolutionContainer21.style.display = "none";
-        evolutionContainer31.style.display = "none";
+        // evolutionContainer11.style.display = "none";
+        // evolutionContainer21.style.display = "none";
+        // evolutionContainer31.style.display = "none";
 
-        evolutionContainer12.style.display = "none";
-        evolutionContainer22.style.display = "none";
-        evolutionContainer32.style.display = "none";
+        // evolutionContainer12.style.display = "none";
+        // evolutionContainer22.style.display = "none";
+        // evolutionContainer32.style.display = "none";
 
-        evolutionContainer13.style.display = "none";
-        evolutionContainer23.style.display = "none";
-        evolutionContainer33.style.display = "none";
+        // evolutionContainer13.style.display = "none";
+        // evolutionContainer23.style.display = "none";
+        // evolutionContainer33.style.display = "none";
 
-        evolutionContainer14.style.display = "block";
-        evolutionContainer24.style.display = "block";
-        evolutionContainer34.style.display = "block";
+        // evolutionContainer14.style.display = "block";
+        // evolutionContainer24.style.display = "block";
+        // evolutionContainer34.style.display = "block";
     }
 }
 
@@ -108,7 +108,6 @@ let cur = [];
 
 window.addEventListener("scroll", event => {
   let fromTop = window.scrollY;
-
   mainNavLinks.forEach(link => {
     let section = document.querySelector(link.hash);
 

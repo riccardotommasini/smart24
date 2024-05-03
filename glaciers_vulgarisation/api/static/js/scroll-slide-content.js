@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function() {
             opacity = Math.min(1, Math.max(0, opacity));
         }
         slides[currentSlide].style.opacity = opacity; 
-        console.log("currentSlide", currentSlide, "windowHeight", windowHeight, "\nwindowcenter", windowcenter, "\nslideBottom", slideBottom, "\nslideCenter", slideCenter, "\nslideTop", slideTop)
 
         // Passe à la slide suivante
         if (opacity==0 && slideCenter<windowcenter ){

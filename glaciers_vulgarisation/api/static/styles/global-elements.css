@@ -19,8 +19,8 @@ header {
 }
 
 body {
-      background-color: rgba(22,15, 41, 1);
-      color: #160f29;
+      background-color: #263a4d;
+      color: #ffffff;
       font-family: "Montserrat", sans-serif;
       margin: 0;
       display: grid;
@@ -50,7 +50,6 @@ header img {
 
 main{
       display: block;
-      background: #f6e7cf;
       padding: 50px;
 }
 
@@ -68,7 +67,10 @@ main{
 
 nav {
       white-space: nowrap;
-      background: #f6e7cf;
+      margin-top: 1rem;
+	border-top-right-radius: 1rem;
+      background: #52708d;
+	box-shadow: 3px 0px 0px 4px rgba(0,0,0,.1);
 }
 
 @media only screen and (max-width: 800px) {
