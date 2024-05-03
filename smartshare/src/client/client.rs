@@ -89,7 +89,7 @@ impl Client {
             let _ = self
                 .ide
                 .send(MessageIde::Error(
-                    "Error: Offset format was not set by IDE".into(),
+                    "Error: MessageIde::RequestFile was sent by IDE but offset format is not set".into(),
                 ))
                 .await;
             return;
@@ -115,7 +115,7 @@ impl Client {
             let _ = self
                 .ide
                 .send(MessageIde::Error(
-                    "Error: Offset format was not set by IDE".into(),
+                    "Error: MessageIde::Update was sent by IDE but offset format is not set".into(),
                 ))
                 .await;
             return;
