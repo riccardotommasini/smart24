@@ -1,12 +1,10 @@
-nav {
-      white-space: nowrap;
-      background: rgba(255, 220, 195, 0.900);
-}
 nav ul {
       list-style: none;
       margin: 0;
       padding: 0;
 }
+
+
 /* Only stick if you can fit */
 @media (min-height: 300px) {
       nav ul {
@@ -21,7 +19,7 @@ nav ul li a {
       text-decoration: none;
 }
 nav ul li a.current {
-      background: #f6e7cf;
+      background:  #fff7ea;
 }
 
 nav ul label {
@@ -75,27 +73,12 @@ nav ul label {
       border: 2px solid #160f29;
 }
 
-#evolution-container-1 {
+#evolutionContainer1 {
       display: block;
 }
-#evolution-container-2,
-#evolution-container-3,
-#evolution-container-4 {
+#evolutionContainer2,
+#evolutionContainer3,
+#evolutionContainer4 {
       display: none;
 }
   
-
-@media only screen and (max-width: 1200px) {
-}
-
-@media only screen and (max-width: 992px) {
-
-}
-
-@media only screen and (max-width: 768px) {
-
-}
-
-@media only screen and (max-width: 576px) {
-
-}

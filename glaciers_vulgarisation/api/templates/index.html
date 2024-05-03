@@ -7,9 +7,10 @@
   <title>Vulgarisation sur la fonte des glaciers</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/menu.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/font.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/content-elements.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/menu-elements.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/global-elements.css') }}">>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/font.css') }}">>
 </head>
 
 <body>
@@ -25,11 +26,11 @@
   <nav>
     <ul>
       <li><a href="#prologue">Prologue</a></li>
-      <li><a href="#section-1">Partie I</a></li>
-      <li><a href="#section-2">Partie II</a></li>
-      <li><a href="#section-3">Partie III</a></li>
-      <li><a href="#section-4">Partie IV</a></li>
-      <li><a href="#section-5">Partie V</a></li>
+      <li><a href="#section1">Partie I</a></li>
+      <li><a href="#section2">Partie II</a></li>
+      <li><a href="#section3">Partie III</a></li>
+      <li><a href="#section4">Partie IV</a></li>
+      <li><a href="#section5">Partie V</a></li>
 
       <div class="options">
         <label class="temperature-option">
@@ -60,7 +61,10 @@
     <main style="background: rgba(255, 220, 195, 0.900);">
       <section class="section-container" id="prologue">
         <p><strong style="font-size: 32px;">I</strong>l n’est jamais facile de rédiger une accroche, notamment sur un site internet. Ce n’est pas un livre, un mémoire, ou encore une thèse. Pourtant, celui-ci mérite son introduction autant que les supports précédemment cités. Que diriez-vous d’une belle histoire, celle que l’on raconte aux jeunes enfants ? L’histoire que nous allons vous raconter est destinée à vous, lecteur que vous soyez enfants, adolescents, adultes ou en encore à la retraite, ouvrez grands vos yeux.</p>
-        <img src="{{ url_for('static', filename='images/livre.jpg') }}" alt="Illustration">
+        <div class="illustration-container">
+          <img width="20%" src="{{ url_for('static', filename='images/cartoon-eyes.svg') }}" alt="Illustration">
+          <legend>add a legend</legend>
+        </div>
         <h3 style="font-style: italic;">Savez-vous ce qui fascine les peuples au plus au point ?</h3>
         <div style="display: flex;">
         <div style="width: 50%">
@@ -87,7 +91,14 @@
         </div>
         <p>Mais avant d’aller plus loin pourquoi ne pas profiter d’une petite mise en jambe afin de découvrir les différents glaciers du monde et quelques informations qui les composent ?</p>
         
-        <img src="{{ url_for('static', filename='images/wgms_rgi_map.png') }}" alt="Illustration">
+        <div class="illustration-container">
+          <div class="scale3d">
+            <img src="{{ url_for('static', filename='images/wgms_rgi_map.png') }}" alt="Illustration">
+          </div>
+          <legend>add a legend</legend>
+        </div>
+      </section>
+      <section id="section2" class="section-container">
         
       </section>
         <section class="section-container" id="section-1"></section>
@@ -100,61 +111,103 @@
           Si l’on considère les années passées, il est juste de remarquer que le phénomène se veut de plus en plus présent. Un des indicateurs les plus importants lorsque l’on fait ce type d’affirmation est celui de la balance massique*. Jusqu’à aujourd’hui les quantités impliquées sont décroissantes, cela peut s’expliquer par une quantité accumulé moindre ou une quantité perdue de plus en plus importante. Plus tôt, je vous parlais du futur, venez-avec moi découvrir le futur d’un glacier alpin.
         </p>
         </div>
+        <div class="illustration-container">
           {% include 'glass.html' %}
+          <legend>add a legend</legend>
+        </div>
         <p>Même si cela reste dans le domaine de l’hypothèse, le résultat se veut plutôt intéressant. Il suit la tendance actuelle, qui ne se veut pas bienveillante. Mais pour vous donner une image voilà ce que je vous dirai : la vitesse à laquelle décroit la balance de masse correspondrait à celle de la consommation de lait dans le monde. Une diminution qui se veut deux fois plus importante. </p>
         <p>Prenons, un autre exemple, celui de la mer de glace. Cela ne doit pas vous être étranger la mer de glace est en forte récession. Vous pouvez voir ci-dessus, l’espace laissé vacant par le glacier qui se veut de moins en moins prépondérant.<p>
-        <div id="evolution-container-1" class="anim-container">
+          <div id="evolutionContainer1" class="illustration-container">
           <h3>Evolution de la mer de glace de 2010 à 2100 (+1.5°C)</h3>
-          {% include 'evolution_mer_de_glace_1_5.html' %}
+          <div class="illustration-container">
+            {% include 'evolution_mer_de_glace/evolution_mer_de_glace_1_5.html' %}
+            <legend>add a legend</legend>
+          </div>
         </div>
-        <div id="evolution-container-2" class="anim-container">
+        <div id="evolutionContainer2" class="illustration-container">
           <h3>Evolution de la mer de glace de 2010 à 2100 (+2°C)</h3>
-          {% include 'evolution_mer_de_glace_2.html' %}
+          <div class="illustration-container">
+            {% include 'evolution_mer_de_glace/evolution_mer_de_glace_2.html' %}
+            <legend>add a legend</legend>
+          </div>
         </div>
-        <div id="evolution-container-3" class="anim-container">
+        <div id="evolutionContainer3" class="illustration-container">
           <h3>Evolution de la mer de glace de 2010 à 2100 (+3°C)</h3>
-          {% include 'evolution_mer_de_glace_3.html' %}
+          <div class="illustration-container">
+            {% include 'evolution_mer_de_glace/evolution_mer_de_glace_3.html' %}
+            <legend>add a legend</legend>
+          </div>
         </div>
-        <div id="evolution-container-4" class="anim-container">
+        <div id="evolutionContainer4" class="illustration-container">
           <h3>Evolution de la mer de glace de 2010 à 2100 (+4°C)</h3>
-          {% include 'evolution_mer_de_glace_4.html' %}
+          <div class="illustration-container">
+            {% include 'evolution_mer_de_glace/evolution_mer_de_glace_4.html' %}
+            <legend>add a legend</legend>
+          </div>
         </div>
         <p> Quand est-il de son volume global ? Voyons ensemble :</p>
-        <div class="slides">
+        <div class="anim-slide">
           <div class="slide-wrapper">
-            <div id="volume-container-1" class="slide-container">
+            <div id="volumeContainer1" class="slide-container">
               <h3>Volume selon le scénario SSP126</h3>
-              {% include 'mdg_volume_scenario_1_ssp126.html' %}
+              <div class="illustration-container">
+                {% include 'volume_mer_de_glace/mdg_volume_scenario_1_ssp126.html' %}
+                <legend>add a legend</legend>
+              </div>
             </div>
           </div>
           <div class="slide-wrapper">
-            <div id="volume-container-2" class="slide-container">
+            <div id="volumeContainer2" class="slide-container">
               <h3>Volume selon le scénario SSP370</h3>
-              {% include 'mdg_volume_scenario_2_ssp370.html' %}
+              <div class="illustration-container">
+                <div class="illustration-container">
+                  {% include 'volume_mer_de_glace/mdg_volume_scenario_2_ssp370.html' %}
+                  <legend>add a legend</legend>
+                </div>
+              </div>
             </div>
           </div>
 
           <div class="slide-wrapper">
-            <div id="volume-container-3" class="slide-container">
+            <div id="volumeContainer3" class="slide-container">
               <h3>Volume selon le scénario SSP585</h3>
-              {% include 'mdg_volume_scenario_3_ssp585.html' %}
+              <div class="illustration-container">
+                {% include 'volume_mer_de_glace/mdg_volume_scenario_3_ssp585.html' %}
+                <legend>add a legend</legend>
+              </div>
             </div>
           </div>
         </div>
         <p>Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e siècle, la mer de glace perdrait 80% de son volume.</p>
-        <div class="anim-container">
-          <img
-            src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_milk-consumption.svg') }}"
-            alt="Illustration">
-          <img
-            src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_us-birth-rates-of-triplets-or-more.svg') }}"
-            alt="Illustration">
+        <div class="anim-slide">
+          <div class="slide-wrapper">
+            <div id="correlationEvolution1" class="slide-container">
+              <h3>Evolution similaire entre le volume de la mer de glace et la consommation de lait</h3>
+              <div class="illustration-container">
+                <img
+                  src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_milk-consumption.svg') }}"
+                  alt="Illustration">
+                <legend>add a legend</legend>
+              </div>
+            </div>
+          </div>
+          <div class="slide-wrapper">
+            <div id="correlationEvolution2" class="slide-container">
+              <h3>Evolution similaire entre le volume de la mer de glace et la naissance de triplet (ou plus)</h3>
+              <div class="illustration-container">
+                <img
+                  src="{{ url_for('static', filename='images/evolution-du-volume-de-la-mer-de-glace-en-fonction-du-temps_correlates-with_us-birth-rates-of-triplets-or-more.svg') }}"
+                  alt="Illustration">
+                <legend>add a legend</legend>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       <br>
 
-      <section class="section-container" id="section-2">
+      <section class="section-container" id="section2">
         <h2>Un drame en deux actes</h2>
         <div style="display: flex;">
         <p style="width: 50%;padding: 0 20px;">La quantité perdue ne disparaît pas, l’occasion de ressortir la citation de Lavoisier qui vous permettra de briller en société « Rien ne se perd, rien ne se crée, tout se transforme). La finalité est toujours la fonte, mais avant cela elle peut s’être détachée, on nomme cela le vêlage. Cette action est plutôt impressionnante notamment lorsqu’il y a création d’iceberg. Elle peut provenir des couches supérieures ou bien inférieures. Ces différents moyens d’éliminations présentent chacune leur spécificités et problèmes. Le vêlage peut causer des problèmes lors de la chute de blocs, la fonte de la couche inférieure crée de l’instabilité au sein du glacier, instabilité pouvant mener à des glissements, des coulées… La fonte en tant que telle impacte le cours des ruisseaux notamment sur le débit. Quand bien même la hauteur des rivières bordant les glaciers se veut de plus en plus réduite, le débit n’en ai pas moins changé.</p>
@@ -167,8 +220,11 @@
           </p>
           <p>
           Voilà une carte de l’Europe qui vous présente les zones qui seraient impactés.
+          <div class="illustration-container">
+            <img src="{{ url_for('static', filename='images/europe.png') }}" alt="Illustration">
+            <legend>add a legend</legend>
+          </div>
           </p>
-          <img src="{{ url_for('static', filename='images/europe.png') }}" alt="Illustration">
           <p>
           Mais ce problème n’est pas le seul, des problèmes bien plus insidieux pourrait arriver avec la fonte de ceux-ci. L’accélération de l’effet de serre par le rejet de gaz emprisonnés (qui comme l’effet albédo va accélérer de nouveau la fonte). La libération d’anciens organismes pouvant se révéler bénéfiques ou terriblement léthaux.
           </p>
@@ -176,7 +232,7 @@
 
       <br>
 
-      <section class="section-container" id="section-3">
+      <section class="section-container" id="section3">
         <h2>Partie III</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
           malesuada
@@ -199,7 +255,7 @@
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
-        <div id="animation-container-2" class="anim-container">
+        <div id="animation-container-2" class="illustration-container">
           <h3>Titre de l'illustration</h3>
           {% include 'animation2.html' %}
         </div>
@@ -207,7 +263,7 @@
 
       <br>
 
-      <section class="section-container" id="section-4">
+      <section class="section-container" id="section4">
         <h2>Partie IV</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
           malesuada
@@ -230,14 +286,14 @@
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
-        <div id="animation-container-3" class="anim-container">
+        <div id="animation-container-3" class="illustration-container">
           <h3>Titre de l'illustration</h3>
         </div>
       </section>
 
       <br>
 
-      <section class="section-container" id="section-5">
+      <section class="section-container" id="section5">
         <h2>Partie V</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
           malesuada
@@ -260,7 +316,7 @@
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
-        <div id="animation-container-4" class="anim-container">
+        <div id="animation-container-4" class="illustration-container">
           <h3>Titre de l'illustration</h3>
         </div>
       </section>
@@ -268,7 +324,10 @@
   </div>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/scroll-slide-content.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/scroll-slide-to-slide.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/menu-action.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
 </body>
 
 </html>

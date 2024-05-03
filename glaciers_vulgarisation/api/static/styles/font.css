@@ -34,6 +34,22 @@ p {
       text-align: justify;
 }
 
+img{
+      max-width: 100%;
+      height: auto;
+      display: block;
+      align-self: center;
+}
+
+legend 
+{
+line-height: 1.2;
+font-weight: 150;
+font-style: italic;
+text-align : center;
+margin: 1rem 0;
+}
+
 @media only screen and (max-width: 1200px) {
       h1 {
             font-size:56px;
