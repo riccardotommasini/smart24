@@ -7,6 +7,8 @@ import axios from "axios";
 import { useTokenStore } from "../stores/auth.ts";
 import { onMounted, ref } from "vue";
 import BandeauHomepage from "../components/common/BandeauHomepage.vue";
+import modal from "../components/common/modal.vue";
+import NewPost from "../components/NewPost.vue";
 
 const store = useUserInfoStore();
 
@@ -14,6 +16,11 @@ const username = ref('');
 const name = ref('');
 const surname = ref('');
 const posts=ref<any[]>([]);;
+const showCreateNewPost = ref(false);
+
+const switchShowCreateNewPost = () => {
+    showCreateNewPost.value = !showCreateNewPost.value;
+}
 
 onMounted(async () => {
     let userInfo = store.getUserInfo;
@@ -34,8 +41,8 @@ onMounted(async () => {
 
 
 async function getPosts() {
-    const idPost = "66333d0f22fdb44ff5afc20b";
-    const idPost2="66334a4522fdb44ff5afc248";
+    const idPost = "66335387450595a99959e21d";
+    const idPost2="66349d40b1f3fe6ff9a98cb7";
     const token = localStorage.getItem('token');
     
     // Vérifiez si le token est présent
@@ -58,16 +65,27 @@ async function getPosts() {
 }
 
 
-
+const handlePostStatus = (status: string) => {
+    if (status === 'success') {
+      switchShowCreateNewPost();
+    } else {
+        alert('An error occurred while posting your message');
+    }
+}
 </script>
 
 <template>
     <div class="mainFeed">
         <header>        
-                <BandeauHomepage :username="username" :fistname="name" :lastname="surname"/>
+                <BandeauHomepage :username="username"/>
         </header>
         <div class="screen">
+            <button class="btn btn-primary b" @click="switchShowCreateNewPost">Post</button>
+
             <feed :posts="posts"></feed>
+            <modal v-if="showCreateNewPost" @close="switchShowCreateNewPost">
+                <NewPost @postStatus="handlePostStatus"/>
+            </modal>
         </div>
     </div>
 
