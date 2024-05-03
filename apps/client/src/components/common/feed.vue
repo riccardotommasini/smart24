@@ -16,6 +16,7 @@ console.log("posts", props.posts);
 
 <template>
     <div class="feed">
+        <!-- eslint-disable-next-line vue/require-v-for-key -->
         <div class="posts" v-for="(item) in  props.posts" key="index">
             <post :info="item"></post>
         </div>
