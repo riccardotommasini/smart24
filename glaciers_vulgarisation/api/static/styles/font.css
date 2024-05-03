@@ -1,3 +1,5 @@
+
+
 h1 {
 font-size: 64px;
 margin-top: 32px;
@@ -16,6 +18,14 @@ font-size: 32px;
 margin-top:40px;
 margin-bottom: 10px;
 font-weight: 650;
+}
+
+.illustration-container h3 {
+margin-bottom: -10px;
+}
+
+.slide-container h3 {
+margin-bottom: -10px;
 }
 
 h4 {
