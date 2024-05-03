@@ -75,12 +75,12 @@ nav ul label {
       border: 2px solid #160f29;
 }
 
-#evolution-container-1 {
+#evolution_container_1 {
       display: block;
 }
-#evolution-container-2,
-#evolution-container-3,
-#evolution-container-4 {
+#evolution_container_2,
+#evolution_container_3,
+#evolution_container_4 {
       display: none;
 }
   

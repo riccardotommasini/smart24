@@ -20,10 +20,10 @@ function plusSlides(n) {
 //-------- Faire afficher le bon graphe selon le scénario choisi ----------
 
 // Récupérer les éléments de l'animation container
-const evolutionContainer1 = document.getElementById("evolution-container-1");
-const evolutionContainer2 = document.getElementById("evolution-container-2");
-const evolutionContainer3 = document.getElementById("evolution-container-3");
-const evolutionContainer4 = document.getElementById("evolution-container-4");
+const evolutionContainer1 = document.getElementById("evolution_container_1");
+const evolutionContainer2 = document.getElementById("evolution_container_2");
+const evolutionContainer3 = document.getElementById("evolution_container_3");
+const evolutionContainer4 = document.getElementById("evolution_container_4");
 
 // Récupérer les éléments d'options de température
 const temperatureOptions = document.querySelectorAll(".temperature-option input[type='radio']");

@@ -29,17 +29,17 @@
       top: 1rem;
 }
     
-#volumeContainer1,
-#volumeContainer2,
-#volumeContainer3{
+#volume_container1,
+#volume_container2,
+#volume_container3{
       position: sticky;
       bottom: 1rem;
       align-self: flex-end;
       opacity: 0;
 }
     
-#correlationEvolution1,
-#correlationEvolution2{
+#correlation_evolution1,
+#correlation_evolution2{
       position: sticky;
       bottom: 1rem;
       align-self: flex-end;

@@ -27,11 +27,11 @@
   <nav>
     <ul>
       <li><a href="#prologue">Prologue</a></li>
-      <li><a href="#section-1">Partie I</a></li>
-      <li><a href="#section-2">Partie II</a></li>
-      <li><a href="#section-3">Partie III</a></li>
-      <li><a href="#section-4">Partie IV</a></li>
-      <li><a href="#section-5">Partie V</a></li>
+      <li><a href="#section_1">Partie I</a></li>
+      <li><a href="#section_2">Partie II</a></li>
+      <li><a href="#section_3">Partie III</a></li>
+      <li><a href="#section_4">Partie IV</a></li>
+      <li><a href="#section_5">Partie V</a></li>
 
       <div class="options">
         <label class="temperature-option">
@@ -120,7 +120,7 @@
         <img src="{{ url_for('static', filename='images/wgms_rgi_map.png') }}" alt="Illustration">
 
       </section>
-      <section class="section-container" id="section-1"></section>
+      <section id="section_1" class="section-container"></section>
       <h2>Le recul des glaciers</h2>
       <div style="display: flex;">
         <p style="width: 50%;padding:0 20px;">Les glaciers ne sont pas éternels. En tout cas, pas si nous continuons sur
@@ -148,19 +148,19 @@
         forte récession. Vous pouvez voir ci-dessus, l’espace laissé vacant par le glacier qui se veut de moins en moins
         prépondérant.
       <p>
-      <div id="evolution-container-1" class="anim-container">
+      <div id="evolution_container_1" class="anim-container">
         <h3>Evolution de la mer de glace de 2010 à 2100 (+1.5°C)</h3>
         {% include 'evolution_mer_de_glace/evolution_mer_de_glace_1_5.html' %}
       </div>
-      <div id="evolution-container-2" class="anim-container">
+      <div id="evolution_container_2" class="anim-container">
         <h3>Evolution de la mer de glace de 2010 à 2100 (+2°C)</h3>
         {% include 'evolution_mer_de_glace/evolution_mer_de_glace_2.html' %}
       </div>
-      <div id="evolution-container-3" class="anim-container">
+      <div id="evolution_container_3" class="anim-container">
         <h3>Evolution de la mer de glace de 2010 à 2100 (+3°C)</h3>
         {% include 'evolution_mer_de_glace/evolution_mer_de_glace_3.html' %}
       </div>
-      <div id="evolution-container-4" class="anim-container">
+      <div id="evolution_container_4" class="anim-container">
         <h3>Evolution de la mer de glace de 2010 à 2100 (+4°C)</h3>
         {% include 'evolution_mer_de_glace/evolution_mer_de_glace_4.html' %}
       </div>
@@ -191,7 +191,7 @@
         <div class="right-part">
           <div class="anim-slide">
             <div class="slide-wrapper">
-              <div id="volumeContainer1" class="slide-container">
+              <div id="volume_container1" class="slide-container">
                 <h3>Volume selon le scénario SSP126</h3>
                 <div class="illustration-container">
                   {% include 'volume_mer_de_glace/mdg_volume_scenario_1_ssp126.html' %}
@@ -200,7 +200,7 @@
               </div>
             </div>
             <div class="slide-wrapper">
-              <div id="volumeContainer2" class="slide-container">
+              <div id="volume_container2" class="slide-container">
                 <h3>Volume selon le scénario SSP370</h3>
                 <div class="illustration-container">
                   {% include 'volume_mer_de_glace/mdg_volume_scenario_2_ssp370.html' %}
@@ -210,7 +210,7 @@
             </div>
 
             <div class="slide-wrapper">
-              <div id="volumeContainer3" class="slide-container">
+              <div id="volume_container3" class="slide-container">
                 <h3>Volume selon le scénario SSP585</h3>
                 <div class="illustration-container">
                   {% include 'volume_mer_de_glace/mdg_volume_scenario_3_ssp585.html' %}
@@ -224,7 +224,7 @@
 
       <div class="anim-slide">
         <div class="slide-wrapper">
-          <div id="correlationEvolution1" class="slide-container">
+          <div id="correlation_evolution1" class="slide-container">
             <h3>Evolution similaire entre le volume de la mer de glace et la consommation de lait</h3>
             <div class="illustration-container">
               <img
@@ -235,7 +235,7 @@
           </div>
         </div>
         <div class="slide-wrapper">
-          <div id="correlationEvolution2" class="slide-container">
+          <div id="correlation_evolution2" class="slide-container">
             <h3>Evolution similaire entre le volume de la mer de glace et la naissance de triplet (ou plus)</h3>
             <div class="illustration-container">
               <img
@@ -250,7 +250,7 @@
 
       <br>
 
-      <section class="section-container" id="section-2">
+      <section id="section_2" class="section-container">
         <h2>Un drame en deux actes</h2>
         <div style="display: flex;">
           <p style="width: 50%;padding: 0 20px;">La quantité perdue ne disparaît pas, l’occasion de ressortir la
@@ -297,7 +297,7 @@
 
       <br>
 
-      <section class="section-container" id="section-3">
+      <section id="section_3" class="section-container">
         <h2>Partie III</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
           malesuada
@@ -320,7 +320,7 @@
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
-        <div id="animation-container-2" class="anim-container">
+        <div id="animation_container_2" class="anim-container">
           <h3>Titre de l'illustration</h3>
           {% include 'animation2.html' %}
         </div>
@@ -328,7 +328,7 @@
 
       <br>
 
-      <section class="section-container" id="section-4">
+      <section id="section_4" class="section-container">
         <h2>Partie IV</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
           malesuada
@@ -351,14 +351,14 @@
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
-        <div id="animation-container-3" class="anim-container">
+        <div id="animation_container_3" class="anim-container">
           <h3>Titre de l'illustration</h3>
         </div>
       </section>
 
       <br>
 
-      <section class="section-container" id="section-5">
+      <section id="section_5" class="section-container">
         <h2>Partie V</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique ante quis nisi iaculis mattis. Ut
           malesuada
@@ -381,7 +381,7 @@
           rutrum eros interdum. Donec urna velit, sodales vel magna nec, congue convallis elit.
         </p>
 
-        <div id="animation-container-4" class="anim-container">
+        <div id="animation_container_4" class="anim-container">
           <h3>Titre de l'illustration</h3>
         </div>
       </section>
