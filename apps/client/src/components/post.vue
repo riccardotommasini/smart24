@@ -27,7 +27,7 @@ const day=dateInstance.getDate();
 const hour=dateInstance.getHours();
 const minute=dateInstance.getMinutes();
 const metrics=ref('');
-
+console.log("likedBy", props.likedBy);
 
 onMounted(async () => {
 
@@ -66,6 +66,12 @@ async function untrustPost(){
     console.log(res.data);
 }
 
+async function factCheckPost(){
+    const res = await axios.post("/factCheck/create")
+    metrics.value=await getMetrics();
+    console.log(res.data);
+}
+
 </script>
 
 <style>
@@ -89,7 +95,13 @@ async function untrustPost(){
                 <img v-if="info.image" :src="info.image" alt="post-image" class="post-image">
             </div>
             <div class="post-footer">
-                <div class="post-footer-left">                          
+                <div class="post-footer-left"> 
+                    <div class="comment-icon-container">          
+                        <button  class="material-symbols-outlined button-post" @click="factCheckPost">
+                            verified
+                        </button> 
+                        <div class="comment-count-bubble">{{metrics.nbFactChecks}}</div>
+                    </div>
                     <div class="comment-icon-container">
                         <button v-if="trustedBy" class="material-symbols-outlined button-post green">
                             verified_user

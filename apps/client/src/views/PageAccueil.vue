@@ -15,7 +15,6 @@ const username = ref('');
 const name = ref('');
 const surname = ref('');
 const posts=ref<any[][]>([]);
-const likes=ref<any[][]>([]);
 
 onMounted(async () => {
     let userInfo = store.getUserInfo;
@@ -105,7 +104,7 @@ async function checkIfUserHasLiked() {
 <template>
     <div class="mainFeed">
         <header>        
-                <BandeauHomepage :username="username" :fistname="name" :lastname="surname"/>
+            <BandeauHomepage :username="username" :fistname="name" :lastname="surname"/>
         </header>
         <div class="screen">
             <feed :posts="posts" :username="username"></feed>
