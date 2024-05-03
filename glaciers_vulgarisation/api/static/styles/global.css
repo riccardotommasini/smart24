@@ -1,0 +1,32 @@
+html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    
+body {
+      background-color: #160f29;
+      color: #f7f7f2;
+      font-family: "Montserrat", sans-serif;
+      margin: 0;
+      display: grid;
+      }
+
+header {
+      grid-column: 1 / 3;
+      background-image: url("https://di262mgurvkjm.cloudfront.net/cf9051ed-452f-4449-a7f4-1e8942a9463a/Aiguilles_de_Chamonix_et_Mont-Blanc_105x35~24_xgaplus.jpg");
+      background-size:cover; 
+      color: #160f29;
+      padding: 2rem;
+      text-align: center;
+}
+
+.container {
+      margin: 2% 12%;
+      text-align: center;
+      min-height: 100vh;
+}
+
+nav {
+      white-space: nowrap;
+      background: #f6e7cf;
+}
