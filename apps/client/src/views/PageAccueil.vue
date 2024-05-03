@@ -33,8 +33,8 @@ onMounted(async () => {
 
 
 async function getPosts() {
-    const idPost = "66333d0f22fdb44ff5afc20b";
-    const idPost2="66334a4522fdb44ff5afc248";
+    // const idPost = "66333d0f22fdb44ff5afc20b";
+    // const idPost2="66334a4522fdb44ff5afc248";
     const token = localStorage.getItem('token');
     
     // Vérifiez si le token est présent
@@ -47,13 +47,14 @@ async function getPosts() {
         'Authorization': `Bearer ${token}`
     };
 
-    const res = await axios.get(`/posts/${idPost}`, { headers });
-    const res2= await axios.get(`/posts/${idPost2}`, { headers });
+    // const res = await axios.get(`/posts/${idPost}`, { headers });
+    // const res2= await axios.get(`/posts/${idPost2}`, { headers });
 
-    const postsArray=[res.data, res2.data];
-    console.log("data"  , postsArray);
+    // const postsArray=[res.data, res2.data];
+    // console.log("data"  , postsArray);
 
-    return postsArray;
+    // return postsArray;
+    return {}
 }
 
 
