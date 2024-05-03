@@ -55,6 +55,7 @@
     "typescript": "^5.4.4"
   },
   "dependencies": {
+    "@types/underscore": "^1.11.15",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -62,6 +63,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.5.0",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "underscore": "^1.13.6"
   }
 }
