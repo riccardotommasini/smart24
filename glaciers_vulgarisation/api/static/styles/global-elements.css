@@ -26,7 +26,17 @@ header {
       min-height: 100vh;
 }
 
+@media only screen and (max-width: 576px) {
+      .container {
+            margin: 4%;
+      }
+}
+
 nav {
       white-space: nowrap;
       background: #f6e7cf;
+}
+
+@media only screen and (max-width: 800px) {
+      nav {white-space: normal;}
 }

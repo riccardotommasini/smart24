@@ -7,10 +7,10 @@
   <title>Vulgarisation sur la fonte des glaciers</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/menu.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/content-elements.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/menu-elements.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/font.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/global.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/global-elements.css') }}">
 </head>
 
 <body>
@@ -94,7 +94,9 @@
         <p>Mais avant d’aller plus loin pourquoi ne pas profiter d’une petite mise en jambe afin de découvrir les
           différents glaciers du monde et quelques informations qui les composent ?</p>
         <div class="illustration-container">
-          <img src="{{ url_for('static', filename='images/wgms_rgi_map.png') }}" alt="Illustration">
+          <div class="scale3d">
+            <img src="{{ url_for('static', filename='images/wgms_rgi_map.png') }}" alt="Illustration">
+          </div>
           <legend>add a legend</legend>
         </div>
       </section>
@@ -116,7 +118,6 @@
           alpin.
         </p>
         <div class="illustration-container">
-          {% include 'glass.html' %}
           <legend>add a legend</legend>
         </div>
         <p>Même si cela reste dans le domaine de l’hypothèse, le résultat se veut plutôt intéressant. Il suit la
