@@ -198,6 +198,9 @@ if __name__ == "__main__":
     db.drop_collection('ratings-dislikes')
     db.drop_collection('ratings-trust')
     db.drop_collection('ratings-untrust')
+    db.drop_collection('algo-suggestions')
+    db.drop_collection('algo-confidences')
+    db.drop_collection('algo-similars')
 
     print("📦 Populating database...")
 
