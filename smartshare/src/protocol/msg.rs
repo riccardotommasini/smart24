@@ -21,6 +21,7 @@ pub enum MessageIde {
     Error(String),
     RequestFile,
     File(String),
+    Ack,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
