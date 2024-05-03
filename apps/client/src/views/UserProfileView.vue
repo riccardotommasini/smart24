@@ -56,10 +56,10 @@ onMounted( () => {
 
 async function buttonTrustUser() {
   let trusted = document.getElementsByClassName('trust');
+  trustUser();
   if(trusted[0].hasAttribute('id')){
     trusted[0].removeAttribute('id');
   } else {
-    trustUser();
     trusted[0].setAttribute('id', 'trusted')
   }
   let unTrusted = document.getElementsByClassName('untrust');
@@ -68,10 +68,10 @@ async function buttonTrustUser() {
 
 async function buttonUnTrustUser() {
   let unTrusted = document.getElementsByClassName('untrust');
+  unTrustUser();
   if(unTrusted[0].hasAttribute('id')){
     unTrusted[0].removeAttribute('id');
   } else {
-    unTrustUser();
     unTrusted[0].setAttribute('id', 'unTrusted')
   }
   let trusted = document.getElementsByClassName('trust');
