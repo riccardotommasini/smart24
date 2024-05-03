@@ -5,6 +5,7 @@ import _ from 'underscore';
 import { IRatings } from '../models/ratings/ratings';
 import { logger } from '../utils/logger';
 import { AlgoComputer } from './algo-computer';
+import { getRatedItemsForUser, getRatingUsersForItem } from '../utils/ratings';
 
 export class AlgoFieldComputer extends AlgoComputer<IAlgoField> {
     constructor(
@@ -22,15 +23,15 @@ export class AlgoFieldComputer extends AlgoComputer<IAlgoField> {
     async computeForUser(user: NonStrictObjectId): Promise<IAlgoField & Document> {
         logger.info(this.constructor.name, 'computeForUser', 'Computing for', user);
 
-        const positiveRatedItems = await this.getRatedItemsForUser(user, this.positiveRatingModel);
-        const negativeRatedItems = await this.getRatedItemsForUser(user, this.negativeRatingModel);
+        const positiveRatedItems = await getRatedItemsForUser(user, this.positiveRatingModel);
+        const negativeRatedItems = await getRatedItemsForUser(user, this.negativeRatingModel);
 
-        const usersWithCommonPositive = (
-            await this.getRatingUsersForItem(positiveRatedItems, this.positiveRatingModel)
-        ).map(String);
-        const usersWithCommonNegative = (
-            await this.getRatingUsersForItem(negativeRatedItems, this.negativeRatingModel)
-        ).map(String);
+        const usersWithCommonPositive = (await getRatingUsersForItem(positiveRatedItems, this.positiveRatingModel)).map(
+            String,
+        );
+        const usersWithCommonNegative = (await getRatingUsersForItem(negativeRatedItems, this.negativeRatingModel)).map(
+            String,
+        );
 
         const usersWithCommon: string[] = [
             ...new Set([...usersWithCommonPositive.map(String), ...usersWithCommonNegative.map(String)]),
@@ -66,10 +67,10 @@ export class AlgoFieldComputer extends AlgoComputer<IAlgoField> {
     ): Promise<IAlgoFieldOther> {
         logger.debug(this.constructor.name, 'computeForUserPair', 'Computing for', user, 'and', other);
 
-        const otherPositive = (await this.getRatedItemsForUser(other, this.positiveRatingModel)).map(String);
-        const otherNegative = (await this.getRatedItemsForUser(other, this.negativeRatingModel)).map(String);
+        const otherPositive = (await getRatedItemsForUser(other, this.positiveRatingModel)).map(String);
+        const otherNegative = (await getRatedItemsForUser(other, this.negativeRatingModel)).map(String);
 
-        const similarity =
+        const score =
             (_.intersection(positive, otherPositive).length +
                 _.intersection(negative, otherNegative).length -
                 _.intersection(positive, otherNegative).length -
@@ -84,9 +85,9 @@ export class AlgoFieldComputer extends AlgoComputer<IAlgoField> {
             'and',
             other,
             'similarity',
-            similarity.toFixed(3),
+            score.toFixed(3),
         );
 
-        return { user: toObjectId(other), similarity };
+        return { user: toObjectId(other), score };
     }
 }

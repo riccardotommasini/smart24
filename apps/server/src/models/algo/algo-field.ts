@@ -2,7 +2,7 @@ import { Schema, Types } from 'mongoose';
 
 export interface IAlgoFieldOther {
     user: Types.ObjectId;
-    similarity: number;
+    score: number;
 }
 
 export interface IAlgoField {
@@ -12,7 +12,7 @@ export interface IAlgoField {
 
 export const AlgoFieldOtherSchema = new Schema<IAlgoFieldOther>({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    similarity: { type: Number, required: true },
+    score: { type: Number, required: true },
 });
 
 export const AlgoFieldSchema = new Schema<IAlgoField>({

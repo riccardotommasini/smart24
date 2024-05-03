@@ -13,6 +13,7 @@ import { singleton } from 'tsyringe';
 import { IAlgoField } from '../../models/algo/algo-field';
 import { AlgoSuggestionType, AlgoSuggestionsDict } from '../../algo/algo-suggestion/algo-suggestions-computer';
 import { AlgoSuggestionDefaultComputer } from '../../algo/algo-suggestion/algo-suggestions-default-computer';
+import { AlgoSuggestionReconfComputer } from '../../algo/algo-suggestion/algo-suggestions-reconf-computer';
 
 @singleton()
 export class AlgoService {
@@ -24,7 +25,28 @@ export class AlgoService {
         this.similarityComputer = new AlgoFieldComputer(AlgoSimilar, RatingsLikes, RatingsDislikes);
         this.confidenceComputer = new AlgoFieldComputer(AlgoConfidence, RatingsTrust, RatingsUntrust);
         this.suggestionsComputers = {
-            default: new AlgoSuggestionDefaultComputer(),
+            default: new AlgoSuggestionDefaultComputer({
+                kTopUsers: 10,
+                positiveRatingsModel: RatingsLikes,
+                negativeRatingsModel: RatingsDislikes,
+                selectUserType: 'similar',
+            }),
+            reconf1: new AlgoSuggestionReconfComputer({
+                kTopUsers: 10,
+                similarityCoefficient: 1,
+                confidenceCoefficient: 1,
+                positiveRatingsModel: RatingsLikes,
+                negativeRatingsModel: RatingsDislikes,
+                selectUserType: 'similar',
+            }),
+            reconf2: new AlgoSuggestionReconfComputer({
+                kTopUsers: 10,
+                similarityCoefficient: 1,
+                confidenceCoefficient: 1,
+                positiveRatingsModel: RatingsTrust,
+                negativeRatingsModel: RatingsUntrust,
+                selectUserType: 'confidence',
+            }),
         };
     }
 
