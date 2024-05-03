@@ -68,6 +68,26 @@ impl Client {
     }
 
     async fn on_server_change(&mut self, modif: &ModifRequest) {
+        if self.format.is_none() {
+            let _ = self
+                .ide
+                .send(MessageIde::Error {
+                    error: "Error: Offset format was not set by IDE".into(),
+                })
+                .await;
+            return;
+        }
+
+        if self.file.is_none() {
+            let _ = self
+                .ide
+                .send(MessageIde::Error {
+                    error: "Error: Unknown file".into(),
+                })
+                .await;
+            return;
+        }
+
         self.rev_num += 1;
         if self.rev_num != modif.rev_num {
             todo!("handle desynchronisation");
