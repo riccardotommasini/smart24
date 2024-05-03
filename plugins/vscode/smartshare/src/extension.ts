@@ -1,23 +1,22 @@
 import * as vscode from 'vscode';
 import { logClient, logServer } from './utils';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
-import { Ack, Declare, File, Message, RequestFile, Update, isMessage, matchMessage } from './message';
+import { Ack, Declare, File, Message, RequestFile, TextModification, Update, isMessage, matchMessage } from './message';
 
 let waitingAcks = 0;
-let changes_to_discard = new Array();
+//let changes_to_discard = new Array();
 let clientProc: ChildProcessWithoutNullStreams | undefined;
 let serverProc: ChildProcessWithoutNullStreams | undefined;
 let disposable: vscode.Disposable | undefined;
-let exePath: string
+let exePath = __dirname + '/../../../../smartshare/target/debug/';
 let statusBarItem: vscode.StatusBarItem;
 let context: vscode.ExtensionContext;
+let ignoreNextEvent = false;
 
-
-async function applyUpdateAction(update: Update) {
-    if (await update.write()) {
-        clientProc?.stdin.write(JSON.stringify({action: "ack"}));
-    }
-    changes_to_discard.push(JSON.stringify(update));
+async function applyChange(change: TextModification): Promise<boolean> {
+    //changes_to_discard.push(JSON.stringify(change));
+    ignoreNextEvent = true;
+    return change.write()
 }
 
 function clientStdoutHandler(): (chunk: any) => void {
@@ -45,8 +44,14 @@ function handleMessage(data: Message) {
     const editor = vscode.window.activeTextEditor;
     matchMessage(data)(
         (update: Update) => {
-            if(!waitingAcks) {
-                applyUpdateAction(update);
+            if (!waitingAcks) {
+                for (const change of update.changes) {
+                    applyChange(change).then((success) => {
+                        if (success) {
+                            clientProc?.stdin.write(JSON.stringify({ action: "ack" }))
+                        }
+                    })
+                }
             } else {
                 logClient.debug("Ignore update before acknowledge", update)
             }
@@ -59,25 +64,16 @@ function handleMessage(data: Message) {
         },
         (_: RequestFile) => {
             clientProc?.stdin.write(JSON.stringify({
+                action: "file",
                 file: vscode.window.activeTextEditor?.document.getText()
-            }));
+            }) + '\n');
         },
         (file: File) => {
-            editor?.edit((editBuilder: vscode.TextEditorEdit) => {
-                editBuilder.replace(new vscode.Range(
-                    editor.document.positionAt(0),
-                    editor.document.positionAt(editor.document.getText().length)
-                ), file.file);
-            }).then(success => {
-                if (success) {
-                    vscode.window.showInformationMessage('Text inserted');
-                } else {
-                    vscode.window.showErrorMessage('Failed to insert text');
-                }
-            });
+            applyChange(new TextModification(0, editor?.document.getText().length || 0, file.file))
+                .catch(err => logClient.error(err));
         },
         (_: Ack) => {
-            if(!waitingAcks) {
+            if (!waitingAcks) {
                 logClient.info("Recieved unexpected ack");
             } else {
                 waitingAcks--;
@@ -91,14 +87,26 @@ function changeDocumentHandler(event: vscode.TextDocumentChangeEvent): any {
 
     for (let change of event.contentChanges) {
 
-        const message = new Update(
-            change.rangeOffset,
-            change.rangeLength,
-            change.text
-        );
+        const message = {
+            action: "update",
+            changes: [new TextModification(
+                change.rangeOffset,
+                change.rangeLength,
+                change.text)
+            ]
+        };
 
-        if (changes_to_discard[changes_to_discard.length - 1] == JSON.stringify(message)) {
-            changes_to_discard.pop();
+        logClient.debug("Sending message", message);
+
+        // if (changes_to_discard[changes_to_discard.length - 1] == JSON.stringify(message)) {
+        //     changes_to_discard.pop();
+        // } else {
+        //     console.log(JSON.stringify(message));
+        //     clientProc?.stdin.write(JSON.stringify(message) + '\n');
+        //     waitingAcks++;
+        // }
+        if (ignoreNextEvent) {
+            ignoreNextEvent = false;
         } else {
             console.log(JSON.stringify(message));
             clientProc?.stdin.write(JSON.stringify(message) + '\n');
@@ -109,8 +117,8 @@ function changeDocumentHandler(event: vscode.TextDocumentChangeEvent): any {
 
 function startClient(addr: string) {
 
-    clientProc = spawn(exePath + "client", [addr], { env: { CARGO_LOG: 'trace' } });
-    if (clientProc.pid) {
+    clientProc = spawn(exePath + "client", [addr], { env: { RUST_LOG: 'trace' } });
+    if (!clientProc.pid) {
         vscode.window.showInformationMessage("Failed to run executable, aborting")
         return;
     }
@@ -133,7 +141,7 @@ function startClient(addr: string) {
 
     disposable = vscode.workspace.onDidChangeTextDocument(changeDocumentHandler);
 
-    context.subscriptions.push(disposable);
+    //context.subscriptions.push(disposable);
 }
 
 function stopClient(disposable: vscode.Disposable, clientProc: ChildProcessWithoutNullStreams) {
@@ -154,8 +162,6 @@ export async function activate(context: vscode.ExtensionContext) {
     statusBarItem.text = "Disconnected";
     statusBarItem.show();
 
-    exePath = __dirname + '/../../../../smartshare/target/debug/';
-
 
     context.subscriptions.push(vscode.commands.registerCommand('smartshare.createSession', () => {
 
@@ -164,7 +170,7 @@ export async function activate(context: vscode.ExtensionContext) {
             return;
         }
 
-        serverProc = spawn(exePath + "server", [], { env: { CARGO_LOG: 'trace' } });
+        serverProc = spawn(exePath + "server", [], { env: { RUST_LOG: 'trace' } });
         if (!serverProc.pid) {
             vscode.window.showInformationMessage("Failed to start server")
             return;

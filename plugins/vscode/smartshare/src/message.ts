@@ -3,14 +3,17 @@ import { logClient } from './utils';
 
 export type Message = Update | Declare | Error | RequestFile | File | Ack;
 
-export class Update {
-    readonly action: "update"
+export interface Update {
+    action: "update"
+    changes: TextModification[]
+}
+
+export class TextModification {
     offset: number
     delete: number
     text: string
 
     constructor(offset: number, deleteParam: number, text: string) {
-        this.action = "update";
         this.offset = offset;
         this.delete = deleteParam;
         this.text = text;
@@ -54,7 +57,7 @@ export interface Error {
 }
 
 export interface RequestFile {
-    action: "requestFile"
+    action: "request_file"
 }
 
 export interface File {
@@ -67,7 +70,7 @@ export interface Ack {
 }
 
 export function isMessage(object: any): object is Message {
-    return object.action in ["update", "declare", "error", "requestFile", "file", "ack"];
+    return ["update", "declare", "error", "request_file", "file", "ack"].includes(object.action);
 }
 
 export function matchMessage(message: Message): any {
@@ -86,7 +89,7 @@ export function matchMessage(message: Message): any {
                 return onDeclare(message);
             case "error":
                 return onError(message);
-            case "requestFile":
+            case "request_file":
                 return onRequestFile(message);
             case "file":
                 return onFile(message);
