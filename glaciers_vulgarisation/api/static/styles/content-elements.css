@@ -86,16 +86,17 @@ body {
   }
 }
 
-@media only screen and (max-width: 576px) {
-  .container {
-    margin: 4%;
-  }
-}
-
-
 
 .anim-slide {
   width: 100%;
+}
+
+.illustration-container div {
+  transition: transform 2s;
+}
+.scale3d:hover {
+  transform: scale3d(1.5, 1.5, 1.5); 
+  /* translate3d x y z */
 }
 
 .slide-wrapper {

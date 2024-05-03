@@ -5,9 +5,7 @@ nav ul {
       padding: 0;
 }
 
-@media only screen and (max-width: 800px) {
-      nav {white-space: normal;}
-}
+
 /* Only stick if you can fit */
 @media (min-height: 300px) {
       nav ul {
