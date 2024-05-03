@@ -13,19 +13,17 @@
 
 .two-columns {
   display: flex;
-  margin-top: -10%;
-  justify-content: center; /* Aligne les éléments au centre horizontalement */
+  column-gap: 2rem;
+  justify-content: start; /* Aligne les éléments au centre horizontalement */
   align-items: center; /* Aligne les éléments au centre verticalement */
   flex-wrap: wrap; /* Permet aux éléments de passer à la ligne lorsque l'espace est insuffisant */
 }
 
 .left-part {
-  margin: 0;
   flex: 1; /* Fait en sorte que la partie gauche prenne tout l'espace disponible */
 }
 
 .right-part {
-  margin: 0;
   flex: 1; /* Fait en sorte que la partie droite prenne tout l'espace disponible */
 }
 
