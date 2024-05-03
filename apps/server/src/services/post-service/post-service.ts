@@ -68,19 +68,12 @@ export class PostService {
             .populate('metrics');
 
         const res = await commentsQuery.exec();
-        console.log('comments = ', res);
-        console.log('length = ', res.length);
-        /* const promises = res.map(async (comment: Document & CommentDocument) => {
-            comment.comments = await this.getPostComments(comment._id);
-            return comment;
-        }); */
         for (let i = 0; i < res.length; i++) {
-            res[i]['comments'] = await this.getPostComments(res[i]._id);
-            console.log('commentaires = ', res[i].comments);
+            const comment = res[i].toObject(); 
+            comment.comments = await this.getPostComments(comment._id);
+            res[i] = comment;
         }
 
-        //await Promise.all(promises);
-        console.log(res);
         return res;
     }
 
