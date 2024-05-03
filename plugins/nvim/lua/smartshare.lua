@@ -31,8 +31,7 @@ function connect(addr)
                     local message = vim.json.decode(json_object)
 
                     if message.action == "update" and ack_waiting == 0 then
-
-                        for _,change in ipairs(message.changes) do
+                        for _, change in ipairs(message.changes) do
                             is_user_input = false
                             M.set_text(change.offset, change.delete, vim.fn.split(change.text, "\n", 1))
                         end
@@ -42,7 +41,7 @@ function connect(addr)
                         })
                     end
 
-                    if message.action == "request_file" then 
+                    if message.action == "request_file" then
                         local file = table.concat(vim.api.nvim_buf_get_lines(buf, 0, -1, false), "\n")
                         send_message({
                             action = "file",
@@ -77,7 +76,7 @@ function connect(addr)
     })
 end
 
-function attach() 
+function attach()
     vim.api.nvim_buf_attach(buf, false, {
         on_bytes = function(
             _,
@@ -109,7 +108,7 @@ function attach()
                 return
             end
 
-            if new_row > old_row or (new_row == old_row and new_column >= old_column) then
+            vim.schedule(function()
                 local column_end
                 if new_row == 0 then
                     column_end = startcolumn + new_column
@@ -127,9 +126,10 @@ function attach()
                     row_end, column_end = M.get_line_column_from_byte_offset(new_byte_offset)
                 end
 
-                local replaced = 0
-                if old_byte_len == new_byte_len then
-                    replaced = old_byte_len
+                local replaced = old_byte_len
+                if byte_offset < 0 then
+                    byte_offset = 0
+                    replaced = replaced - 1
                 end
 
                 local message = {
@@ -138,35 +138,20 @@ function attach()
                         {
                             offset = byte_offset,
                             delete = replaced,
-                            text = table.concat(vim.api.nvim_buf_get_text(buf, startrow, startcolumn, row_end, column_end, {}), '\n')
+                            text = table.concat(
+                                vim.api.nvim_buf_get_text(buf, startrow, startcolumn, row_end, column_end, {}), '\n')
                         }
                     }
                 }
 
                 ack_waiting = ack_waiting + 1
                 send_message(message)
-            else
-                local message = {
-                    action = "update",
-                    changes = {
-                        {
-                            offset = byte_offset,
-                            delete = old_byte_len - new_byte_len,
-                            text = ""
-                        },
-                    }
-                }
-
-                ack_waiting = ack_waiting + 1
-                send_message(message)
-            end
+            end)
         end
     })
 end
 
-
-
-function send_message(message) 
+function send_message(message)
     local json = vim.json.encode(message)
     vim.fn.chansend(handle, json .. "\n")
 end
