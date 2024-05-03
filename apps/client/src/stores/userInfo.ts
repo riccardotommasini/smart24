@@ -1,3 +1,4 @@
+import axios from 'axios'
 import type { IUser } from '@/models/user';
 import { defineStore } from 'pinia'
 
@@ -21,7 +22,21 @@ export const useUserInfoStore = defineStore({
         localStorage.removeItem('username');
         localStorage.removeItem('surname');
         localStorage.removeItem('name');
-    }
+    },
+    async trustUser(infos: {user: string, otherUserId: string}){
+      const response = await axios.post('/user/trustUser', infos);
+      return response;
+    },
+    async unTrustUser(infos: {user: string, otherUserId: string}){
+      const response = await axios.post('/user/unTrustUser', infos);
+      return response;
+    },
+    async clearTrustUser(infos: {user: string, otherUserId: string}){
+      //TODO: to do
+    },
+    async clearUntrustUser(infos: {user: string, otherUserId: string}){
+      //TODO: to do
+    },
   },
   getters : {
     getUserInfo : (state) => {

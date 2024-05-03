@@ -6,6 +6,8 @@ import { useUserInfoStore } from "../stores/userInfo";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import BandeauHomepage from "../components/common/BandeauHomepage.vue";
+import modal from "../components/common/modal.vue";
+import NewPost from "../components/NewPost.vue";
 
 const loadFeed = ref(false);
 
@@ -15,6 +17,11 @@ const username = ref('');
 const name = ref('');
 const surname = ref('');
 const posts=ref<any[]>([]);;
+const showCreateNewPost = ref(false);
+
+const switchShowCreateNewPost = () => {
+    showCreateNewPost.value = !showCreateNewPost.value;
+}
 
 onMounted(async () => {
     let userInfo = store.getUserInfo;
@@ -32,23 +39,31 @@ onMounted(async () => {
     }});
 
 async function getPosts() {
-    const idPost = "6634d7740d43d6840202139d";
 
-    const res = await axios.get(`/posts/${idPost}`);
-    const postsArray=[res.data];
-
-    return postsArray;
+    // return postsArray;
+    return {}
 }
 
+const handlePostStatus = (status: string) => {
+    if (status === 'success') {
+      switchShowCreateNewPost();
+    } else {
+        alert('An error occurred while posting your message');
+    }
+}
 </script>
 
 <template>
     <div class="mainFeed">
-        <header>        
-            <bandeauHomepage :username="username" :fistname="name" :lastname="surname"/>
+        <header>   
+                <BandeauHomepage :username="username"/>
         </header>
-        <div class="screen" v-if="loadFeed">
+        <div class="screen">
+            <button class="btn btn-primary b" @click="switchShowCreateNewPost">Post</button>
             <feed :posts="posts"></feed>
+            <modal v-if="showCreateNewPost" @close="switchShowCreateNewPost">
+                <NewPost @postStatus="handlePostStatus"/>
+            </modal>
         </div>
     </div>
 </template>
