@@ -24,6 +24,7 @@ pub struct Client {
     client_id: usize,
     format: Option<Format>,
     file: Option<File>,
+    // TODO: Delete this
     ide_ack: bool,
 }
 
@@ -123,7 +124,7 @@ impl Client {
         self.server_sent_delta = new_server_sent_delta;
         self.server_unsent_delta = new_server_unsent_delta;
 
-        self.ide_unsent_delta = self.ide_unsent_delta.compose(&modif.delta).unwrap();
+        self.ide_unsent_delta = self.ide_unsent_delta.compose(&ide_delta).unwrap();
         if self.ide_sent_delta.is_noop() {
             self.submit_ide_change().await;
         }
@@ -137,8 +138,7 @@ impl Client {
             })
             .await;
         self.ide_ack = false;
-        self.ide_sent_delta = self.ide_unsent_delta.clone();
-        self.ide_unsent_delta = OperationSeq::default();
+        self.ide_sent_delta = std::mem::take(&mut self.ide_unsent_delta);
         self.ide_unsent_delta
             .retain(self.ide_sent_delta.target_len() as u64);
     }
@@ -199,50 +199,44 @@ impl Client {
                 // change.delete = self.file.as_mut().unwrap().byte_to_char(change.delete);
             }
         }
-        let ide_seq =
-            match modifs_to_operation_seq(&changes, &(self.server_unsent_delta.target_len() as u64))
-            {
-                Ok(seq) => seq,
-                Err(err) => {
-                    self.ide
-                        .send(MessageIde::Error {
-                            error: err.to_string(),
-                        })
-                        .await;
-                    return;
-                }
-            };
-
-        if !self.ide_ack {
-            let (updated_ide_change, new_ide_sent_delta) =
-                ide_seq.transform(&self.ide_sent_delta).unwrap();
-            let (server_delta, new_ide_unsent_delta) = updated_ide_change
-                .transform(&self.ide_unsent_delta)
-                .unwrap();
-
-            self.server_unsent_delta = self
-                .server_unsent_delta
-                .compose(&ide_seq)
-                .expect("modifs_to_operation_seq result should be length compatible with op_seq");
-
-            self.ide_sent_delta = new_ide_sent_delta;
-            self.ide_unsent_delta = new_ide_unsent_delta;
-
-            /*(self.ide_sent_delta, _) = self.ide_sent_delta.transform(&ide_seq).unwrap();
-            (self.ide_unsent_delta, _) = self.ide_unsent_delta.transform(&ide_seq).unwrap();*/
-
-            self.ide.send(MessageIde::Ack).await;
-            self.ide
-                .send(MessageIde::Update {
-                    changes: to_ide_changes(&self.ide_sent_delta),
-                })
-                .await;
-        } else {
-            self.server_unsent_delta = self.server_unsent_delta.compose(&ide_seq).unwrap();
-            self.ide.send(MessageIde::Ack).await;
-            if self.server_sent_delta.is_noop() && !self.server_unsent_delta.is_noop() {
-                self.submit_server_change().await;
+        let ide_seq = match modifs_to_operation_seq(
+            &changes,
+            &(self.ide_sent_delta.base_len() as u64),
+        ) {
+            Ok(seq) => seq,
+            Err(err) => {
+                self.ide
+                    .send(MessageIde::Error {
+                        error: err.to_string(),
+                    })
+                    .await;
+                return;
             }
+        };
+
+        let (updated_ide_change, new_ide_sent_delta) =
+            ide_seq.transform(&self.ide_sent_delta).unwrap();
+        let (server_delta, new_ide_unsent_delta) = updated_ide_change
+            .transform(&self.ide_unsent_delta)
+            .unwrap();
+
+        self.server_unsent_delta = self
+            .server_unsent_delta
+            .compose(&server_delta)
+            .expect("modifs_to_operation_seq result should be length compatible with op_seq");
+
+        self.ide_sent_delta = new_ide_sent_delta;
+        self.ide_unsent_delta = new_ide_unsent_delta;
+
+        self.ide.send(MessageIde::Ack).await;
+
+        if !self.ide_sent_delta.is_noop() {
+            self.ide_unsent_delta = self.ide_sent_delta.compose(&self.ide_unsent_delta).unwrap();
+            self.submit_ide_change().await;
+        }
+
+        if self.server_sent_delta.is_noop() && !self.server_unsent_delta.is_noop() {
+            self.submit_server_change().await;
         }
     }
 
@@ -261,7 +255,9 @@ impl Client {
             if !self.ide_unsent_delta.is_noop() {
                 self.submit_ide_change().await;
             } else {
+                let len = self.ide_sent_delta.target_len();
                 self.ide_sent_delta = OperationSeq::default();
+                self.ide_sent_delta.retain(len as u64);
             }
             self.ide_ack = true;
         }
