@@ -44,6 +44,14 @@ impl File {
     pub fn len_chars(&self) -> usize {
         self.content.len_chars()
     }
+
+    pub fn byte_to_char(&self, byte: u64) -> u64 {
+        return self.content.byte_to_char(byte as usize) as u64;
+    }
+
+    pub fn char_to_byte(&self, char: u64) -> u64 {
+        return self.content.char_to_byte(char as usize) as u64;
+    }
 }
 
 impl Display for File {

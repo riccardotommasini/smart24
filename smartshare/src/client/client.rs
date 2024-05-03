@@ -1,7 +1,10 @@
 use operational_transform::OperationSeq;
-use smartshare::protocol::msg::{
-    modifs_to_operation_seq, to_ide_changes, Format, MessageIde, MessageServer, ModifRequest,
-    TextModification,
+use smartshare::{
+    file::File,
+    protocol::msg::{
+        modifs_to_operation_seq, to_ide_changes, Format, MessageIde, MessageServer, ModifRequest,
+        TextModification,
+    },
 };
 
 use crate::ide::Ide;
@@ -17,6 +20,7 @@ pub struct Client {
     ide: Ide,
     client_id: usize,
     format: Option<Format>,
+    file: Option<File>,
 }
 
 impl Client {
@@ -30,6 +34,7 @@ impl Client {
             ide,
             client_id,
             format: None,
+            file: None,
         }
     }
 
@@ -78,7 +83,15 @@ impl Client {
         self.server_state = new_server_state;
         self.sent_delta = new_sent_delta;
         self.unsent_delta = new_unsent_delta;
-        let ide_modifs = to_ide_changes(&ide_delta);
+        let mut ide_modifs = to_ide_changes(&ide_delta);
+
+        if matches!(self.format.as_ref().unwrap(), Format::Bytes) {
+            for ide_modif in ide_modifs.iter_mut() {
+                ide_modif.offset = self.file.as_mut().unwrap().char_to_byte(ide_modif.offset);
+                ide_modif.delete = self.file.as_mut().unwrap().char_to_byte(ide_modif.delete);
+            }
+        }
+
         self.ide
             .send(MessageIde::Update {
                 changes: ide_modifs,
@@ -91,6 +104,7 @@ impl Client {
     }
 
     async fn on_receive_file(&mut self, file: String, version: usize) {
+        self.file = Some(File::new(&file));
         self.server_state.retain(file.len() as u64);
         self.sent_delta.retain(file.len() as u64);
         self.unsent_delta.retain(file.len() as u64);
@@ -100,6 +114,7 @@ impl Client {
 
     async fn on_ide_file(&mut self, file: String) {
         self.rev_num = 0;
+        self.file = Some(File::new(&file));
         self.server_state.retain(file.len() as u64);
         self.sent_delta.retain(file.len() as u64);
         self.unsent_delta.retain(file.len() as u64);
@@ -109,9 +124,36 @@ impl Client {
             .await;
     }
 
-    async fn on_ide_change(&mut self, change: &Vec<TextModification>) {
+    async fn on_ide_change(&mut self, changes: &mut Vec<TextModification>) {
+        if self.format.is_none() {
+            let _ = self
+                .ide
+                .send(MessageIde::Error {
+                    error: "Error: Offset format was not set by IDE".into(),
+                })
+                .await;
+            return;
+        }
+
+        if self.file.is_none() {
+            let _ = self
+                .ide
+                .send(MessageIde::Error {
+                    error: "Error: Unknown file".into(),
+                })
+                .await;
+            return;
+        }
+
+        if matches!(self.format.as_ref().unwrap(), Format::Bytes) {
+            for change in changes.iter_mut() {
+                change.offset = self.file.as_mut().unwrap().byte_to_char(change.offset);
+                change.delete = self.file.as_mut().unwrap().byte_to_char(change.delete);
+            }
+        }
+
         let ide_seq =
-            match modifs_to_operation_seq(change, &(self.unsent_delta.target_len() as u64)) {
+            match modifs_to_operation_seq(changes, &(self.unsent_delta.target_len() as u64)) {
                 Ok(seq) => seq,
                 Err(err) => {
                     self.ide
@@ -147,7 +189,7 @@ impl Client {
 
     pub async fn on_message_ide(&mut self, message_ide: MessageIde) {
         match message_ide {
-            MessageIde::Update { changes } => self.on_ide_change(&changes).await,
+            MessageIde::Update { mut changes } => self.on_ide_change(&mut changes).await,
             MessageIde::Declare(format) => self.on_ide_format(format).await,
             MessageIde::File { file } => self.on_ide_file(file).await,
             MessageIde::RequestFile => warn!("IDE sent RequestFile"),
