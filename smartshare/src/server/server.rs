@@ -75,7 +75,7 @@ impl Server {
             error!("Client {source_id} sent modifications before file was initialized");
             self.send_to_client(
                 source_id,
-                MessageServer::Error("File not initialized".into()),
+                MessageServer::Error{error: "File not initialized".into()},
             )
             .await;
 
@@ -112,12 +112,12 @@ impl Server {
 
     async fn on_file(&mut self, source_id: usize, file: String, version: usize) {
         if version != 0 {
-            self.send_to_client(source_id, MessageServer::Error("First version should be 0".into())).await;
+            self.send_to_client(source_id, MessageServer::Error{error: "First version should be 0".into()}).await;
             return;
         }
 
         if self.file.is_some() {
-            self.send_to_client(source_id, MessageServer::Error("File is already initialized".into())).await;
+            self.send_to_client(source_id, MessageServer::Error{error: "File is already initialized".into()}).await;
             return;
         }
 

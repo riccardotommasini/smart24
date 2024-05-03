@@ -59,7 +59,7 @@ impl Client {
     }
 
     async fn on_server_error(&mut self, err: String) {
-        self.ide.send(MessageIde::Error(err)).await;
+        self.ide.send(MessageIde::Error { error: err }).await;
     }
 
     async fn on_server_change(&mut self, modif: &ModifRequest) {
@@ -79,24 +79,19 @@ impl Client {
         self.sent_delta = new_sent_delta;
         self.unsent_delta = new_unsent_delta;
         let ide_modifs = to_ide_changes(&ide_delta);
-        self.ide.send(MessageIde::Update(ide_modifs)).await;
+        self.ide
+            .send(MessageIde::Update {
+                changes: ide_modifs,
+            })
+            .await;
     }
 
     async fn on_request_file(&mut self) {
-        if self.format.is_none() {
-            self
-                .ide
-                .send(MessageIde::Error(
-                    "Error: MessageIde::RequestFile was sent by IDE but offset format is not set".into(),
-                ))
-                .await;
-            return;
-        }
         let _ = self.ide.send(MessageIde::RequestFile).await;
     }
 
     async fn on_receive_file(&mut self, file: String, version: usize) {
-        self.ide.send(MessageIde::File(file)).await;
+        self.ide.send(MessageIde::File { file }).await;
         self.rev_num = version
     }
 
@@ -113,7 +108,11 @@ impl Client {
             match modifs_to_operation_seq(&change, &(self.unsent_delta.target_len() as u64)) {
                 Ok(seq) => seq,
                 Err(err) => {
-                    self.ide.send(MessageIde::Error(err.to_string())).await;
+                    self.ide
+                        .send(MessageIde::Error {
+                            error: err.to_string(),
+                        })
+                        .await;
                     return;
                 }
             };
@@ -134,7 +133,7 @@ impl Client {
         match message {
             MessageServer::ServerUpdate(modif) => self.on_server_change(&modif).await,
             MessageServer::Ack => self.on_ack().await,
-            MessageServer::Error(err) => self.on_server_error(err).await,
+            MessageServer::Error { error: err } => self.on_server_error(err).await,
             MessageServer::RequestFile => self.on_request_file().await,
             MessageServer::File { file, version } => self.on_receive_file(file, version).await,
         }
@@ -142,11 +141,11 @@ impl Client {
 
     pub async fn on_message_ide(&mut self, message_ide: MessageIde) {
         match message_ide {
-            MessageIde::Update(change) => self.on_ide_change(&change).await,
+            MessageIde::Update { changes } => self.on_ide_change(&changes).await,
             MessageIde::Declare(format) => self.on_ide_format(format).await,
-            MessageIde::File(file) => self.on_ide_file(file).await,
+            MessageIde::File { file } => self.on_ide_file(file).await,
             MessageIde::RequestFile => warn!("IDE sent RequestFile"),
-            MessageIde::Error(_) => warn!("IDE sent error"),
+            MessageIde::Error { .. } => warn!("IDE sent error"),
         }
     }
 }

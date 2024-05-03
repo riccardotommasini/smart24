@@ -2,6 +2,9 @@ local M = {}
 local ns = vim.api.nvim_create_namespace('smartshare')
 local is_user_input = true
 
+local buf = vim.api.nvim_get_current_buf()
+local initialized = false
+
 function M.get_line_column_from_byte_offset(byte_offset)
     local line = vim.fn.byte2line(byte_offset + 1) - 1
     if line < 0 then
@@ -18,16 +21,36 @@ function M.set_text(offset, deleted, text)
     vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col, text)
 end
 
-local handle = vim.fn.jobstart("./client 192.168.165.193:4903", {
+local handle = vim.fn.jobstart("./client 127.0.0.1:4903", {
     on_stdout = function(_job_id, data, event)
         for _, json_object in ipairs(data) do
             if json_object ~= nil and json_object ~= '' then
-                local change = vim.json.decode(json_object)
+                local message = vim.json.decode(json_object)
 
-                if change.action == "i_d_e_update" and change.update_type == "TextModification" then
+                if message.action == "update" then
                     is_user_input = false
 
-                    M.set_text(change.offset, change.delete, vim.fn.split(change.text, "\n", 1))
+                    for change in message.changes do
+                        M.set_text(change.offset, change.delete, vim.fn.split(change.text, "\n", 1))
+                    end
+                end
+
+                if message.action == "request_file" then 
+                    local file = table.concat(vim.api.nvim_buf_get_lines(buf, 0, -1, false), "\n")
+                    send_message({
+                        action = "file",
+                        file = file,
+                    })
+                    initialized = true
+                end
+
+                if message.action == "file" then
+                    vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.fn.split(message.file, "\n", 1))
+                    initialized = true
+                end
+
+                if message.action == "error" then
+                    vim.notify(message.error, "error")
                 end
             end
         end
@@ -37,7 +60,17 @@ local handle = vim.fn.jobstart("./client 192.168.165.193:4903", {
     end
 })
 
-vim.api.nvim_buf_attach(0, false, {
+function send_message(message) 
+    local json = vim.json.encode(message)
+    vim.fn.chansend(handle, json .. "\n")
+end
+
+send_message({
+    action = "declare",
+    offset_format = "bytes",
+})
+
+vim.api.nvim_buf_attach(buf, false, {
     on_bytes = function(
         _,
         buf,
@@ -61,6 +94,10 @@ vim.api.nvim_buf_attach(0, false, {
 
         if is_user_input == false then
             is_user_input = true
+            return
+        end
+
+        if not initialized then
             return
         end
 
@@ -88,24 +125,30 @@ vim.api.nvim_buf_attach(0, false, {
             end
 
             local message = {
-                action = "i_d_e_update",
-                offset = byte_offset,
-                delete = replaced,
-                text = table.concat(vim.api.nvim_buf_get_text(buf, startrow, startcolumn, row_end, column_end, {}), '\n')
+                action = "update",
+                changes = {
+                    {
+                        offset = byte_offset,
+                        delete = replaced,
+                        text = table.concat(vim.api.nvim_buf_get_text(buf, startrow, startcolumn, row_end, column_end, {}), '\n')
+                    }
+                }
             }
 
-            local json = vim.json.encode(message)
-            vim.fn.chansend(handle, json .. "\n")
+            send_message(message)
         else
             local message = {
-                action = "i_d_e_update",
-                offset = byte_offset,
-                delete = old_byte_len - new_byte_len,
-                text = ""
+                action = "update",
+                changes = {
+                    {
+                        offset = byte_offset,
+                        delete = old_byte_len - new_byte_len,
+                        text = ""
+                    },
+                }
             }
 
-            local json = vim.json.encode(message)
-            vim.fn.chansend(handle, json .. "\n")
+            send_message(message)
         end
     end
 })
