@@ -34,4 +34,14 @@ export class RatingsUntrustService {
             item: new Types.ObjectId(postId),
         });
     }
+
+    async hasUntrustedPost(userId: string, postId: string): Promise<boolean> {
+        await this.userService.getUser(userId);
+        await this.postService.getPost(postId);
+
+        return !!(await RatingsUntrust.findOne({
+            user: new Types.ObjectId(userId),
+            item: new Types.ObjectId(postId),
+        }));
+    }
 }
