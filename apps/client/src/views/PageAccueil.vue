@@ -6,6 +6,7 @@ import { useUserInfoStore } from "../stores/userInfo";
 import axios from "axios";
 import { useTokenStore } from "../stores/auth.ts";
 import { onMounted, ref } from "vue";
+import BandeauHomepage from "../components/common/BandeauHomepage.vue";
 
 const store = useUserInfoStore();
 
