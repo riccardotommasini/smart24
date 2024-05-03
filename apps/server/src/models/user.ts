@@ -12,10 +12,10 @@ export interface IUser extends Document {
     totalPosts: number;
     nbFactChecked: number;
     organization: string;
-    posts: [{ type: Schema.Types.ObjectId; ref: 'Post' }];
-    follows: [{ type: Schema.Types.ObjectId; ref: 'User' }];
-    trustedUsers: [{ type: Schema.Types.ObjectId; ref: 'User' }];
-    untrustedUsers: [{ type: Schema.Types.ObjectId; ref: 'User' }];
+    posts: mongoose.Types.ObjectId[];
+    follows: mongoose.Types.ObjectId[];
+    trustedUsers: mongoose.Types.ObjectId[];
+    untrustedUsers: mongoose.Types.ObjectId[];
     parameters: { rateFactChecked: number; rateDiversification: number };
 }
 

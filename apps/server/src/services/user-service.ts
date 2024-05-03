@@ -4,7 +4,7 @@ import { singleton } from 'tsyringe';
 import { StatusCodes } from 'http-status-codes';
 import { HttpException } from '../models/http-exception';
 import { Document, UpdateQuery, Types } from 'mongoose';
-import { NonStrictObjectId } from 'src/utils/objectid';
+import { NonStrictObjectId, toObjectId } from '../utils/objectid';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { env } from '../utils/env';
@@ -81,23 +81,35 @@ export class UserService {
     }
 
     async trustUser(userId: NonStrictObjectId, otherUserId: NonStrictObjectId) {
-        await Promise.all([
-            User.updateOne(
-                { _id: userId, trustedUsers: { $ne: otherUserId } },
-                { $push: { trustedUsers: otherUserId } },
-            ),
-            User.updateOne({ _id: userId }, { $pull: { untrustedUsers: { $in: [otherUserId] } } }),
-        ]);
+        const user = await this.getUser(userId);
+        const otherUserIdObj = toObjectId(otherUserId);
+        if (user.trustedUsers.includes(otherUserIdObj)) {
+            await User.updateOne({ _id: userId }, { $pull: { trustedUsers: { $in: [otherUserId] } } });
+        } else {
+            await Promise.all([
+                User.updateOne(
+                    { _id: userId, trustedUsers: { $ne: otherUserId } },
+                    { $push: { trustedUsers: otherUserId } },
+                ),
+                User.updateOne({ _id: userId }, { $pull: { untrustedUsers: { $in: [otherUserId] } } }),
+            ]);
+        }
     }
 
     async untrustUser(userId: NonStrictObjectId, otherUserId: NonStrictObjectId) {
-        await Promise.all([
-            User.updateOne(
-                { _id: userId, untrustedUsers: { $ne: otherUserId } },
-                { $push: { untrustedUsers: otherUserId } },
-            ),
-            User.updateOne({ _id: userId }, { $pull: { trustedUsers: { $in: [otherUserId] } } }),
-        ]);
+        const user = await this.getUser(userId);
+        const otherUserIdObj = toObjectId(otherUserId);
+        if (user.untrustedUsers.includes(otherUserIdObj)) {
+            await User.updateOne({ _id: userId }, { $pull: { untrustedUsers: { $in: [otherUserId] } } });
+        } else {
+            await Promise.all([
+                User.updateOne(
+                    { _id: userId, untrustedUsers: { $ne: otherUserId } },
+                    { $push: { untrustedUsers: otherUserId } },
+                ),
+                User.updateOne({ _id: userId }, { $pull: { trustedUsers: { $in: [otherUserId] } } }),
+            ]);
+        }
     }
 
     async getUserProfile(otherUserId: NonStrictObjectId) {
