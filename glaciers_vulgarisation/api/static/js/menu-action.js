@@ -2,10 +2,20 @@
 //-------- Faire afficher le bon graphe selon le scénario choisi ----------
 
 // Récupérer les éléments de l'animation container
-const evolutionContainer1 = document.getElementById("evolution_container_1");
-const evolutionContainer2 = document.getElementById("evolution_container_2");
-const evolutionContainer3 = document.getElementById("evolution_container_3");
-const evolutionContainer4 = document.getElementById("evolution_container_4");
+const evolutionContainer11 = document.getElementById("evolution_container_11");
+const evolutionContainer12 = document.getElementById("evolution_container_12");
+const evolutionContainer13 = document.getElementById("evolution_container_13");
+const evolutionContainer14 = document.getElementById("evolution_container_14");
+
+const evolutionContainer21 = document.getElementById("evolution_container_21");
+const evolutionContainer22 = document.getElementById("evolution_container_22");
+const evolutionContainer23 = document.getElementById("evolution_container_23");
+const evolutionContainer24 = document.getElementById("evolution_container_24");
+
+const evolutionContainer31 = document.getElementById("evolution_container_31");
+const evolutionContainer32 = document.getElementById("evolution_container_32");
+const evolutionContainer33 = document.getElementById("evolution_container_33");
+const evolutionContainer34 = document.getElementById("evolution_container_34");
 
 // Récupérer les éléments d'options de température
 const temperatureOptions = document.querySelectorAll(".temperature-option input[type='radio']");
@@ -13,25 +23,69 @@ const temperatureOptions = document.querySelectorAll(".temperature-option input[
 // Fonction pour afficher l'animation correspondante à l'option sélectionnée
 function afficherAnimation() {
     if (this.value === "1.5") {
-        evolutionContainer1.style.display = "block";
-        evolutionContainer2.style.display = "none";
-        evolutionContainer3.style.display = "none";
-        evolutionContainer4.style.display = "none";
+        evolutionContainer11.style.display = "block";
+        evolutionContainer21.style.display = "block";
+        evolutionContainer31.style.display = "block";
+
+        evolutionContainer12.style.display = "none";
+        evolutionContainer22.style.display = "none";
+        evolutionContainer32.style.display = "none";
+
+        evolutionContainer13.style.display = "none";
+        evolutionContainer23.style.display = "none";
+        evolutionContainer33.style.display = "none";
+
+        evolutionContainer14.style.display = "none";
+        evolutionContainer24.style.display = "none";
+        evolutionContainer34.style.display = "none";
     } else if (this.value === "2") {
-        evolutionContainer1.style.display = "none";
-        evolutionContainer2.style.display = "block";
-        evolutionContainer3.style.display = "none";
-        evolutionContainer4.style.display = "none";
+        evolutionContainer11.style.display = "none";
+        evolutionContainer21.style.display = "none";
+        evolutionContainer31.style.display = "none";
+
+        evolutionContainer12.style.display = "block";
+        evolutionContainer22.style.display = "block";
+        evolutionContainer32.style.display = "block";
+
+        evolutionContainer13.style.display = "none";
+        evolutionContainer23.style.display = "none";
+        evolutionContainer33.style.display = "none";
+
+        evolutionContainer14.style.display = "none";
+        evolutionContainer24.style.display = "none";
+        evolutionContainer34.style.display = "none";
     } else if (this.value === "3") {
-        evolutionContainer1.style.display = "none";
-        evolutionContainer2.style.display = "none";
-        evolutionContainer3.style.display = "block";
-        evolutionContainer4.style.display = "none";
+      volutionContainer11.style.display = "none";
+        evolutionContainer21.style.display = "none";
+        evolutionContainer31.style.display = "none";
+
+        evolutionContainer12.style.display = "none";
+        evolutionContainer22.style.display = "none";
+        evolutionContainer32.style.display = "none";
+
+        evolutionContainer13.style.display = "block";
+        evolutionContainer23.style.display = "block";
+        evolutionContainer33.style.display = "block";
+
+        evolutionContainer14.style.display = "none";
+        evolutionContainer24.style.display = "none";
+        evolutionContainer34.style.display = "none";
     }else if (this.value === "4") {
-        evolutionContainer1.style.display = "none";
-        evolutionContainer2.style.display = "none";
-        evolutionContainer3.style.display = "none";
-        evolutionContainer4.style.display = "block";
+      volutionContainer11.style.display = "none";
+        evolutionContainer21.style.display = "none";
+        evolutionContainer31.style.display = "none";
+
+        evolutionContainer12.style.display = "none";
+        evolutionContainer22.style.display = "none";
+        evolutionContainer32.style.display = "none";
+
+        evolutionContainer13.style.display = "none";
+        evolutionContainer23.style.display = "none";
+        evolutionContainer33.style.display = "none";
+
+        evolutionContainer14.style.display = "block";
+        evolutionContainer24.style.display = "block";
+        evolutionContainer34.style.display = "block";
     }
 }
 

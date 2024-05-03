@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/font.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/menu-elements.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/global-elements.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/select-glacier.css') }}">
 </head>
 
 <body>
@@ -36,7 +37,6 @@
       <li><a href="#section_4">Partie II</a></li>
       <li><a href="#section_5">Partie III</a></li>
       <li><a href="#section_6">Partie IV</a></li>
-      <li><a href="#section_7">Partie V</a></li>
 
       <div class="options">
         <label class="temperature-option">
@@ -184,23 +184,42 @@
         forte récession. Vous pouvez voir ci-dessus, l’espace laissé vacant par le glacier qui se veut de moins en moins
         prépondérant.
       <p>
-      <div id="evolution_container_1" class="anim-container">
-        <h3>Evolution de la mer de glace de 2010 à 2100 (+1.5°C)</h3>
-        {% include 'evolution_mer_de_glace/evolution_mer_de_glace_1_5.html' %}
-      </div>
-      <div id="evolution_container_2" class="anim-container">
-        <h3>Evolution de la mer de glace de 2010 à 2100 (+2°C)</h3>
-        {% include 'evolution_mer_de_glace/evolution_mer_de_glace_2.html' %}
-      </div>
-      <div id="evolution_container_3" class="anim-container">
-        <h3>Evolution de la mer de glace de 2010 à 2100 (+3°C)</h3>
-        {% include 'evolution_mer_de_glace/evolution_mer_de_glace_3.html' %}
-      </div>
-      <div id="evolution_container_4" class="anim-container">
-        <h3>Evolution de la mer de glace de 2010 à 2100 (+4°C)</h3>
-        {% include 'evolution_mer_de_glace/evolution_mer_de_glace_4.html' %}
-      </div>
 
+      <div class="tab">
+        <a class="tablinks" onclick="openGlacier(event, 'glacier1')">Mer de Glace</a>
+        <a class="tablinks" onclick="openGlacier(event, 'glacier2')">Glacier 2</a>
+        <a class="tablinks" onclick="openGlacier(event, 'glacier3')">Glacier 3</a>
+      </div>
+      <div id="glacier1" class="tabcontent">
+        <div id="evolution_container_11" class="anim-container">
+          <h3>Evolution de la mer de glace de 2010 à 2100 (+1.5°C)</h3>
+          {% include 'mer_de_glace/evolution_mer_de_glace/evolution_mer_de_glace_1_5.html' %}
+        </div>
+        <div id="evolution_container_12" class="anim-container">
+          <h3>Evolution de la mer de glace de 2010 à 2100 (+2°C)</h3>
+          {% include 'mer_de_glace/evolution_mer_de_glace/evolution_mer_de_glace_2.html' %}
+        </div>
+        <div id="evolution_container_13" class="anim-container">
+          <h3>Evolution de la mer de glace de 2010 à 2100 (+3°C)</h3>
+          {% include 'mer_de_glace/evolution_mer_de_glace/evolution_mer_de_glace_3.html' %}
+        </div>
+        <div id="evolution_container_14" class="anim-container">
+          <h3>Evolution de la mer de glace de 2010 à 2100 (+4°C)</h3>
+          {% include 'mer_de_glace/evolution_mer_de_glace/evolution_mer_de_glace_4.html' %}
+        </div>
+      </div>
+      <div id="glacier2" class="tabcontent">
+        <div id="evolution_container_21" class="anim-container">
+          <h3>Evolution de glacier 2 de 2010 à 2100 (+1.5°C)</h3>
+          {% include 'glacier2/evolution_glacier2/evolution_glacier2_1_5.html' %}
+        </div>
+      </div>
+      <div id="glacier3" class="tabcontent">
+        <div id="evolution_container_31" class="anim-container">
+          <h3>Evolution de glacier 3 de 2010 à 2100 (+1.5°C)</h3>
+          {% include 'glacier3/evolution_glacier3/evolution_glacier3_1_5.html' %}
+        </div>
+      </div>
         <p> Quand est-il de son volume global ? Voyons ensemble :</p>
         <div class="two-columns">
           <div class="left-part">
@@ -231,7 +250,7 @@
                 <div id="volume_container1" class="slide-container">
                   <illustration_title>Volume selon le scénario SSP126</illustration_title>
                   <div class="illustration-container">
-                    {% include 'volume_mer_de_glace/mdg_volume_scenario_1_ssp126.html' %}
+                    {% include 'mer_de_glace/volume_mer_de_glace/mdg_volume_scenario_1_ssp126.html' %}
                     <legend>add a legend</legend>
                   </div>
                 </div>
@@ -240,7 +259,7 @@
                 <div id="volume_container2" class="slide-container">
                   <illustration_title>Volume selon le scénario SSP370</illustration_title>
                   <div class="illustration-container">
-                    {% include 'volume_mer_de_glace/mdg_volume_scenario_2_ssp370.html' %}
+                    {% include 'mer_de_glace/volume_mer_de_glace/mdg_volume_scenario_2_ssp370.html' %}
                     <legend>add a legend</legend>
                   </div>
                 </div>
@@ -249,7 +268,7 @@
                 <div id="volume_container3" class="slide-container">
                   <illustration_title>Volume selon le scénario SSP585</illustration_title>
                   <div class="illustration-container">
-                    {% include 'volume_mer_de_glace/mdg_volume_scenario_3_ssp585.html' %}
+                    {% include 'mer_de_glace/volume_mer_de_glace/mdg_volume_scenario_3_ssp585.html' %}
                     <legend>add a legend</legend>
                   </div>
                 </div>
@@ -463,6 +482,7 @@
   <script src="{{ url_for('static', filename='js/scroll-slide-to-slide.js') }}"></script>
   <script src="{{ url_for('static', filename='js/menu-action.js') }}"></script>
   <script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/select-glacier.js') }}"></script>
 </body>
 
 </html>
