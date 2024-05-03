@@ -124,7 +124,9 @@ impl Client {
         self.server_unsent_delta = new_server_unsent_delta;
 
         self.ide_unsent_delta = self.ide_unsent_delta.compose(&modif.delta).unwrap();
-        self.submit_ide_change().await;
+        if self.ide_sent_delta.is_noop() {
+            self.submit_ide_change().await;
+        }
     }
 
     async fn submit_ide_change(&mut self) {
