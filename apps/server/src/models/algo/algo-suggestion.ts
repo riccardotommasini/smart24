@@ -1,7 +1,7 @@
 import mongoose, { Schema, Types } from 'mongoose';
 
 export interface IAlgoSuggestionOther {
-    post: Types.ObjectId;
+    item: Types.ObjectId;
     weight: number;
 }
 
@@ -11,7 +11,7 @@ export interface IAlgoSuggestion {
 }
 
 const AlgoSuggestionOtherSchema = new Schema<IAlgoSuggestionOther>({
-    post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
+    item: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
     weight: { type: Number, required: true },
 });
 
