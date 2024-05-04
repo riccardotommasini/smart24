@@ -2,10 +2,11 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 import numpy as np
-from pymongo import MongoClient, collection
+from pymongo import MongoClient
 from bson import ObjectId
 from faker import Faker
 from unidecode import unidecode
+from typing import Literal
 
 def parse_str_list(series: pd.Series) -> pd.Series:
     return series.str.strip('[]').str.split()
@@ -91,6 +92,18 @@ def load_posts(path: str, users: pd.DataFrame):
 
     return posts, metrics
 
+def rate_post(metrics: pd.DataFrame, user_ids: list[str], metrics_id: str, rating: list[Literal['like', 'dislike', 'trust', 'untrust']]) -> pd.DataFrame:
+    nb_ratings_cols = map(lambda x: f'nb{x.capitalize()}s', rating)
+    ratings_by_cols = map(lambda x: f'{x}{'' if x.endswith('e') else 'e'}dBy', rating)
+
+    for nb_col, by_col in zip(nb_ratings_cols, ratings_by_cols):
+        for user_id in user_ids:
+            if user_id not in metrics.loc[metrics['_id'] == metrics_id, by_col].iloc[0]:
+                metrics.loc[metrics['_id'] == metrics_id, nb_col] += 1
+                metrics.loc[metrics['_id'] == metrics_id, by_col] = metrics.loc[metrics['_id'] == metrics_id, by_col].apply(lambda x: x + [user_id])
+
+    return metrics
+
 def create_new_users(users: pd.DataFrame, posts: pd.DataFrame, metrics: pd.DataFrame, n: int, n_shared_likes: int, n_unique_likes: int, faker: Faker):
     new_users = pd.DataFrame(columns=users.columns)
 
@@ -122,20 +135,14 @@ def create_new_users(users: pd.DataFrame, posts: pd.DataFrame, metrics: pd.DataF
     posts_to_like = posts.sample(n=n_shared_likes, random_state=69)
 
     for i, post in posts_to_like.iterrows():
-        metrics.loc[metrics['_id'] == post['metrics'], 'nbLikes'] += n
-        metrics.loc[metrics['_id'] == post['metrics'], 'nbTrusts'] += n
-        metrics.loc[metrics['_id'] == post['metrics'], 'likedBy'] = metrics.loc[metrics['_id'] == post['metrics'], 'likedBy'].apply(lambda x: x + [new_users['_id'].iloc[0]])
-        metrics.loc[metrics['_id'] == post['metrics'], 'trustedBy'] = metrics.loc[metrics['_id'] == post['metrics'], 'trustedBy'].apply(lambda x: x + [new_users['_id'].iloc[0]])
-    
+        metrics = rate_post(metrics, new_users['_id'].tolist(), post['metrics'], ['like', 'trust'])
+
     for i, user in new_users.iterrows():
         user_posts_to_like = posts.sample(n=n_unique_likes, random_state=69)
 
         for j, post in user_posts_to_like.iterrows():
-            metrics.loc[metrics['_id'] == post['metrics'], 'nbLikes'] += 1
-            metrics.loc[metrics['_id'] == post['metrics'], 'nbTrusts'] += 1
-            metrics.loc[metrics['_id'] == post['metrics'], 'likedBy'] = metrics.loc[metrics['_id'] == post['metrics'], 'likedBy'].apply(lambda x: x + [user['_id']])
-            metrics.loc[metrics['_id'] == post['metrics'], 'trustedBy'] = metrics.loc[metrics['_id'] == post['metrics'], 'trustedBy'].apply(lambda x: x + [user['_id']])
-
+            metrics = rate_post(metrics, [user['_id']], post['metrics'], ['like', 'trust'])
+            
     users = pd.concat([users, new_users], ignore_index=True)
 
     return users, posts, metrics
