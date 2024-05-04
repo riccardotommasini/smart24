@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import PageAccueil from '../views/PageAccueil.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import HomeView from '../views/HomeView.vue'
 import UserSettingsView from '@/views/UserSettingsView.vue'
 import Feed from '../components/common/feed.vue'
 import { useTokenStore } from '@/stores/auth'
@@ -20,6 +21,11 @@ const ROUTES = {
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: HomeView
+    },
     {
       path: '/login',
       name: ROUTES.login,
@@ -75,7 +81,7 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   const tokenStore = useTokenStore();
 
   if (to.meta.isPrivate && !tokenStore.isLoggedIn()) {

@@ -128,7 +128,7 @@ function checkIfUserHasLiked(list) {
             <div class="post-content">
                 <p class="std"> {{info.text}}
                 </p>
-                <img v-if="info.image" :src="info.image" alt="post-image" class="post-image">
+                <img v-if="post.image" :src="post.image" alt="post-image" class="post-image">
             </div>
             <div class="post-footer">
                 <div class="post-footer-left"> 
@@ -186,7 +186,9 @@ function checkIfUserHasLiked(list) {
                
             </div>
         </div>
-        
+    </div>
+    <div v-if="loadComments">
+        <modal><FeedComment :parentPostId="post._id"></FeedComment></modal>
     </div>
 
 

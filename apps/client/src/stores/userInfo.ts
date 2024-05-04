@@ -1,3 +1,4 @@
+import axios from 'axios'
 import type { IUser } from '@/models/user';
 import { defineStore } from 'pinia'
 

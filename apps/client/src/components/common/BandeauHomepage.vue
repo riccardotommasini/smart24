@@ -2,6 +2,9 @@
 <script setup>
 
 import AppLogo from '../logo/app-logo.vue';
+import { useTokenStore } from '@/stores/auth';
+
+const tokenStore = useTokenStore();
 
 const props = defineProps([
     'username'
@@ -9,6 +12,11 @@ const props = defineProps([
 
 const redirectSettings = () => {
     window.location.href = "/settings";
+}
+
+const logout = () => {
+    tokenStore.logout();
+    window.location.href = '/login';
 }
 
 </script>
@@ -20,8 +28,8 @@ const redirectSettings = () => {
             <p class="info-user std title3">{{ props.username }}</p>
         </div>
         <div class="right-box">
-            <button class="btn btn-primary b" @click="post">Post</button>
             <button class="btn btn-primary b" @click="redirectSettings">Settings</button>
+            <button class="btn btn-primary b" @click="logout">Logout</button>
         </div>
     </nav>
 </template>

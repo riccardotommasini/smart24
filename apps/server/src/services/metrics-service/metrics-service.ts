@@ -7,8 +7,7 @@ import { RatingsLikesService } from '../ratings-services/ratings-likes-service';
 import { RatingsDislikesService } from '../ratings-services/ratings-dislikes-service';
 import { RatingsTrustService } from '../ratings-services/ratings-trust-service';
 import { RatingsUntrustService } from '../ratings-services/ratings-untrust-service';
-import { HttpException } from '../../models/http-exception';
-import { StatusCodes } from 'http-status-codes';
+import { UserService } from '../user-service';
 
 @singleton()
 export class MetricsService {
@@ -18,6 +17,7 @@ export class MetricsService {
         private readonly ratingsDislikesService: RatingsDislikesService,
         private readonly ratingsTrustService: RatingsTrustService,
         private readonly ratingsUntrustService: RatingsUntrustService,
+        private readonly userService: UserService,
     ) {}
 
     async getMetricsByPostId(postId: NonStrictObjectId): Promise<Document & IMetrics> {
@@ -37,6 +37,7 @@ export class MetricsService {
 
     async likePost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
+        await this.userService.getUser(userId);
         const userIdObj = toObjectId(userId);
 
         if (metrics.likedBy.includes(userIdObj)) {
@@ -63,6 +64,7 @@ export class MetricsService {
     async dislikePost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
         const userIdObj = toObjectId(userId);
+        await this.userService.getUser(userId);
 
         if (metrics.dislikedBy.includes(userIdObj)) {
             metrics.dislikedBy = metrics.dislikedBy.filter((id) => !id.equals(userIdObj));
@@ -88,6 +90,7 @@ export class MetricsService {
     async trustPost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
         const userIdObj = toObjectId(userId);
+        await this.userService.getUser(userId);
 
         if (metrics.trustedBy.includes(userIdObj)) {
             metrics.trustedBy = metrics.trustedBy.filter((id) => !id.equals(userIdObj));
@@ -113,6 +116,7 @@ export class MetricsService {
     async untrustPost(userId: NonStrictObjectId, postId: NonStrictObjectId): Promise<Document & IMetrics> {
         const metrics = await this.getMetricsByPostId(postId);
         const userIdObj = toObjectId(userId);
+        await this.userService.getUser(userId);
 
         if (metrics.untrustedBy.includes(userIdObj)) {
             metrics.untrustedBy = metrics.untrustedBy.filter((id) => !id.equals(userIdObj));

@@ -170,9 +170,6 @@ if __name__ == "__main__":
     users = load_users(path=os.getenv('USERS_DATA'))
     posts, metrics = load_posts(path=os.getenv('POSTS_DATA'), users=users)
 
-    print("🔄 Converting data...")
-    posts_likes, posts_dislikes, posts_trusts, posts_untrusts = convert_to_pivot_tables(users, posts, metrics)
-
     print("🔨 Creating fake users...")
     users, posts, metrics = create_new_users(
         users,
@@ -183,6 +180,10 @@ if __name__ == "__main__":
         n_unique_likes=2,
         faker=fake,
     )
+
+    print("🔄 Converting data...")
+    posts_likes, posts_dislikes, posts_trusts, posts_untrusts = convert_to_pivot_tables(users, posts, metrics)
+
     users['posts'] = users['_id'].map(lambda _id: posts.loc[posts['createBy'] == _id, '_id'].tolist())
 
     client = MongoClient(os.getenv('MONGO_URI'))
@@ -197,6 +198,9 @@ if __name__ == "__main__":
     db.drop_collection('ratings-dislikes')
     db.drop_collection('ratings-trust')
     db.drop_collection('ratings-untrust')
+    db.drop_collection('algo-suggestions')
+    db.drop_collection('algo-confidences')
+    db.drop_collection('algo-similars')
 
     print("📦 Populating database...")
 
