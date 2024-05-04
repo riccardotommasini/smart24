@@ -28,6 +28,7 @@ let userProfileId: string = props.profileId;
 let userProfileUsername = ref('');
 let userProfileName = ref('');
 let userProfileSurname = ref('');
+let userProfileFactchecker = ref(false);
 
 const posts = ref<any[]>([]);
 
@@ -37,6 +38,7 @@ const fetchInfos = async (userId: string) => {
     userProfileUsername.value = JSON.stringify(response.data.userData.username).replace(/"/g, '');
     userProfileName.value = JSON.stringify(response.data.userData.name).replace(/"/g, '');
     userProfileSurname.value = JSON.stringify(response.data.userData.surname).replace(/"/g, '');
+    userProfileFactchecker.value = (JSON.stringify(response.data.userData.factChecker) == "true")
     posts.value.push(response.data);
   } catch (error) {
     console.error(error);
@@ -104,8 +106,10 @@ async function unTrustUser(){
         <em>
           <span id="username">@{{ userProfileUsername }}</span>
         </em>
+        <div v-if=userProfileFactchecker class="material-symbols-outlined factCheckerTick">
+          security
+        </div>
       </div>
-      <
       <div class="user-profile-buttons">
         <button class="material-symbols-outlined button-profile trust" @click="buttonTrustUser">
           verified_user
@@ -168,5 +172,10 @@ async function unTrustUser(){
     column-count: 2;
     column-gap: 2vw;
     list-style-type: none;
+  }
+
+  .factCheckerTick {
+    font-size: 15px !important;
+    margin-left: 5px;
   }
 </style>
