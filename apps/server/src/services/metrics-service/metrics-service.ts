@@ -46,22 +46,19 @@ export class MetricsService {
             await metrics.save();
 
             await this.ratingsLikesService.removeRatingsLikes(userId.toString(), postId.toString());
-        } else if (!metrics.dislikedBy.includes(userIdObj)) {
+        } else {
             metrics.likedBy.push(userIdObj);
             metrics.nbLikes += 1;
-            await metrics.save();
-
             await this.ratingsLikesService.createRatingsLikes(userId.toString(), postId.toString());
-        } else if (metrics.dislikedBy.includes(userIdObj)) {
-            metrics.likedBy.push(userIdObj);
-            metrics.nbLikes += 1;
-            metrics.dislikedBy = metrics.dislikedBy.filter((id) => !id.equals(userIdObj));
-            metrics.nbDislikes -= 1;
-            await metrics.save();
 
-            await this.ratingsLikesService.createRatingsLikes(userId.toString(), postId.toString());
-            await this.ratingsDislikesService.removeRatingsDislikes(userId.toString(), postId.toString());
+            if (metrics.dislikedBy.includes(userIdObj)) {
+                metrics.dislikedBy = metrics.dislikedBy.filter((id) => !id.equals(userIdObj));
+                metrics.nbDislikes -= 1;
+                await this.ratingsDislikesService.removeRatingsDislikes(userId.toString(), postId.toString());
+            }
         }
+
+        await metrics.save();
 
         return metrics;
     }
@@ -77,22 +74,19 @@ export class MetricsService {
             await metrics.save();
 
             await this.ratingsDislikesService.removeRatingsDislikes(userId.toString(), postId.toString());
-        } else if (!metrics.likedBy.includes(userIdObj)) {
+        } else {
             metrics.dislikedBy.push(userIdObj);
             metrics.nbDislikes += 1;
-            await metrics.save();
-
             await this.ratingsDislikesService.createRatingsDislikes(userId.toString(), postId.toString());
-        } else if (metrics.likedBy.includes(userIdObj)) {
-            metrics.dislikedBy.push(userIdObj);
-            metrics.nbDislikes += 1;
-            metrics.likedBy = metrics.likedBy.filter((id) => !id.equals(userIdObj));
-            metrics.nbLikes -= 1;
-            await metrics.save();
 
-            await this.ratingsDislikesService.createRatingsDislikes(userId.toString(), postId.toString());
-            await this.ratingsLikesService.removeRatingsLikes(userId.toString(), postId.toString());
+            if (metrics.likedBy.includes(userIdObj)) {
+                metrics.likedBy = metrics.likedBy.filter((id) => !id.equals(userIdObj));
+                metrics.nbLikes -= 1;
+                await this.ratingsLikesService.removeRatingsLikes(userId.toString(), postId.toString());
+            }
         }
+
+        await metrics.save();
 
         return metrics;
     }
@@ -108,22 +102,19 @@ export class MetricsService {
             await metrics.save();
 
             await this.ratingsTrustService.removeRatingsTrust(userId.toString(), postId.toString());
-        } else if (!metrics.untrustedBy.includes(userIdObj)) {
+        } else {
             metrics.trustedBy.push(userIdObj);
             metrics.nbTrusts += 1;
-            await metrics.save();
-
             await this.ratingsTrustService.createRatingsTrust(userId.toString(), postId.toString());
-        } else if (metrics.untrustedBy.includes(userIdObj)) {
-            metrics.trustedBy.push(userIdObj);
-            metrics.nbTrusts += 1;
-            metrics.untrustedBy = metrics.untrustedBy.filter((id) => !id.equals(userIdObj));
-            metrics.nbUntrusts -= 1;
-            await metrics.save();
 
-            await this.ratingsTrustService.createRatingsTrust(userId.toString(), postId.toString());
-            await this.ratingsUntrustService.removeRatingsUntrust(userId.toString(), postId.toString());
+            if (metrics.untrustedBy.includes(userIdObj)) {
+                metrics.untrustedBy = metrics.untrustedBy.filter((id) => !id.equals(userIdObj));
+                metrics.nbUntrusts -= 1;
+                await this.ratingsUntrustService.removeRatingsUntrust(userId.toString(), postId.toString());
+            }
         }
+
+        await metrics.save();
 
         return metrics;
     }
@@ -136,25 +127,21 @@ export class MetricsService {
         if (metrics.untrustedBy.includes(userIdObj)) {
             metrics.untrustedBy = metrics.untrustedBy.filter((id) => !id.equals(userIdObj));
             metrics.nbUntrusts -= 1;
-            await metrics.save();
 
             await this.ratingsUntrustService.removeRatingsUntrust(userId.toString(), postId.toString());
-        } else if (!metrics.trustedBy.includes(userIdObj)) {
+        } else {
             metrics.untrustedBy.push(userIdObj);
             metrics.nbUntrusts += 1;
-            await metrics.save();
-
             await this.ratingsUntrustService.createRatingsUntrust(userId.toString(), postId.toString());
-        } else if (metrics.trustedBy.includes(userIdObj)) {
-            metrics.untrustedBy.push(userIdObj);
-            metrics.nbUntrusts += 1;
-            metrics.trustedBy = metrics.trustedBy.filter((id) => !id.equals(userIdObj));
-            metrics.nbTrusts -= 1;
-            await metrics.save();
 
-            await this.ratingsUntrustService.createRatingsUntrust(userId.toString(), postId.toString());
-            await this.ratingsTrustService.removeRatingsTrust(userId.toString(), postId.toString());
+            if (metrics.trustedBy.includes(userIdObj)) {
+                metrics.trustedBy = metrics.trustedBy.filter((id) => !id.equals(userIdObj));
+                metrics.nbTrusts -= 1;
+                await this.ratingsTrustService.removeRatingsTrust(userId.toString(), postId.toString());
+            }
         }
+
+        await metrics.save();
 
         return metrics;
     }

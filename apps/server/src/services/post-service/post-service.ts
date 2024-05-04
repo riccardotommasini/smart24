@@ -20,19 +20,16 @@ export class PostService {
         const metrics = new Metrics({});
         await metrics.save();
 
-        const post = new Post({
+        let post = new Post({
             text: newPost.text,
             image: newPost.image,
             createdBy: userId,
             metrics: metrics._id,
         });
 
+        post = await post.save();
 
-        const user = await this.userService.getUser(userId);
-        user.posts.push(post.id);
-
-        await user.save();
-        await post.save();
+        await this.userService.addPostId(userId, post._id);
 
         return post;
     }
@@ -76,7 +73,7 @@ export class PostService {
 
         const res = await commentsQuery.exec();
         for (let i = 0; i < res.length; i++) {
-            const comment = res[i].toObject(); 
+            const comment = res[i].toObject();
             comment.comments = await this.getPostComments(comment._id);
             res[i] = comment;
         }
