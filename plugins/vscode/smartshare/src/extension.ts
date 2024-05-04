@@ -16,7 +16,7 @@ let ignoreNextEvent = false;
 
 function procWrite(proc: ChildProcessWithoutNullStreams, message: any): void {
     logClient.debug("Send message", message);
-    proc.stdin.write(JSON.stringify(message)+'\n');
+    proc.stdin.write(JSON.stringify(message) + '\n');
 }
 
 async function applyChange(change: TextModification): Promise<boolean> {
@@ -55,7 +55,7 @@ function handleMessage(data: Message) {
                     applyChange(change).then((success) => {
                         if (success && clientProc) {
                             //clientProc?.stdin.write(JSON.stringify({ action: "ack" }))
-                            procWrite(clientProc,{ action: "ack" })
+                            procWrite(clientProc, { action: "ack" })
                         }
                     })
                 }
@@ -70,7 +70,7 @@ function handleMessage(data: Message) {
             logClient.error("From client: ", error)
         },
         (_: RequestFile) => {
-            if(!clientProc){
+            if (!clientProc) {
                 return;
             }
             procWrite(clientProc, {
@@ -82,9 +82,8 @@ function handleMessage(data: Message) {
         (file: File) => {
             ignoreNextEvent = false;
             new TextModification(0, editor?.document.getText().length || 0, file.file)
-                .write()
+                .write().then(() => { init = false })
                 .catch(err => logClient.error(err));
-            init = false;
         },
         (_: Ack) => {
             if (!waitingAcks) {
@@ -98,13 +97,13 @@ function handleMessage(data: Message) {
 
 function changeDocumentHandler(event: vscode.TextDocumentChangeEvent): any {
 
-    if(event.document.uri.path.startsWith("extension-output")) {
+    if (event.document.uri.path.startsWith("extension-output")) {
         return;
     }
 
     console.log(event.document.uri);
 
-    if(init) {
+    if (init) {
         return;
     }
 
