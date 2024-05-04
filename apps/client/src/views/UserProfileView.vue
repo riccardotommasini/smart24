@@ -28,6 +28,7 @@ let userProfileId: string = props.profileId;
 let userProfileUsername = ref('');
 let userProfileName = ref('');
 let userProfileSurname = ref('');
+let userProfileFactchecker = ref(false);
 
 const posts = ref<any[]>([]);
 
@@ -37,6 +38,7 @@ const fetchInfos = async (userId: string) => {
     userProfileUsername.value = JSON.stringify(response.data.userData.username).replace(/"/g, '');
     userProfileName.value = JSON.stringify(response.data.userData.name).replace(/"/g, '');
     userProfileSurname.value = JSON.stringify(response.data.userData.surname).replace(/"/g, '');
+    userProfileFactchecker.value = (JSON.stringify(response.data.userData.factChecker) == "true")
     posts.value.push(response.data);
   } catch (error) {
     console.error(error);
@@ -85,14 +87,6 @@ async function trustUser(){
 async function unTrustUser(){
   await axios.post('/user/untrustUser', {user: currentUserId.value, otherUserId: props.profileId});
 }
-// async function ClearTrustUser(){
-//   await tokenstore.register({name: name.value, surname: surname.value, username: username.value, mail: email.value, password: password.value})
-//   window.location.href = '/login'
-// }
-// async function ClearUntrustUser(){
-//   await tokenstore.register({name: name.value, surname: surname.value, username: username.value, mail: email.value, password: password.value})
-//   window.location.href = '/login'
-// }
 
 </script>
 
@@ -105,12 +99,15 @@ async function unTrustUser(){
     <bandeau :username="currentUserUsername" :firstname="currentUserName" :lastname="currentUserSurname" />
     <div class="user-profile-container">
       <div class="user-profile-infos">
-        <ul class="info-list">
-          <li id="user-infos-id" class="label">{{ userProfileId }}</li>
-          <li id="user-infos-username" class="label">{{ userProfileUsername }}</li>
-          <li id="user-infos-name" class="label">{{ userProfileName }}</li>
-          <li id="user-infos-surname" class="label">{{ userProfileSurname }}</li>
-        </ul>
+        <strong>
+          <span id="userIdentity" class="label">{{ userProfileName }} {{ userProfileSurname }}</span>
+        </strong>
+        <em>
+          <span id="username">@{{ userProfileUsername }}</span>
+          <span v-if=userProfileFactchecker class="material-symbols-outlined factCheckerTick">
+            security
+          </span>
+        </em>
       </div>
       <div class="user-profile-buttons">
         <button class="material-symbols-outlined button-profile trust" @click="buttonTrustUser">
@@ -128,20 +125,25 @@ async function unTrustUser(){
 <style scoped>
   .user-profile-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    justify-content: space-evenly;
     align-items: flex-start;
     background-image: linear-gradient(to bottom, #f7e1e1 50%, #B9ABAB 100%);
   }
 
   .user-profile-infos {
-    flex: 1; 
+    display:flex;
+    flex-direction: column;
+    align-items:flex-start;
   }
+ 
 
   .user-profile-buttons {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
   }
+  
 
   .button-profile {
     background-color: transparent;
@@ -166,13 +168,8 @@ async function unTrustUser(){
     color: rgb(228, 37, 37);
   }
 
-  .info-list {
-    -moz-column-count: 2;
-    -moz-column-gap: 2vw;
-    -webkit-column-count: 2;
-    -webkit-column-gap: 2vw;
-    column-count: 2;
-    column-gap: 2vw;
-    list-style-type: none;
+  .factCheckerTick {
+    font-size: 15px;
+    margin-left: 5px;
   }
 </style>
