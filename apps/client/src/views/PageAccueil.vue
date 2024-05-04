@@ -12,6 +12,7 @@ const loadFeed = ref(false);
 
 const store = useUserInfoStore();
 
+const userId = ref('')
 const username = ref('');
 const posts=ref<any[]>([]);;
 const showCreateNewPost = ref(false);
@@ -23,6 +24,7 @@ const switchShowCreateNewPost = () => {
 onMounted(async () => {
     let userInfo = store.getUserInfo;
 
+    userId.value = userInfo._id!;
     username.value = userInfo.username!;
 
     try {

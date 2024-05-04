@@ -4,15 +4,13 @@ import { ref, onMounted } from "vue";
 import { useUserInfoStore } from "../stores/userInfo";
 
 const props = defineProps({
-    posts: Array,
     info: {
         date: Date,
         createdBy: Object,
         metrics: Object,
         image: String,
         text: String,
-    },
-    username: String,
+    }
 });
 
 const store = useUserInfoStore();
