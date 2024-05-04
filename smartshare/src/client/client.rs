@@ -24,8 +24,6 @@ pub struct Client {
     client_id: usize,
     format: Option<Format>,
     file: Option<File>,
-    // TODO: Delete this
-    ide_ack: bool,
 }
 
 impl Client {
@@ -43,7 +41,6 @@ impl Client {
             client_id,
             format: None,
             file: None,
-            ide_ack: true,
         }
     }
 
@@ -137,7 +134,6 @@ impl Client {
                 changes: ide_modifs,
             })
             .await;
-        self.ide_ack = false;
         self.ide_sent_delta = std::mem::take(&mut self.ide_unsent_delta);
         self.ide_unsent_delta
             .retain(self.ide_sent_delta.target_len() as u64);
@@ -245,7 +241,7 @@ impl Client {
     }
 
     async fn on_ide_ack(&mut self) {
-        if self.ide_ack {
+        if self.ide_sent_delta.is_noop() {
             self.ide
                 .send(MessageIde::Error {
                     error: "ack not ok".to_owned(),
@@ -259,7 +255,6 @@ impl Client {
                 self.ide_sent_delta = OperationSeq::default();
                 self.ide_sent_delta.retain(len as u64);
             }
-            self.ide_ack = true;
         }
     }
 
