@@ -103,3 +103,38 @@ async fn main() {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use smartshare::protocol::msg::{MessageIde, MessageServer};
+
+    use crate::client::Client;
+    use crate::ide::Ide;
+    use crate::server::Server;
+
+    #[tokio::test]
+    async fn simple_connection() {
+        let (server_sender, _server_receiver) = tokio::sync::mpsc::channel(8);
+        let (ide_sender, mut ide_receiver) = tokio::sync::mpsc::channel(8);
+        let mut client = Client::new(Server::new(server_sender), Ide::new(ide_sender), 0);
+
+        client.on_message_server(MessageServer::File { file: "Hello world".into(), version: 0 }).await;
+
+        assert_eq!(ide_receiver.try_recv(), Ok(MessageIde::File { file: "Hello world".into() }));
+    }
+
+    #[tokio::test]
+    async fn first_connection() {
+        let (server_sender, mut server_receiver) = tokio::sync::mpsc::channel(8);
+        let (ide_sender, mut ide_receiver) = tokio::sync::mpsc::channel(8);
+        let mut client = Client::new(Server::new(server_sender), Ide::new(ide_sender), 0);
+
+        client.on_message_server(MessageServer::RequestFile).await;
+
+        assert_eq!(ide_receiver.try_recv(), Ok(MessageIde::RequestFile));
+
+        client.on_message_ide(MessageIde::File { file: "Hello world".into() }).await;
+
+        assert_eq!(server_receiver.try_recv(), Ok(MessageServer::File { file: "Hello world".into(), version: 0 }));
+    }
+}

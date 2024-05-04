@@ -3,7 +3,7 @@ use std::usize;
 use operational_transform::{Operation, OperationSeq};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "action", rename_all = "snake_case")]
 pub enum MessageServer {
     ServerUpdate(ModifRequest),
@@ -13,7 +13,7 @@ pub enum MessageServer {
     File { file: String, version: usize },
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "action", rename_all = "snake_case")]
 pub enum MessageIde {
     Update { changes: Vec<TextModification> },
@@ -24,14 +24,14 @@ pub enum MessageIde {
     Ack,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub struct TextModification {
     pub offset: u64,
     pub delete: u64,
     pub text: String,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ModifRequest {
     pub delta: OperationSeq,
     pub rev_num: usize,
@@ -82,7 +82,7 @@ enum State {
     Del,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "offset_format", rename_all = "snake_case")]
 pub enum Format {
     Bytes,
