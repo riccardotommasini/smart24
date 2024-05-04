@@ -15,7 +15,6 @@ const props = defineProps({
 
 const store = useUserInfoStore();
 const userInfo = useUserInfoStore.getUserInfo;
-const username = userInfo.username;
 const userIsFactChecker = userInfo.isFactChecker === "true" ? true : false;
 
 const metric = ref('');
@@ -119,8 +118,9 @@ function checkIfUserHasLiked(list) {
     <div class="  ">
         <div class="post">
             <div class="post-header">
-                <h2 class="createdBy">{{username}}</h2>
+                <h2 class="createdBy">{{props.info.createdBy.username}}</h2>
                 <h3 class="date">{{ day }}-{{ month }}-{{ year }} {{hour}}:{{minute}}</h3>  
+
             </div>
             <div class="post-content">
                 <p class="std"> {{info.text}}
