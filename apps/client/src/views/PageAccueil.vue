@@ -26,9 +26,7 @@ const switchShowCreateNewPost = () => {
 onMounted(async () => {
     let userInfo = store.getUserInfo;
 
-    username.value = userInfo.username;
-    name.value = userInfo.name;
-    surname.value = userInfo.surname;
+    username.value = userInfo.username!;
 
     try {
         const array = await getPosts();
@@ -39,9 +37,8 @@ onMounted(async () => {
     }});
 
 async function getPosts() {
-
-    // return postsArray;
-    return {}
+    posts.value = (await axios.get('/posts/getSuggestions')).data.suggestions;
+    return posts.value;
 }
 
 const handlePostStatus = (status: string) => {

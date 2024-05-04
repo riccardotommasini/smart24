@@ -18,25 +18,6 @@ async function displayComments() {
     loadComments.value = true;
 }
 
-onMounted( () => {
-    console.log(props.post);
-})
-
-// // Sélectionnez tous les boutons avec la classe 'myButton'
-// const button_verified_user = document.getElementById('.red');
-// const button_remove_moderator = document.getElementById('.red');
-// const button_thumb_up = document.getElementById('.red');
-// const button_thumb_down = document.getElementById('.red');
-// const button_comment = document.getElementById('.red');
-// const button_send = document.getElementById('.red');
-
-// console.log(buttons);
-// // Parcourir tous les boutons et ajouter un écouteur d'événements à chacun
-//   button.addEventListener('click', function() {
-//     // Ajoute la classe "button-clicked" au bouton cliqué
-//     button.style.color="red";
-//   });
-
 </script>
 
 <style>
@@ -54,9 +35,7 @@ onMounted( () => {
                 <h3 class="date">{{ props.post.date }}</h3>
             </div>
             <div class="post-content">
-                <p class="std"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
+                <p class="std">{{ post.text }}</p>
                 <img v-if="post.image" :src="post.image" alt="post-image" class="post-image">
             </div>
             <div class="post-footer">
@@ -78,9 +57,6 @@ onMounted( () => {
                     </button>  
                     <button class="material-symbols-outlined button-post">
                         send
-                    </button>
-                    <button>
-                        See comments
                     </button>
                 </div>
                

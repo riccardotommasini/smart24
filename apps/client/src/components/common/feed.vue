@@ -6,7 +6,7 @@ import '../../assets/PageAccueil.css'
 
 
 const props = defineProps({
-    posts: Array // Déclarez le type de la prop 'posts' comme un tableau d'objets
+    posts: Array
 })
 
 </script>
