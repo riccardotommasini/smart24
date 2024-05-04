@@ -102,13 +102,12 @@ async function unTrustUser(){
         <strong>
           <span id="userIdentity" class="label">{{ userProfileName }} {{ userProfileSurname }}</span>
         </strong>
-        <br/>
         <em>
           <span id="username">@{{ userProfileUsername }}</span>
+          <span v-if=userProfileFactchecker class="material-symbols-outlined factCheckerTick">
+            security
+          </span>
         </em>
-        <div v-if=userProfileFactchecker class="material-symbols-outlined factCheckerTick">
-          security
-        </div>
       </div>
       <div class="user-profile-buttons">
         <button class="material-symbols-outlined button-profile trust" @click="buttonTrustUser">
@@ -126,20 +125,25 @@ async function unTrustUser(){
 <style scoped>
   .user-profile-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    justify-content: space-evenly;
     align-items: flex-start;
     background-image: linear-gradient(to bottom, #f7e1e1 50%, #B9ABAB 100%);
   }
 
   .user-profile-infos {
-    flex: 1; 
+    display:flex;
+    flex-direction: column;
+    align-items:flex-start;
   }
+ 
 
   .user-profile-buttons {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
   }
+  
 
   .button-profile {
     background-color: transparent;
@@ -162,16 +166,6 @@ async function unTrustUser(){
 
   #unTrusted {
     color: rgb(228, 37, 37);
-  }
-
-  .info-list {
-    -moz-column-count: 2;
-    -moz-column-gap: 2vw;
-    -webkit-column-count: 2;
-    -webkit-column-gap: 2vw;
-    column-count: 2;
-    column-gap: 2vw;
-    list-style-type: none;
   }
 
   .factCheckerTick {
