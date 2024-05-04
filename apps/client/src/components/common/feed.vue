@@ -2,7 +2,6 @@
 <!-- eslint-disable vue/require-v-for-key -->
 <script setup>
 import post from '../post.vue'
-import '../../assets/PageAccueil.css'
 
 const props = defineProps({
     posts: Array,

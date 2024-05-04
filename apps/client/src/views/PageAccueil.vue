@@ -1,12 +1,11 @@
 <script setup lang="ts">
 
 import feed from "../components/common/feed.vue"
-import '../assets/PageAccueil.css'
 import { useUserInfoStore } from "../stores/userInfo";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import BandeauHomepage from "../components/common/BandeauHomepage.vue";
-import modal from "../components/common/modal.vue";
+import modal from "../components/pop-ups/modal.vue";
 import NewPost from "../components/NewPost.vue";
 
 const loadFeed = ref(false);
@@ -14,8 +13,6 @@ const loadFeed = ref(false);
 const store = useUserInfoStore();
 
 const username = ref('');
-const name = ref('');
-const surname = ref('');
 const posts=ref<any[]>([]);;
 const showCreateNewPost = ref(false);
 
@@ -26,9 +23,7 @@ const switchShowCreateNewPost = () => {
 onMounted(async () => {
     let userInfo = store.getUserInfo;
 
-    username.value = userInfo.username;
-    name.value = userInfo.name;
-    surname.value = userInfo.surname;
+    username.value = userInfo.username!;
 
     try {
         const array = await getPosts();
@@ -44,11 +39,8 @@ onMounted(async () => {
 
 //Function to get posts
 async function getPosts() {
-
-    return postsArray;
+    return [];
 }
-
-
 
 
 </script>
