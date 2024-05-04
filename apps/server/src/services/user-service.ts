@@ -49,6 +49,7 @@ export class UserService {
         }
     }
 
+
     async createUser(user: IUserCreation): Promise<IUser & Document> {
         const existingUser = await User.findOne({ $or: [{ username: user.username }, { mail: user.mail }] });
 
