@@ -1,16 +1,23 @@
 import User, { IUser, IUserCreation } from '../models/user';
-import { Post } from '../models/post';
-import { singleton } from 'tsyringe';
+import { Post, IPost } from '../models/post';
+import { ClassProvider, container, inject, injectable, singleton } from 'tsyringe';
 import { StatusCodes } from 'http-status-codes';
 import { HttpException } from '../models/http-exception';
-import { Document, UpdateQuery, Types } from 'mongoose';
+import mongoose, { Document, UpdateQuery, Types } from 'mongoose';
 import { NonStrictObjectId, toObjectId } from '../utils/objectid';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { env } from '../utils/env';
+import { AlgoSuggestion, IAlgoSuggestion, IAlgoSuggestionOther } from '../models/algo/algo-suggestion';
+import { PostService } from './post-service/post-service';
 
+@injectable()
 @singleton()
 export class UserService {
+
+    constructor () {
+    }
+
     async getUser(userId: NonStrictObjectId): Promise<IUser> {
         const user = await User.findById(userId);
 

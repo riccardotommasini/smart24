@@ -1,13 +1,15 @@
 import { StatusCodes } from 'http-status-codes';
 import { Document } from 'mongoose';
-import { singleton } from 'tsyringe';
+import { container, inject, injectable, singleton } from 'tsyringe';
 import { Comment, CommentDocument, ICreateComment } from '../../models/comment';
 import { HttpException } from '../../models/http-exception';
 import { Metrics } from '../../models/metrics';
 import { ICreatePost, IPost, Post } from '../../models/post';
 import { NonStrictObjectId } from '../../utils/objectid';
 import { UserService } from '../user-service';
+import { AlgoSuggestion, IAlgoSuggestionOther } from '../../models/algo/algo-suggestion';
 
+@injectable()
 @singleton()
 export class PostService {
     constructor(private readonly userService: UserService) {}
@@ -84,5 +86,33 @@ export class PostService {
 
     async getMetricsId(postId: NonStrictObjectId): Promise<string> {
         return (await this.getPost(postId)).metrics.toString();
+    }
+
+    async getSuggestions(userId : NonStrictObjectId) {
+
+        let suggestions: IPost[] = [];
+        let suggestionsIds: IAlgoSuggestionOther[] = (await AlgoSuggestion.findOne({ user: userId }))!.others.slice(0, 200);
+        
+        await Promise.all(suggestionsIds.map(async (so:IAlgoSuggestionOther) => {
+            suggestions.push(await this.getPost(so.item));
+        }));
+
+        const nbSuggestions = suggestions.length;
+        if (nbSuggestions < 200) {
+            //fills missing posts with random posts
+            const nbSuggToAdd = 200 - nbSuggestions;
+            const pipeline = [
+                { '$sample': { 'size': nbSuggToAdd } },
+                { '$limit': nbSuggToAdd }
+              ]
+            
+            const suggestionsToAdd = await Post.aggregate(pipeline)
+
+            suggestions = suggestions.concat(suggestionsToAdd);
+        }
+
+        return {
+            suggestions: suggestions
+        };
     }
 }

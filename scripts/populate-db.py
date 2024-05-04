@@ -94,7 +94,7 @@ def load_posts(path: str, users: pd.DataFrame):
 
 def rate_post(metrics: pd.DataFrame, user_ids: list[str], metrics_id: str, rating: list[Literal['like', 'dislike', 'trust', 'untrust']]) -> pd.DataFrame:
     nb_ratings_cols = map(lambda x: f'nb{x.capitalize()}s', rating)
-    ratings_by_cols = map(lambda x: f'{x}{'' if x.endswith('e') else 'e'}dBy', rating)
+    ratings_by_cols = map(lambda x: f'{x}{"" if x.endswith("e") else "e"}dBy', rating)
 
     for nb_col, by_col in zip(nb_ratings_cols, ratings_by_cols):
         for user_id in user_ids:
@@ -241,7 +241,7 @@ if __name__ == "__main__":
     Faker.seed(69)
     fake = Faker(locale=['fr-FR', 'fr-CA'])
 
-    load_dotenv()
+    load_dotenv('.env.template')
 
     print("📚 Loading data...")
 

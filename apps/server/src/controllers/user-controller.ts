@@ -1,7 +1,7 @@
 import { NextFunction, Response, Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
-import { singleton } from 'tsyringe';
+import { container, singleton } from 'tsyringe';
 import { UserService } from '../services/user-service';
 import { AbstractController } from './abstract-controller';
 import { MetricsService } from '../services/metrics-service/metrics-service';
@@ -19,6 +19,7 @@ export class UserController extends AbstractController {
     }
 
     protected configureRoutes(router: Router) {
+
         router.get(
             '/:userId',
             auth,
