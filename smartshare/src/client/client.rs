@@ -74,7 +74,6 @@ impl Client {
     }
 
     async fn on_server_change(&mut self, modif: &ModifRequest) {
-
         self.rev_num += 1;
         if self.rev_num != modif.rev_num {
             todo!("handle desynchronisation");
@@ -89,7 +88,6 @@ impl Client {
             .unwrap();
 
         self.server_state = new_server_state;
-
 
         self.server_sent_delta = new_server_sent_delta;
         self.server_unsent_delta = new_server_unsent_delta;
@@ -171,7 +169,10 @@ impl Client {
         self.file = Some(file);
         let _ = self
             .server
-            .send(MessageServer::File { file: file_str, version: 0 })
+            .send(MessageServer::File {
+                file: file_str,
+                version: 0,
+            })
             .await;
     }
 
@@ -196,41 +197,30 @@ impl Client {
             return;
         };
 
-        let ide_seq = match format {
-            Format::Bytes => {
-                let mut seq = OperationSeq::default();
-                seq.retain(file.len_chars() as u64);
+        let ide_seq = {
+            let mut seq = OperationSeq::default();
+            seq.retain(file.len_chars() as u64);
 
-                for change in &mut changes {
+            for change in &mut changes {
+                if let Format::Bytes = format {
                     file.byte_to_char(&mut *change);
-                    let delta = match modif_to_operation_seq(change, &(file.len_chars() as u64)) {
-                        Ok(seq) => seq,
-                        Err(err) => {
-                            self.ide
-                                .send(MessageIde::Error {
-                                    error: err.to_string(),
-                                })
-                                .await;
-                            return;
-                        }
-                    };
-                    file.apply(&delta).unwrap();
-                    seq = seq.compose(&delta).unwrap();
                 }
-
-                seq
+                let delta = match modif_to_operation_seq(change, &(file.len_chars() as u64)) {
+                    Ok(seq) => seq,
+                    Err(err) => {
+                        self.ide
+                            .send(MessageIde::Error {
+                                error: err.to_string(),
+                            })
+                            .await;
+                        return;
+                    }
+                };
+                file.apply(&delta).unwrap();
+                seq = seq.compose(&delta).unwrap();
             }
-            Format::Chars => match modifs_to_operation_seq(&changes, &(file.len_chars() as u64)) {
-                Ok(seq) => seq,
-                Err(err) => {
-                    self.ide
-                        .send(MessageIde::Error {
-                            error: err.to_string(),
-                        })
-                        .await;
-                    return;
-                }
-            },
+
+            seq
         };
 
         info!("{:?}", ide_seq);

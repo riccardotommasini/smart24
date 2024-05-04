@@ -14,8 +14,8 @@ let context: vscode.ExtensionContext;
 let init = true;
 let ignoreNextEvent = false;
 
-function procWrite(proc: ChildProcessWithoutNullStreams, message: any): void {
-    logClient.debug("Send message", message);
+function procWrite(proc: ChildProcessWithoutNullStreams, message: Message): void {
+    logClient.debug("Send message", JSON.stringify(message));
     proc.stdin.write(JSON.stringify(message) + '\n');
 }
 
@@ -56,7 +56,6 @@ function handleMessage(data: Message) {
                     applyChange(change).then((success) => {
                         console.log("success ?" + success);
                         if (success && clientProc) {
-                            //clientProc?.stdin.write(JSON.stringify({ action: "ack" }))
                             procWrite(clientProc, { action: "ack" })
                         }
                     }).catch(err => console.log("err" + err))
@@ -72,12 +71,12 @@ function handleMessage(data: Message) {
             logClient.error("From client: ", error)
         },
         (_: RequestFile) => {
-            if (!clientProc) {
+            if (!clientProc || !vscode.window.activeTextEditor) {
                 return;
             }
             procWrite(clientProc, {
                 action: "file",
-                file: vscode.window.activeTextEditor?.document.getText()
+                file: vscode.window.activeTextEditor.document.getText()
             })
             init = false;
         },
@@ -104,37 +103,27 @@ function changeDocumentHandler(event: vscode.TextDocumentChangeEvent): any {
 
     console.log(event.document.uri);
 
-    if (init) {
+    if (init || !clientProc) {
+        return;
+    }
+    if(ignoreNextEvent) {
+        ignoreNextEvent = false
         return;
     }
 
-    for (let change of event.contentChanges) {
-
-        const message = {
-            action: "update",
-            changes: [new TextModification(
-                change.rangeOffset,
-                change.rangeLength,
-                change.text)
-            ]
-        };
-
-        // if (changes_to_discard[changes_to_discard.length - 1] == JSON.stringify(message)) {
-        //     changes_to_discard.pop();
-        // } else {
-        //     console.log(JSON.stringify(message));
-        //     clientProc?.stdin.write(JSON.stringify(message) + '\n');
-        //     waitingAcks++;
-        // }
-        if (ignoreNextEvent) {
-            ignoreNextEvent = false;
-        } else if (clientProc) {
-            console.log(JSON.stringify(message));
-            //clientProc?.stdin.write(JSON.stringify(message) + '\n');
-            procWrite(clientProc, message);
-            waitingAcks++;
-        }
-    }
+    let changes = event.contentChanges.map(change => {
+        return new TextModification(
+            change.rangeOffset,
+            change.rangeLength,
+            change.text
+        )
+    });
+    let message: Update = {
+        action: "update",
+        changes: changes
+    };
+    procWrite(clientProc, message);
+    waitingAcks++;
 }
 
 function startClient(addr: string) {
@@ -148,9 +137,7 @@ function startClient(addr: string) {
 
     statusBarItem.text = "Connected";
     clientProc.stdout.setEncoding('utf8');
-    const message = { action: "declare", offset_format: "chars" };
-    //logClient.debug(message);
-    //clientProc.stdin.write(JSON.stringify(message));
+    const message: Declare = { action: "declare", offset_format: "chars" };
     procWrite(clientProc, message);
     clientProc.on('close', () => {
         vscode.window.showErrorMessage("Client closed");
@@ -165,8 +152,6 @@ function startClient(addr: string) {
     });
 
     disposable = vscode.workspace.onDidChangeTextDocument(changeDocumentHandler);
-
-    //context.subscriptions.push(disposable);
 }
 
 function stopClient(disposable: vscode.Disposable, clientProc: ChildProcessWithoutNullStreams) {

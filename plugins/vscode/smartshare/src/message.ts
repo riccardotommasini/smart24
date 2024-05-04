@@ -48,7 +48,7 @@ export class TextModification {
 
 export interface Declare {
     action: "declare"
-    offset_format: "bytes" | "char"
+    offset_format: "bytes" | "chars"
 }
 
 export interface Error {
