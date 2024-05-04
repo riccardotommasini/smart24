@@ -41,7 +41,7 @@ pub fn modifs_to_operation_seq(
     modifs: &Vec<TextModification>,
     src_length: &u64,
 ) -> Result<OperationSeq, anyhow::Error> {
-    let op_seq = match modifs.get(0) {
+    let mut op_seq = match modifs.get(0) {
         Some(modif) => modif_to_operation_seq(modif, src_length)?,
         None => {
             let mut noop = OperationSeq::default();
@@ -50,7 +50,7 @@ pub fn modifs_to_operation_seq(
         }
     };
     for modif in &modifs[1..] {
-        op_seq
+        op_seq = op_seq
             .compose(&modif_to_operation_seq(
                 modif,
                 &(op_seq.target_len() as u64),
