@@ -23,4 +23,4 @@ const FactCheckSchema = new Schema<IFactCheck>({
 });
 
 // Export model
-export const FactCheck = mongoose.model<IFactCheck>('FactCheck', FactCheckSchema);
+export const FactCheck = mongoose.model<IFactCheck>('fact-checks', FactCheckSchema);
