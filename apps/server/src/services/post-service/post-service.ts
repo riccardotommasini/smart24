@@ -25,7 +25,6 @@ export class PostService {
             metrics: metrics._id,
         });
 
-
         const user = await this.userService.getUser(userId);
         user.posts.push(post.id);
 
@@ -74,7 +73,7 @@ export class PostService {
 
         const res = await commentsQuery.exec();
         for (let i = 0; i < res.length; i++) {
-            const comment = res[i].toObject(); 
+            const comment = res[i].toObject();
             comment.comments = await this.getPostComments(comment._id);
             res[i] = comment;
         }
