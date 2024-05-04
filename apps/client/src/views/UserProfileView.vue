@@ -175,7 +175,7 @@ async function unTrustUser(){
   }
 
   .factCheckerTick {
-    font-size: 15px !important;
+    font-size: 15px;
     margin-left: 5px;
   }
 </style>
