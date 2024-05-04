@@ -3,7 +3,9 @@
 
 <template>
     <div class="app-logo">
-        <p class="logo laila">A</p>
+        <a class ="logoLink" href="/homepage">
+            <p class="logo laila">A</p>
+        </a>
     </div>
 </template>
 
@@ -12,5 +14,10 @@
     font-weight: 700;
     font-size: 50px;
     margin: 0 0 0 1em;
+}
+
+.logoLink{
+    text-decoration: none;
+    color: inherit;
 }
 </style>
