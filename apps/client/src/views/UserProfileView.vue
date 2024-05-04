@@ -81,11 +81,11 @@ async function buttonUnTrustUser() {
 }
 
 async function trustUser(){
-  await store.trustUser({user: currentUserId.value, otherUserId: props.profileId});
+  await axios.post('/user/trustUser', {user: currentUserId.value, otherUserId: props.profileId});
 }
 
 async function unTrustUser(){
-  await store.unTrustUser({user: currentUserId.value, otherUserId: props.profileId});
+  await axios.post('/user/unTrustUser', {user: currentUserId.value, otherUserId: props.profileId});
 }
 
 </script>
