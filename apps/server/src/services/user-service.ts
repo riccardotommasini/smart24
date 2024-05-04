@@ -1,13 +1,13 @@
-import User, { IUser, IUserCreation } from '../models/user';
-import { Post } from '../models/post';
-import { singleton } from 'tsyringe';
-import { StatusCodes } from 'http-status-codes';
-import { HttpException } from '../models/http-exception';
-import { Document, UpdateQuery, Types } from 'mongoose';
-import { NonStrictObjectId, toObjectId } from '../utils/objectid';
 import bcryptjs from 'bcryptjs';
+import { StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
+import { Document, Types, UpdateQuery } from 'mongoose';
+import { singleton } from 'tsyringe';
+import { HttpException } from '../models/http-exception';
+import { Post } from '../models/post';
+import User, { IUser, IUserCreation } from '../models/user';
 import { env } from '../utils/env';
+import { NonStrictObjectId, toObjectId } from '../utils/objectid';
 
 @singleton()
 export class UserService {
@@ -48,7 +48,6 @@ export class UserService {
         }
     }
 
-
     async createUser(user: IUserCreation): Promise<IUser & Document> {
         const existingUser = await User.findOne({ $or: [{ username: user.username }, { mail: user.mail }] });
 
@@ -78,6 +77,10 @@ export class UserService {
         }
         const updatedUser = await User.findByIdAndUpdate(userObjectId, update, { new: true });
         return updatedUser;
+    }
+
+    async addPostId(userId: NonStrictObjectId, postId: NonStrictObjectId) {
+        await User.updateOne({ _id: userId }, { $push: { posts: postId } }, { new: false }).exec();
     }
 
     async trustUser(userId: NonStrictObjectId, otherUserId: NonStrictObjectId) {
