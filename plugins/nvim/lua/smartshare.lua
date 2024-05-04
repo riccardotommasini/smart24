@@ -6,6 +6,7 @@ local buf = nil
 local handle = nil
 local initialized = false
 local ack_waiting = 0
+local is_attached = false
 
 function M.get_line_column_from_byte_offset(byte_offset)
     local line = vim.fn.byte2line(byte_offset + 1) - 1
@@ -24,6 +25,10 @@ function M.set_text(offset, deleted, text)
 end
 
 function connect(addr)
+    if handle ~= nil then
+        vim.fn.jobstop(handle)
+    end
+
     handle = vim.fn.jobstart("./client " .. addr .. ":4903", {
         on_stdout = function(_job_id, data, event)
             for _, json_object in ipairs(data) do
@@ -147,6 +152,7 @@ function attach()
             send_message(message)
         end
     })
+    is_attached = true
 end
 
 function send_message(message)
@@ -163,7 +169,10 @@ vim.api.nvim_create_user_command("SmartShareConnect", function(cmd)
 
     buf = vim.api.nvim_get_current_buf()
     connect(addr)
-    attach()
+
+    if not is_attached then
+        attach()
+    end
 end, {})
 
 return M
