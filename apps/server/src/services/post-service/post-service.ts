@@ -18,18 +18,16 @@ export class PostService {
         const metrics = new Metrics({});
         await metrics.save();
 
-        const post = new Post({
+        let post = new Post({
             text: newPost.text,
             image: newPost.image,
             createdBy: userId,
             metrics: metrics._id,
         });
 
-        const user = await this.userService.getUser(userId);
-        user.posts.push(post.id);
+        post = await post.save();
 
-        await user.save();
-        await post.save();
+        await this.userService.addPostId(userId, post._id);
 
         return post;
     }
