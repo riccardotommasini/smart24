@@ -22,7 +22,7 @@ function procWrite(proc: ChildProcessWithoutNullStreams, message: any): void {
 async function applyChange(change: TextModification): Promise<boolean> {
     //changes_to_discard.push(JSON.stringify(change));
     ignoreNextEvent = true;
-    return change.write()
+    return await change.write();
 }
 
 function clientStdoutHandler(): (chunk: any) => void {
@@ -51,13 +51,15 @@ function handleMessage(data: Message) {
     matchMessage(data)(
         (update: Update) => {
             if (!waitingAcks) {
-                for (const change of update.changes) {
+                for (let change of update.changes) {
+                    change = new TextModification(change.offset, change.delete, change.text);
                     applyChange(change).then((success) => {
+                        console.log("success ?" + success);
                         if (success && clientProc) {
                             //clientProc?.stdin.write(JSON.stringify({ action: "ack" }))
                             procWrite(clientProc, { action: "ack" })
                         }
-                    })
+                    }).catch(err => console.log("err" + err))
                 }
             } else {
                 logClient.debug("Ignore update before acknowledge", update)
@@ -81,9 +83,8 @@ function handleMessage(data: Message) {
         },
         (file: File) => {
             ignoreNextEvent = false;
-            new TextModification(0, editor?.document.getText().length || 0, file.file)
-                .write().then(() => { init = false })
-                .catch(err => logClient.error(err));
+            new TextModification(0, editor?.document.getText().length || 0, file.file).write()
+                .then(() => { init = false });
         },
         (_: Ack) => {
             if (!waitingAcks) {
