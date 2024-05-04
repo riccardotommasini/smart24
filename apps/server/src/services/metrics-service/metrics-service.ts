@@ -53,6 +53,7 @@ export class MetricsService {
 
             if (metrics.dislikedBy.includes(userIdObj)) {
                 metrics.dislikedBy = metrics.dislikedBy.filter((id) => !id.equals(userIdObj));
+                metrics.nbDislikes -= 1;
                 await this.ratingsDislikesService.removeRatingsDislikes(userId.toString(), postId.toString());
             }
         }
@@ -80,6 +81,7 @@ export class MetricsService {
 
             if (metrics.likedBy.includes(userIdObj)) {
                 metrics.likedBy = metrics.likedBy.filter((id) => !id.equals(userIdObj));
+                metrics.nbLikes -= 1;
                 await this.ratingsLikesService.removeRatingsLikes(userId.toString(), postId.toString());
             }
         }
@@ -107,6 +109,7 @@ export class MetricsService {
 
             if (metrics.untrustedBy.includes(userIdObj)) {
                 metrics.untrustedBy = metrics.untrustedBy.filter((id) => !id.equals(userIdObj));
+                metrics.nbUntrusts -= 1;
                 await this.ratingsUntrustService.removeRatingsUntrust(userId.toString(), postId.toString());
             }
         }
@@ -133,6 +136,7 @@ export class MetricsService {
 
             if (metrics.trustedBy.includes(userIdObj)) {
                 metrics.trustedBy = metrics.trustedBy.filter((id) => !id.equals(userIdObj));
+                metrics.nbTrusts -= 1;
                 await this.ratingsTrustService.removeRatingsTrust(userId.toString(), postId.toString());
             }
         }

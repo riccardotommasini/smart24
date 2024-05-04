@@ -26,7 +26,6 @@ export const auth: RequestHandler = async (req: Request, res: Response, next: Ne
 
         if (!token) {
             throw new HttpException(StatusCodes.UNAUTHORIZED, 'You must be logged in');
-
         }
 
         const [user, decoded] = await container.resolve(AuthService).loadSession(token);
