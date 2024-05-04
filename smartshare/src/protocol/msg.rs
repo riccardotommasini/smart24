@@ -60,7 +60,7 @@ pub fn modifs_to_operation_seq(
     Ok(op_seq)
 }
 
-fn modif_to_operation_seq(
+pub fn modif_to_operation_seq(
     modif: &TextModification,
     src_length: &u64,
 ) -> Result<OperationSeq, anyhow::Error> {

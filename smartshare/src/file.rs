@@ -3,7 +3,11 @@ use std::fmt::Display;
 use anyhow::ensure;
 use operational_transform::{Operation, OperationSeq};
 use ropey::Rope;
+use tracing::info;
 
+use crate::protocol::msg::TextModification;
+
+#[derive(Clone)]
 pub struct File {
     content: Rope,
 }
@@ -30,7 +34,7 @@ impl File {
                 }
                 Operation::Insert(str) => {
                     self.content.insert(pos, str);
-                    pos += str.len();
+                    pos += str.chars().count();
                 }
             }
         }
@@ -45,12 +49,21 @@ impl File {
         self.content.len_chars()
     }
 
-    pub fn byte_to_char(&self, byte: u64) -> u64 {
-        return self.content.byte_to_char(byte as usize) as u64;
+    pub fn byte_to_char(&self, modif: &mut TextModification) {
+        modif.delete = self
+            .content
+            .byte_slice(modif.offset as usize..modif.offset as usize + modif.delete as usize)
+            .len_chars() as u64;
+
+        modif.offset = self.content.byte_slice(..modif.offset as usize).len_chars() as u64;
     }
 
-    pub fn char_to_byte(&self, char: u64) -> u64 {
-        return self.content.char_to_byte(char as usize) as u64;
+    pub fn char_to_byte(&self, modif: &mut TextModification) {
+        modif.delete = self
+            .content
+            .slice(modif.offset as usize..modif.offset as usize + modif.delete as usize)
+            .len_bytes() as u64;
+        modif.offset = self.content.slice(..modif.offset as usize).len_bytes() as u64;
     }
 }
 
@@ -108,7 +121,6 @@ mod test {
 
         assert_eq!(&file.to_string(), "Hello world");
     }
-
 
     #[test]
     fn apply_all() {
