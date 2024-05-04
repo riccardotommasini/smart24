@@ -18,6 +18,7 @@ const props = defineProps({
 });
 
 const store = useUserInfoStore();
+const userIsFactChecker = store.getUserInfo.isFactChecker === "true" ? true : false;
 
 const metric = ref('');
 const likedBy = ref(false);
@@ -33,7 +34,6 @@ const hour = dateInstance.getHours();
 const minute = dateInstance.getMinutes();
 
 onMounted(async () => {
-    
     metric.value = await getMetrics();
     checkIfUserHasLiked(metric.value);
 });
@@ -84,8 +84,6 @@ function checkIfUserHasLiked(list) {
     trustedBy.value=false;
     untrustedBy.value=false;
 
-
-    
     // Récupérer les informations de like pour le post actuel
     let likedBySet = new Set(list.likedBy);
     let dislikedBySet = new Set(list.dislikedBy);
@@ -108,8 +106,6 @@ function checkIfUserHasLiked(list) {
     if (untrustedBySet.has(id)) {
         untrustedBy.value = true;
     }
-
- 
 }
 </script>
 
@@ -136,7 +132,7 @@ function checkIfUserHasLiked(list) {
             </div>
             <div class="post-footer">
                 <div class="post-footer-left"> 
-                    <div class="comment-icon-container">          
+                    <div v-if="userIsFactChecker" class="comment-icon-container">          
                         <button  class="material-symbols-outlined button-post" @click="factCheckPost">
                             verified
                         </button> 
@@ -145,10 +141,10 @@ function checkIfUserHasLiked(list) {
                     <div class="comment-icon-container">
                         <button v-if="trustedBy" class="material-symbols-outlined button-post green" @click="trustPost">
                             verified_user
-                        </button> 
+                        </button>
                         <button v-else class="material-symbols-outlined button-post " @click="trustPost">
                             verified_user
-                        </button>  
+                        </button>
                         <div class="comment-count-bubble">{{metric.nbTrusts}}</div>
                     </div>
                     <div class="comment-icon-container">
@@ -186,11 +182,6 @@ function checkIfUserHasLiked(list) {
                         </button>  
                         <div class="comment-count-bubble">{{metric.nbComments}}</div>
                     </div>
-
-                  
-                    <button class="material-symbols-outlined button-post">
-                        send
-                    </button>  
                 </div>
                
             </div>
@@ -201,4 +192,85 @@ function checkIfUserHasLiked(list) {
 
 </template>
 
+<style scoped>
+.comment-icon-container {
+    position: relative;
+    display: inline-block;
+}
 
+.comment-count-bubble {
+    position: absolute;
+    transform: translate(50%, -50%);
+    top: 0.6vh;
+    left: 1.8vh;
+    background-color: #B9ABAB;
+    color: white;
+    border-radius: 50%;
+    width: 1.5vh;
+    height: 1.5vh;
+    font-size: 1.3vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p {
+    font-family: 'inter', sans-serif;
+    font-weight: normal;
+    font-size: 1.5vh;
+    margin: 0;
+}
+
+.container{
+    height:20vh;
+}
+
+
+.post-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+.createdBy{
+    font-family: 'inter', sans-serif;
+    font-weight: bold;
+    font-size: 1.8vh;
+    margin-right: 2vh;
+}
+
+.date{
+    font-family: 'inter', sans-serif;
+    font-weight:normal;
+    font-size: 1.8vh;
+    margin-right: 2vh;
+}
+
+.green{
+    color: #08a808;
+}
+
+.red{
+    color: #d20505;
+}
+
+.post-footer{
+    display:flex;
+}
+
+.button-post{
+    background-color: transparent;
+    margin-right: 2vh;
+    border: none;
+    outline: none;
+}
+
+.button-post:hover{
+    color:#B9ABAB;
+}
+
+.button-post:focus{
+    outline: none;
+}
+</style>

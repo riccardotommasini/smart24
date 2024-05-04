@@ -45,14 +45,16 @@ export class MetricsService {
             await metrics.save();
 
             await this.ratingsLikesService.removeRatingsLikes(userId.toString(), postId.toString());
-        } else if (!metrics.dislikedBy.includes(userIdObj)) {
+        } else {
             metrics.likedBy.push(userIdObj);
             metrics.nbLikes += 1;
+            if (metrics.dislikedBy.includes(userIdObj)) {
+                metrics.dislikedBy = metrics.dislikedBy.filter((id) => !id.equals(userIdObj));
+                await this.ratingsDislikesService.removeRatingsDislikes(userId.toString(), postId.toString());
+            }
             await metrics.save();
 
             await this.ratingsLikesService.createRatingsLikes(userId.toString(), postId.toString());
-        } else {
-            throw new HttpException(StatusCodes.BAD_REQUEST, `User dislikes this post`);
         }
 
         return metrics;
@@ -68,14 +70,16 @@ export class MetricsService {
             await metrics.save();
 
             await this.ratingsDislikesService.removeRatingsDislikes(userId.toString(), postId.toString());
-        } else if (!metrics.likedBy.includes(userIdObj)) {
+        } else {
             metrics.dislikedBy.push(userIdObj);
             metrics.nbDislikes += 1;
+            if (metrics.likedBy.includes(userIdObj)) {
+                metrics.likedBy = metrics.likedBy.filter((id) => !id.equals(userIdObj));
+                await this.ratingsLikesService.removeRatingsLikes(userId.toString(), postId.toString());
+            }
             await metrics.save();
 
             await this.ratingsDislikesService.createRatingsDislikes(userId.toString(), postId.toString());
-        } else {
-            throw new HttpException(StatusCodes.BAD_REQUEST, `User likes this post`);
         }
 
         return metrics;
@@ -91,14 +95,16 @@ export class MetricsService {
             await metrics.save();
 
             await this.ratingsTrustService.removeRatingsTrust(userId.toString(), postId.toString());
-        } else if (!metrics.untrustedBy.includes(userIdObj)) {
+        } else {
             metrics.trustedBy.push(userIdObj);
             metrics.nbTrusts += 1;
+            if (metrics.untrustedBy.includes(userIdObj)) {
+                metrics.untrustedBy = metrics.untrustedBy.filter((id) => !id.equals(userIdObj));
+                await this.ratingsUntrustService.removeRatingsUntrust(userId.toString(), postId.toString());
+            }
             await metrics.save();
 
             await this.ratingsTrustService.createRatingsTrust(userId.toString(), postId.toString());
-        } else {
-            throw new HttpException(StatusCodes.BAD_REQUEST, `User untrusts this post`);
         }
 
         return metrics;
@@ -114,14 +120,16 @@ export class MetricsService {
             await metrics.save();
 
             await this.ratingsUntrustService.removeRatingsUntrust(userId.toString(), postId.toString());
-        } else if (!metrics.trustedBy.includes(userIdObj)) {
+        } else {
             metrics.untrustedBy.push(userIdObj);
             metrics.nbUntrusts += 1;
+            if (metrics.trustedBy.includes(userIdObj)) {
+                metrics.trustedBy = metrics.trustedBy.filter((id) => !id.equals(userIdObj));
+                await this.ratingsTrustService.removeRatingsTrust(userId.toString(), postId.toString());
+            }
             await metrics.save();
 
             await this.ratingsUntrustService.createRatingsUntrust(userId.toString(), postId.toString());
-        } else {
-            throw new HttpException(StatusCodes.BAD_REQUEST, `User trusts this post`);
         }
 
         return metrics;

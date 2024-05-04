@@ -1,4 +1,7 @@
- 
+header{
+  width:100%;
+  position: fixed;
+}
 
 .main{
   width:100%;

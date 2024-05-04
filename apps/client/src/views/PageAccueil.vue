@@ -36,14 +36,11 @@ onMounted(async () => {
 
 //Function to get posts
 async function getPosts() {
-    const idPost ="66333d0f22fdb44ff5afc20b";
-    const idPost2="66334a4522fdb44ff5afc248";
+    const idPost ="6634d7740d43d6840202139d";
     
-    
-    const res = await axios.get(`/posts/${idPost}`);
-    const res2= await axios.get(`/posts/${idPost2}`);
+    const res2 = await axios.get(`/posts/${idPost}`);
 
-    const postsArray=[res.data, res2.data,res2.data,res2.data,res2.data,res2.data,res2.data,res2.data,res2.data,res2.data];
+    const postsArray=[res2.data,res2.data,res2.data,res2.data,res2.data,res2.data,res2.data,res2.data,res2.data];
 
     return postsArray;
 }
@@ -62,9 +59,26 @@ async function getPosts() {
             <feed :posts="posts" :username="username"></feed>
         </div>
     </div>
-
-   
-
-
 </template>
 
+<style scoped>
+.mainFeed{
+    width:100%;
+    height:100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+background-image: linear-gradient(to bottom, #f7e1e1 50%, #B9ABAB 100%);
+}
+
+
+.screen{
+    width: 100%;
+    height: 100%;
+    margin-top:7vh;
+    display:flex;
+    justify-content: center;
+    padding: 1em 0 1em 0;
+}
+</style>

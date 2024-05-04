@@ -34,15 +34,6 @@ async function register(){
     alert("Password's length must be at least 5")
   }
 
-  console.log('Form submitted:', {
-    name: name.value,
-    surname: surname.value,
-    pseudo: username.value,
-    email: email.value,
-    password: password.value,
-    confirmPassword: confirmPassword.value
-  })
-
   await tokenstore.register({name: name.value, surname: surname.value, username: username.value, mail: email.value, password: password.value})
   window.location.href = '/login'
 }

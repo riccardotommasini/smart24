@@ -39,8 +39,7 @@ export class UserService {
                 user: {
                     id: foundUser._id,
                     name: foundUser.name,
-                    surname: foundUser.surname,
-                    username: foundUser.username,
+                    isFactChecker: foundUser.factChecker
                 },
                 token: token,
             };

@@ -30,7 +30,6 @@ const fetchPosts = async (userId: string) => {
   } catch (error) {
     console.error(error);
   }
-  console.log(posts);
 };
 
 onMounted( () => {
@@ -38,9 +37,6 @@ onMounted( () => {
     const userInfo = computed(()=>store.getUserInfo).value;
     id.value = userInfo._id!;
     username.value = userInfo.username!;
-    name.value = userInfo.name!;
-    surname.value = userInfo.surname!;
-    console.log(props.profileId)
     fetchPosts(props.profileId);
 });
 
