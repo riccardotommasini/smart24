@@ -20,8 +20,24 @@ function procWrite(proc: ChildProcessWithoutNullStreams, message: Message): void
     proc.stdin.write(JSON.stringify(message) + '\n');
 }
 
+function setCursor(color: string, position: vscode.Position) {
+    const editor = vscode.window.activeTextEditor;
+    console.log("set cursor 2");
+    if (!editor) {
+        return;
+    }
+    const range = new vscode.Range(position, position);
+    const decoration = vscode.window.createTextEditorDecorationType({
+        borderWidth: "0 1px 0 0",
+        borderStyle: "solid",
+        borderColor: color,
+    });
+    editor.setDecorations(decoration, [range])
+}
+
 async function applyChange(change: TextModification): Promise<boolean> {
     ignoreNextEvent = true;
+    setCursor("red", change.range().end);
     return await change.write();
 }
 
