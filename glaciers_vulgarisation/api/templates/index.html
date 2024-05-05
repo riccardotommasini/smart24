@@ -66,7 +66,6 @@
 
   <div class="container">
     <main>
-      <iframe src="/dash" width="100%" height="600"></iframe>
       <section id="section_1" class="section-container">
         <p>Il n’est jamais facile de rédiger une accroche, notamment sur un site internet. Ce n’est pas un livre, un
           mémoire, ou encore une thèse. Pourtant, celui-ci mérite son introduction autant que les supports précédemment
@@ -181,11 +180,7 @@
           scénarios dès que vous le désirez.</p>
         <p>Mais avant d’aller plus loin pourquoi ne pas profiter d’une petite mise en jambe afin de découvrir les
           différents glaciers du monde et quelques informations qui les composent ?</p>
-        <div class="illustration-container">
-          <div class="scale3d">
-            {% include 'glacier_map.html' %}
-          </div>
-        </div>
+        <iframe src="/dash" width="100%" height="600"></iframe>
         <p>Par la suite nous allons nous pencher sur les cinq glaciers suivant :</p>
         <div class="illustration-container">
           <img src="{{ url_for('static', filename='images/lasneous.jpg') }}" alt="Illustration">
@@ -596,14 +591,13 @@
               </div> 
             </td>
           </tr>
-        <table>
+        </table>
           <p>La mer de Glace perd en moyenne par an ce qui à titre de comparaison représente piscines olympiques.</p>
           <div class="illustration-container">
             <img width="60%" src="{{ url_for('static', filename='images/piscine.jpg') }}" alt="Illustration">
             <legend>add a legend</legend>
           </div>
-        </section>
-
+      </section>
       <section id="section_6" class="section-container">
         <h2>Un drame en deux actes</h2>
         <div class="two-columns">
@@ -697,7 +691,6 @@
           terriblement léthaux...
         </p>
       </section>
-
       <section id="section_7" class="section-container">
         <h2>Que retenir ?</h2>
         <h3>
