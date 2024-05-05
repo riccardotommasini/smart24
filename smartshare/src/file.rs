@@ -3,7 +3,11 @@ use std::fmt::Display;
 use anyhow::ensure;
 use operational_transform::{Operation, OperationSeq};
 use ropey::Rope;
+use tracing::info;
 
+use crate::protocol::msg::TextModification;
+
+#[derive(Clone)]
 pub struct File {
     content: Rope,
 }
@@ -15,7 +19,7 @@ impl File {
         }
     }
 
-    pub fn apply(&mut self, seq: OperationSeq) -> anyhow::Result<()> {
+    pub fn apply(&mut self, seq: &OperationSeq) -> anyhow::Result<()> {
         ensure!(
             seq.base_len() == self.content.len_chars(),
             "Operation base len does not match file len"
@@ -30,7 +34,7 @@ impl File {
                 }
                 Operation::Insert(str) => {
                     self.content.insert(pos, str);
-                    pos += str.len();
+                    pos += str.chars().count();
                 }
             }
         }
@@ -39,6 +43,27 @@ impl File {
         debug_assert_eq!(self.content.len_chars(), seq.target_len());
 
         Ok(())
+    }
+
+    pub fn len_chars(&self) -> usize {
+        self.content.len_chars()
+    }
+
+    pub fn byte_to_char(&self, modif: &mut TextModification) {
+        modif.delete = self
+            .content
+            .byte_slice(modif.offset as usize..modif.offset as usize + modif.delete as usize)
+            .len_chars() as u64;
+
+        modif.offset = self.content.byte_slice(..modif.offset as usize).len_chars() as u64;
+    }
+
+    pub fn char_to_byte(&self, modif: &mut TextModification) {
+        modif.delete = self
+            .content
+            .slice(modif.offset as usize..modif.offset as usize + modif.delete as usize)
+            .len_bytes() as u64;
+        modif.offset = self.content.slice(..modif.offset as usize).len_bytes() as u64;
     }
 }
 
@@ -63,7 +88,7 @@ mod test {
         let mut ops = OperationSeq::default();
         ops.retain(11);
 
-        let res = file.apply(ops);
+        let res = file.apply(&ops);
 
         assert!(res.is_ok());
 
@@ -77,7 +102,7 @@ mod test {
         ops.retain(5);
         ops.delete(6);
 
-        let res = file.apply(ops);
+        let res = file.apply(&ops);
 
         assert!(res.is_ok());
 
@@ -90,13 +115,12 @@ mod test {
         let mut ops = OperationSeq::default();
         ops.insert("Hello world");
 
-        let res = file.apply(ops);
+        let res = file.apply(&ops);
 
         assert!(res.is_ok());
 
         assert_eq!(&file.to_string(), "Hello world");
     }
-
 
     #[test]
     fn apply_all() {
@@ -106,7 +130,7 @@ mod test {
         ops.insert("Smart");
         ops.delete(5);
 
-        let res = file.apply(ops);
+        let res = file.apply(&ops);
 
         assert!(res.is_ok());
 
@@ -120,7 +144,7 @@ mod test {
         ops.insert("Smart");
         ops.delete(5);
 
-        let res = file.apply(ops);
+        let res = file.apply(&ops);
 
         assert!(res.is_err());
 

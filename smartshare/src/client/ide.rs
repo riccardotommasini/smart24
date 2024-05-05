@@ -11,7 +11,10 @@ impl Ide {
         Self { sender }
     }
 
-    pub async fn send(&self, message: MessageIde) -> anyhow::Result<()> {
-        self.sender.send(message).await.map_err(Into::into)
+    pub async fn send(&mut self, message: MessageIde) {
+        self.sender
+            .send(message)
+            .await
+            .expect("stdout should not fail");
     }
 }
