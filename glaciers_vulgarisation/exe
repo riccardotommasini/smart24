@@ -1,2 +1,2 @@
-flask --app api init-db
+
 flask --app api run --debug
