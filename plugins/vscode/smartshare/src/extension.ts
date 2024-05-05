@@ -2,17 +2,18 @@ import * as vscode from 'vscode';
 import { logClient, logServer } from './utils';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import { Ack, Declare, File, Message, RequestFile, TextModification, Update, isMessage, matchMessage } from './message';
-import { on } from 'events';
 
 let waitingAcks = 0;
-//let changes_to_discard = new Array();
-let clientProc: ChildProcessWithoutNullStreams | undefined = undefined;
-let serverProc: ChildProcessWithoutNullStreams | undefined = undefined;
-let disposable: vscode.Disposable | undefined = undefined;
-let exePath = __dirname + '/../../../../smartshare/target/debug/';
+let clientProc: ChildProcessWithoutNullStreams | undefined;
+let serverProc: ChildProcessWithoutNullStreams | undefined;
+let disposable: vscode.Disposable | undefined;
 let statusBarItem: vscode.StatusBarItem;
 let init = true;
 let ignoreNextEvent = false;
+
+const EXE_PATH = __dirname + '/../../../../smartshare/target/debug/';
+const DEFAULT_ADDR = "127.0.0.1";
+const DEFAULT_PORT = "4903";
 
 function procWrite(proc: ChildProcessWithoutNullStreams, message: Message): void {
     logClient.debug("Send message", JSON.stringify(message));
@@ -20,7 +21,6 @@ function procWrite(proc: ChildProcessWithoutNullStreams, message: Message): void
 }
 
 async function applyChange(change: TextModification): Promise<boolean> {
-    //changes_to_discard.push(JSON.stringify(change));
     ignoreNextEvent = true;
     return await change.write();
 }
@@ -75,6 +75,7 @@ function handleMessage(data: Message) {
                 return;
             }
             vscode.window.showInformationMessage("Created a SmartShare session");
+            statusBarItem.text = "Connected";
             procWrite(clientProc, {
                 action: "file",
                 file: vscode.window.activeTextEditor.document.getText()
@@ -82,7 +83,8 @@ function handleMessage(data: Message) {
             init = false;
         },
         (file: File) => {
-            vscode.window.showInformationMessage("Connected to Smartshare session");
+            vscode.window.showInformationMessage("Connected to the SmartShare session");
+            statusBarItem.text = "Connected";
             ignoreNextEvent = false;
             new TextModification(0, editor?.document.getText().length || 0, file.file).write()
                 .then(() => { init = false });
@@ -135,17 +137,19 @@ function startClient(addr: string) {
         return;
     }
 
-    let client = spawn(exePath + "client", [addr], { env: { RUST_LOG: 'trace' } });
+    let client = spawn(
+        EXE_PATH + "client",
+        [addr + ":" + DEFAULT_PORT],
+        { env: { RUST_LOG: 'trace' } }
+    );
     clientProc = client;
 
     client.on('error', () => {
-        vscode.window.showInformationMessage("Failed to start client")
+        vscode.window.showErrorMessage("Failed to start the SmartShare client")
     });
 
     client.on('spawn', () => {
         logClient.info(`Launched client subprocess at pid ${client.pid}`);
-        statusBarItem.text = "Connected";
-
         client.stdout.setEncoding("utf8");
         const message: Declare = { action: "declare", offset_format: "chars" };
         procWrite(client, message);
@@ -163,9 +167,9 @@ function startClient(addr: string) {
         client.removeAllListeners();
         disposable?.dispose();
         if (signal == "SIGTERM") {
-            vscode.window.showInformationMessage("Disconnected from Smartshare session");
+            vscode.window.showInformationMessage("Disconnected from SmartShare session");
         } else {
-            vscode.window.showErrorMessage("Disconnected from Smartshare session");
+            vscode.window.showErrorMessage("Disconnected from the SmartShare session");
         }
         statusBarItem.text = "Disconnected";
         clientProc = undefined;
@@ -177,15 +181,18 @@ function startClient(addr: string) {
 
 function startServer(onServerStart: () => void) {
     if (serverProc) {
-        vscode.window.showInformationMessage("Already hosting a session")
+        vscode.window.showInformationMessage("Already hosting a SmartShare session")
         return;
     }
 
-    const server = spawn(exePath + "server", [], { env: { RUST_LOG: 'trace' } });
+    const server = spawn(
+        EXE_PATH + "server", [],
+        { env: { RUST_LOG: 'trace' } }
+    );
     serverProc = server;
 
     server.on('error', () => {
-        vscode.window.showInformationMessage("Failed to start server")
+        vscode.window.showErrorMessage("Failed to start the SmartShare server")
     });
 
     server.on('spawn', () => {
@@ -200,7 +207,7 @@ function startServer(onServerStart: () => void) {
         logServer.subprocess(data + "");
     });
 
-    server.on('close', (code: number, signal: string) => {
+    server.on('close', () => {
         server.removeAllListeners();
         serverProc = undefined;
     });
@@ -209,15 +216,14 @@ function startServer(onServerStart: () => void) {
 
 export async function activate(context: vscode.ExtensionContext) {
 
-    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    statusBarItem.text = "Disconnected";
+    statusBarItem = vscode.window.createStatusBarItem("Disconnected", vscode.StatusBarAlignment.Right, 100);
     statusBarItem.show();
 
 
     context.subscriptions.push(vscode.commands.registerCommand('smartshare.createSession', () => {
         startServer(() => {
             setTimeout(() => {
-                startClient("127.0.0.1:4903")
+                startClient(DEFAULT_ADDR)
             }, 100);
         });
     }));
@@ -228,7 +234,7 @@ export async function activate(context: vscode.ExtensionContext) {
             return;
         }
         const addr = await vscode.window.showInputBox(
-            { prompt: "IP Address", value: "127.0.0.1", placeHolder: "127.0.0.1"}
+            { prompt: "IP Address", value: DEFAULT_ADDR, placeHolder: DEFAULT_ADDR}
         );
         if (!addr) {
             return;
@@ -252,7 +258,7 @@ export async function activate(context: vscode.ExtensionContext) {
         if (clientProc) {
             clientProc.kill();
         } else {
-            vscode.window.showErrorMessage("Already disconnected");
+            vscode.window.showWarningMessage("Already disconnected from SmartShare");
         }
 
         if (serverProc) {
