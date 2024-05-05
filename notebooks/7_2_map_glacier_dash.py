@@ -7,7 +7,7 @@ import numpy as np
 
 df_glacier = pd.read_csv('../DOI-WGMS-FoG-2024-01/data/glacier.csv')
 df_glacier_id_lut = pd.read_csv('../DOI-WGMS-FoG-2024-01/data/glacier_id_lut.csv')
-df_state = pd.read_csv('../../DOI-WGMS-FoG-2024-01/data/state.csv')
+df_state = pd.read_csv('../DOI-WGMS-FoG-2024-01/data/state.csv')
 df_state.shape
 
 df_glacier_selected = df_glacier[['NAME', 'WGMS_ID', 'LATITUDE', 'LONGITUDE', 'GLACIER_REGION_CODE', 'POLITICAL_UNIT', 'GEN_LOCATION']]
