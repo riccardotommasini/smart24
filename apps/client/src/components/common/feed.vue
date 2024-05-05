@@ -1,18 +1,20 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <!-- eslint-disable vue/require-v-for-key -->
 <script setup>
+import { onMounted } from 'vue';
 import post from '../post.vue'
 
 const props = defineProps({
-    posts: Array
+    posts: Array,
+    isFactChecker: Boolean
 })
 
 </script>
 
 <template>
     <div class="feed">
-        <div class="posts" v-for="(item,index) in  props.posts[0]" key="index">
-            <post :info="item"></post>
+        <div class="posts" v-for="(item) in  props.posts">
+            <post :info="item" :userIsFactChecker="isFactChecker"></post>
         </div>
     </div>
 </template>

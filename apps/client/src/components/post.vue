@@ -2,20 +2,26 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useUserInfoStore } from "../stores/userInfo";
+import FeedComment from "./FeedComment.vue";
+import modal from "./pop-ups/modal.vue";
 
 const props = defineProps({
     info: {
-        date: Date,
+        _id: Object,
         createdBy: Object,
+        date: Date,
+        direct: Number,
         metrics: Object,
-        image: String,
         text: String,
-    }
+    },
+    userIsFactChecker: Boolean
 });
 
+const loadComments = ref(false)
+
 const store = useUserInfoStore();
-const userInfo = useUserInfoStore.getUserInfo;
-const userIsFactChecker = userInfo.isFactChecker === "true" ? true : false;
+const userInfo = store.getUserInfo;
+const id = userInfo._id;
 
 const metric = ref('');
 const likedBy = ref(false);
@@ -34,6 +40,10 @@ onMounted(async () => {
     metric.value = await getMetrics();
     checkIfUserHasLiked(metric.value);
 });
+
+const openCommentsPanel = () => {
+    loadComments.value = true
+}
 
 async function getMetrics() {
     const res = await axios.get(`/posts/${props.info._id}/metrics`);
@@ -71,11 +81,7 @@ async function factCheckPost() {
 }
 
 function checkIfUserHasLiked(list) {
-    // Récupérer les informations de l'utilisateur
-    const userInfo = store.getUserInfo;
-    const id = userInfo._id;
     // Initialiser les indicateurs de like à false
-        
     likedBy.value=false;
     unlikedBy.value=false;
     trustedBy.value=false;
@@ -123,13 +129,11 @@ function checkIfUserHasLiked(list) {
 
             </div>
             <div class="post-content">
-                <p class="std"> {{info.text}}
-                </p>
-                <img v-if="post.image" :src="post.image" alt="post-image" class="post-image">
+                <p class="std"> {{info.text}}</p>
             </div>
             <div class="post-footer">
                 <div class="post-footer-left"> 
-                    <div v-if="userIsFactChecker" class="comment-icon-container">          
+                    <div v-if="props.userIsFactChecker" class="comment-icon-container">          
                         <button  class="material-symbols-outlined button-post" @click="factCheckPost">
                             verified
                         </button> 
@@ -174,7 +178,7 @@ function checkIfUserHasLiked(list) {
                     </div>
 
                     <div class="comment-icon-container">
-                        <button class="material-symbols-outlined button-post">
+                        <button class="material-symbols-outlined button-post" @click="openCommentsPanel">
                         comment
                         </button>  
                         <div class="comment-count-bubble">{{metric.nbComments}}</div>
@@ -185,7 +189,7 @@ function checkIfUserHasLiked(list) {
         </div>
     </div>
     <div v-if="loadComments">
-        <modal><FeedComment :parentPostId="post._id"></FeedComment></modal>
+        <modal><FeedComment :parentPostId="info._id"></FeedComment></modal>
     </div>
 
 

@@ -25,9 +25,8 @@ export class AuthService {
             return {
                 user: {
                     _id: foundUser._id.toString(),
-                    name: foundUser.name,
-                    surname: foundUser.surname,
                     username: foundUser.username,
+                    factChecker: foundUser.factChecker,
                 },
                 token: this.createSessionToken(foundUser),
             };
@@ -49,9 +48,8 @@ export class AuthService {
         return {
             user: {
                 _id: createdUser._id.toString(),
-                name: createdUser.name,
-                surname: createdUser.surname,
                 username: createdUser.username,
+                factChecker: createdUser.factChecker
             },
             token: this.createSessionToken(createdUser),
         };

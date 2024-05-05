@@ -22,7 +22,7 @@ export interface IUser extends Document {
 export type IUserCreation = Pick<IUser, 'username' | 'mail'> & { password: string } & Partial<IUser>;
 
 export interface IUserSession {
-    user: Pick<IUser, 'username' | 'name' | 'surname'> & { _id: string };
+    user: Pick<IUser, 'username' | 'factChecker'> & { _id: string };
     token: string;
 }
 

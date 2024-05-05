@@ -9,7 +9,7 @@ const props = defineProps([
 ]);
 
 const comments = ref();
-let commentText;
+let commentText = defineModel('commentText');
 
 const loadComments = ref(false);
 

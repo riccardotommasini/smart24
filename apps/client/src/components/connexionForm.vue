@@ -11,6 +11,7 @@ const password = ref('');
 
 async function login() {
     const res = await tokenStore.login({username : username.value, password : password.value});
+    console.log(res.data.user)
     userInfoStore.update(res.data.user);
     window.location.href = '/homepage';
 }

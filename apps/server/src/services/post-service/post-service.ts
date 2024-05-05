@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import { Document } from 'mongoose';
-import { container, inject, injectable, singleton } from 'tsyringe';
+import { singleton } from 'tsyringe';
 import { Comment, CommentDocument, ICreateComment } from '../../models/comment';
 import { HttpException } from '../../models/http-exception';
 import { Metrics } from '../../models/metrics';
@@ -9,7 +9,6 @@ import { NonStrictObjectId } from '../../utils/objectid';
 import { UserService } from '../user-service';
 import { AlgoSuggestion, IAlgoSuggestionOther } from '../../models/algo/algo-suggestion';
 
-@injectable()
 @singleton()
 export class PostService {
     constructor(private readonly userService: UserService) {}
@@ -55,7 +54,9 @@ export class PostService {
     }
 
     async getPost(postId: NonStrictObjectId): Promise<Document & IPost> {
-        const post = await Post.findOne({ _id: postId });
+        const post = await Post.findOne({ _id: postId })
+            .populate('createdBy', 'username _id')
+            .populate('metrics');
 
         if (!post) {
             throw new HttpException(StatusCodes.NOT_FOUND, `No post found with ID ${postId}`);
@@ -100,6 +101,25 @@ export class PostService {
             const nbSuggToAdd = 200 - nbSuggestions;
             const pipeline = [
                 { '$sample': { 'size': nbSuggToAdd } },
+                { $lookup: {
+                    from: "users",
+                    localField: "createdBy",
+                    foreignField: "_id",
+                    as: "createdBy"
+                  }
+                },
+                { $project: {
+                    username: "$createdBy.username",
+                    _id: "$createdBy._id"
+                  }
+                },
+                { $lookup: {
+                    from: "metrics",
+                    localField: "_id",
+                    foreignField: "postId",
+                    as: "metrics"
+                  }
+                },
                 { '$limit': nbSuggToAdd }
               ]
             

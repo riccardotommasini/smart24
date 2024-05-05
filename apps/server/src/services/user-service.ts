@@ -1,23 +1,14 @@
 import bcryptjs from 'bcryptjs';
 import User, { IUser, IUserCreation } from '../models/user';
 import { Post, IPost } from '../models/post';
-import { ClassProvider, container, inject, injectable, singleton } from 'tsyringe';
+import { singleton } from 'tsyringe';
 import { StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 import { Document, Types, UpdateQuery } from 'mongoose';
-import { singleton } from 'tsyringe';
 import { HttpException } from '../models/http-exception';
-import { Post } from '../models/post';
-import User, { IUser, IUserCreation } from '../models/user';
-import { env } from '../utils/env';
 import { NonStrictObjectId, toObjectId } from '../utils/objectid';
-import bcryptjs from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { env } from '../utils/env';
-import { AlgoSuggestion, IAlgoSuggestion, IAlgoSuggestionOther } from '../models/algo/algo-suggestion';
-import { PostService } from './post-service/post-service';
 
-@injectable()
 @singleton()
 export class UserService {
 
@@ -32,33 +23,6 @@ export class UserService {
         }
 
         return user;
-    }
-
-    public async login(username: string, password: string) {
-        const foundUser = await User.findOne({ username });
-
-        if (!foundUser) {
-            throw new Error('UserName of user is not correct');
-        }
-
-        const isMatch = bcryptjs.compareSync(password, foundUser.passwordHash);
-
-        if (isMatch) {
-            const token = jwt.sign({ _id: foundUser._id?.toString(), name: foundUser.name }, env.SECRET_KEY, {
-                expiresIn: '2 days',
-            });
-
-            return {
-                user: {
-                    id: foundUser._id,
-                    name: foundUser.name,
-                    isFactChecker: foundUser.factChecker,
-                },
-                token: token,
-            };
-        } else {
-            throw new Error('Password is not correct');
-        }
     }
 
     async createUser(user: IUserCreation): Promise<IUser & Document> {

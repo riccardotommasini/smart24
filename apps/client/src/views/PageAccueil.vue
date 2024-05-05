@@ -14,6 +14,7 @@ const store = useUserInfoStore();
 
 const userId = ref('')
 const username = ref('');
+const userIsFactChecker = ref()
 const posts=ref<any[]>([]);;
 const showCreateNewPost = ref(false);
 
@@ -26,26 +27,16 @@ onMounted(async () => {
 
     userId.value = userInfo._id!;
     username.value = userInfo.username!;
+    userIsFactChecker.value = userInfo.isFactChecker === "true" ? true : false;
 
     try {
-        const array = await getPosts();
-        posts.value = array;
+        posts.value = (await axios.get('/posts/getSuggestions')).data.suggestions;
+        console.log(posts.value)
         loadFeed.value = true;
     } catch (error) {
         console.error("Erreur lors de la récupération des posts :", error);
     }
-
-
 });
-
-
-//Function to get posts
-async function getPosts() {
-    posts.value = (await axios.get('/posts/getSuggestions')).data.suggestions;
-    return posts.value;
-}
-
-
 </script>
 
 <template>
@@ -55,7 +46,7 @@ async function getPosts() {
         </header>
         <div class="screen">
             <button class="btn btn-primary b" @click="switchShowCreateNewPost">Post</button>
-            <feed :posts="posts"></feed>
+            <feed v-if="loadFeed" :posts="posts" :isFactChecker="userIsFactChecker"></feed>
             <modal v-if="showCreateNewPost" @close="switchShowCreateNewPost">
                 <NewPost @postStatus="handlePostStatus"/>
             </modal>
