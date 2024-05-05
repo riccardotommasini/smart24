@@ -162,7 +162,7 @@ mod test {
     }
 
     #[tokio::test]
-    async fn ide_change() {
+    async fn ide_change_chars() {
         let (server_sender, mut server_receiver) = tokio::sync::mpsc::channel(8);
         let (ide_sender, mut ide_receiver) = tokio::sync::mpsc::channel(8);
         let mut client = Client::new(Server::new(server_sender), Ide::new(ide_sender), 0);
@@ -171,7 +171,7 @@ mod test {
 
         client
             .on_message_server(MessageServer::File {
-                file: "hello world".into(),
+                file: "çalùt monde".into(),
                 version: 4,
             })
             .await;
@@ -179,7 +179,7 @@ mod test {
         assert_eq!(
             ide_receiver.try_recv(),
             Ok(MessageIde::File {
-                file: "hello world".into()
+                file: "çalùt monde".into()
             })
         );
 
@@ -195,22 +195,22 @@ mod test {
                     TextModification {
                         offset: 0,
                         delete: 1,
-                        text: "H".into(),
+                        text: "Ç".into(),
                     },
                     TextModification {
                         offset: 6,
                         delete: 1,
-                        text: "W".into(),
+                        text: "M".into(),
                     },
                 ],
             })
             .await;
 
         let mut server_modif = OperationSeq::default();
-        server_modif.insert("H");
+        server_modif.insert("Ç");
         server_modif.delete(1);
         server_modif.retain(5);
-        server_modif.insert("W");
+        server_modif.insert("M");
         server_modif.delete(1);
         server_modif.retain(4);
 
@@ -223,6 +223,208 @@ mod test {
         );
 
         assert_eq!(ide_receiver.try_recv(), Ok(MessageIde::Ack));
+
+        // server ack
+
+        client.on_message_server(MessageServer::Ack).await;
+    }
+
+    #[tokio::test]
+    async fn ide_change_bytes() {
+        let (server_sender, mut server_receiver) = tokio::sync::mpsc::channel(8);
+        let (ide_sender, mut ide_receiver) = tokio::sync::mpsc::channel(8);
+        let mut client = Client::new(Server::new(server_sender), Ide::new(ide_sender), 0);
+
+        // simple connexion with format decl
+
+        client
+            .on_message_server(MessageServer::File {
+                file: "çalùt monde".into(),
+                version: 4,
+            })
+            .await;
+
+        assert_eq!(
+            ide_receiver.try_recv(),
+            Ok(MessageIde::File {
+                file: "çalùt monde".into()
+            })
+        );
+
+        client
+            .on_message_ide(MessageIde::Declare(Format::Bytes))
+            .await;
+
+        // ide change
+
+        client
+            .on_message_ide(MessageIde::Update {
+                changes: vec![
+                    TextModification {
+                        offset: 0,
+                        delete: 2,
+                        text: "Ç".into(),
+                    },
+                    TextModification {
+                        offset: 8,
+                        delete: 1,
+                        text: "M".into(),
+                    },
+                ],
+            })
+            .await;
+
+        let mut server_modif = OperationSeq::default();
+        server_modif.insert("Ç");
+        server_modif.delete(1);
+        server_modif.retain(5);
+        server_modif.insert("M");
+        server_modif.delete(1);
+        server_modif.retain(4);
+
+        assert_eq!(
+            server_receiver.try_recv(),
+            Ok(MessageServer::ServerUpdate(ModifRequest {
+                delta: server_modif,
+                rev_num: 4
+            }))
+        );
+
+        assert_eq!(ide_receiver.try_recv(), Ok(MessageIde::Ack));
+
+        // server ack
+
+        client.on_message_server(MessageServer::Ack).await;
+    }
+
+    #[tokio::test]
+    async fn server_change_chars() {
+        let (server_sender, mut server_receiver) = tokio::sync::mpsc::channel(8);
+        let (ide_sender, mut ide_receiver) = tokio::sync::mpsc::channel(8);
+        let mut client = Client::new(Server::new(server_sender), Ide::new(ide_sender), 0);
+
+        // simple connexion with format decl
+
+        client
+            .on_message_server(MessageServer::File {
+                file: "çalùt monde".into(),
+                version: 4,
+            })
+            .await;
+
+        assert_eq!(
+            ide_receiver.try_recv(),
+            Ok(MessageIde::File {
+                file: "çalùt monde".into()
+            })
+        );
+
+        client
+            .on_message_ide(MessageIde::Declare(Format::Chars))
+            .await;
+
+        // server change
+        let mut server_modif = OperationSeq::default();
+        server_modif.insert("Ç");
+        server_modif.delete(1);
+        server_modif.retain(5);
+        server_modif.insert("M");
+        server_modif.delete(1);
+        server_modif.retain(4);
+
+        client
+            .on_message_server(MessageServer::ServerUpdate(ModifRequest {
+                delta: server_modif,
+                rev_num: 5,
+            }))
+            .await;
+
+        assert_eq!(
+            ide_receiver.try_recv(),
+            Ok(MessageIde::Update {
+                changes: vec![
+                    TextModification {
+                        offset: 0,
+                        delete: 1,
+                        text: "Ç".into(),
+                    },
+                    TextModification {
+                        offset: 6,
+                        delete: 1,
+                        text: "M".into(),
+                    },
+                ],
+            })
+        );
+
+        // ide ack
+
+        client.on_message_ide(MessageIde::Ack).await;
+    }
+
+    #[tokio::test]
+    async fn server_change_bytes() {
+        let (server_sender, mut server_receiver) = tokio::sync::mpsc::channel(8);
+        let (ide_sender, mut ide_receiver) = tokio::sync::mpsc::channel(8);
+        let mut client = Client::new(Server::new(server_sender), Ide::new(ide_sender), 0);
+
+        // simple connexion with format decl
+
+        client
+            .on_message_server(MessageServer::File {
+                file: "çalùt monde".into(),
+                version: 4,
+            })
+            .await;
+
+        assert_eq!(
+            ide_receiver.try_recv(),
+            Ok(MessageIde::File {
+                file: "çalùt monde".into()
+            })
+        );
+
+        client
+            .on_message_ide(MessageIde::Declare(Format::Bytes))
+            .await;
+
+        // server change
+        let mut server_modif = OperationSeq::default();
+        server_modif.insert("Ç");
+        server_modif.delete(1);
+        server_modif.retain(5);
+        server_modif.insert("M");
+        server_modif.delete(1);
+        server_modif.retain(4);
+
+        client
+            .on_message_server(MessageServer::ServerUpdate(ModifRequest {
+                delta: server_modif,
+                rev_num: 5,
+            }))
+            .await;
+
+        assert_eq!(
+            ide_receiver.try_recv(),
+            Ok(MessageIde::Update {
+                changes: vec![
+                    TextModification {
+                        offset: 0,
+                        delete: 2,
+                        text: "Ç".into(),
+                    },
+                    TextModification {
+                        offset: 8,
+                        delete: 1,
+                        text: "M".into(),
+                    },
+                ],
+            })
+        );
+
+        // ide ack
+
+        client.on_message_ide(MessageIde::Ack).await;
     }
 
     #[tokio::test]
@@ -312,6 +514,12 @@ mod test {
                 }]
             })
         );
+
+        // ide & server ack
+
+        client.on_message_ide(MessageIde::Ack).await;
+
+        client.on_message_server(MessageServer::Ack).await;
     }
 
     #[tokio::test]
@@ -390,6 +598,12 @@ mod test {
                 }]
             })
         );
+
+        // ide & server ack
+
+        client.on_message_ide(MessageIde::Ack).await;
+
+        client.on_message_server(MessageServer::Ack).await;
     }
 
     #[tokio::test]
@@ -589,5 +803,9 @@ mod test {
                 }]
             })
         );
+
+        // server ack
+
+        client.on_message_server(MessageServer::Ack).await;
     }
 }
