@@ -3,6 +3,7 @@
     overflow: hidden;
     border: 1px solid #f7f7f2;
     background-color: #52708d;
+    margin:12px;
   }
   
   .tab a {
@@ -23,12 +24,27 @@
   .tabcontent {
     display: none;
     padding: 6px 12px;
-    border: 1px solid #f7f7f2;
-    border-top: none;
+  }
+
+  #glacier-ela1
+  {
+    display: block;
   }
 
   #glacier1
   {
     display: block;
   }
+
+  #mdg1{
+    display: block;
+  }
+
+  #volume-1{
+    display: block;
+  }
   
+  
+  .volume-1-585{
+    display: block;
+  }

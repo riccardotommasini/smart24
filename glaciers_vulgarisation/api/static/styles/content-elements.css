@@ -54,5 +54,3 @@
 .translate3d:hover {
   transform: scale3d(1.5, 1.5, 3) translate(-10%, -8%); 
 }
-
-
