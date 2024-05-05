@@ -36,7 +36,7 @@ class RustLog {
         this.output.show(true);
     }
 
-    subprocess(pid: number, ...msg: [unknown, ...unknown[]]) : void {
+    subprocess(...msg: [unknown, ...unknown[]]) : void {
         this.output.appendLine(msg.map(this.stringify).join(" "));
     }
 
