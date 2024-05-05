@@ -1,93 +1,25 @@
 
 //-------- Faire afficher le bon graphe selon le scénario choisi ----------
-
-// Récupérer les éléments de l'animation container
-const evolutionContainer11 = document.getElementById("evolution_container_11");
-const evolutionContainer12 = document.getElementById("evolution_container_12");
-const evolutionContainer13 = document.getElementById("evolution_container_13");
-const evolutionContainer14 = document.getElementById("evolution_container_14");
-
-const evolutionContainer21 = document.getElementById("evolution_container_21");
-const evolutionContainer22 = document.getElementById("evolution_container_22");
-const evolutionContainer23 = document.getElementById("evolution_container_23");
-const evolutionContainer24 = document.getElementById("evolution_container_24");
-
-const evolutionContainer31 = document.getElementById("evolution_container_31");
-const evolutionContainer32 = document.getElementById("evolution_container_32");
-const evolutionContainer33 = document.getElementById("evolution_container_33");
-const evolutionContainer34 = document.getElementById("evolution_container_34");
-
-// Récupérer les éléments d'options de température
 const temperatureOptions = document.querySelectorAll(".temperature-option input[type='radio']");
+const glaciers = ["mdg", "lasneous", "perito_moreno", "ross", "sturgel"];
+const temperatures = ["1_5", "2", "3", "4"];
+
 
 // Fonction pour afficher l'animation correspondante à l'option sélectionnée
 function afficherAnimation() {
-    if (this.value === "1.5") {
-        // evolutionContainer11.style.display = "block";
-        // evolutionContainer21.style.display = "block";
-        // evolutionContainer31.style.display = "block";
-
-        // evolutionContainer12.style.display = "none";
-        // evolutionContainer22.style.display = "none";
-        // evolutionContainer32.style.display = "none";
-
-        // evolutionContainer13.style.display = "none";
-        // evolutionContainer23.style.display = "none";
-        // evolutionContainer33.style.display = "none";
-
-        // evolutionContainer14.style.display = "none";
-        // evolutionContainer24.style.display = "none";
-        // evolutionContainer34.style.display = "none";
-    } else if (this.value === "2") {
-        // evolutionContainer11.style.display = "none";
-        // evolutionContainer21.style.display = "none";
-        // evolutionContainer31.style.display = "none";
-
-        // evolutionContainer12.style.display = "block";
-        // evolutionContainer22.style.display = "block";
-        // evolutionContainer32.style.display = "block";
-
-        // evolutionContainer13.style.display = "none";
-        // evolutionContainer23.style.display = "none";
-        // evolutionContainer33.style.display = "none";
-
-        // evolutionContainer14.style.display = "none";
-        // evolutionContainer24.style.display = "none";
-        // evolutionContainer34.style.display = "none";
-    } else if (this.value === "3") {
-        // evolutionContainer11.style.display = "none";
-        // evolutionContainer21.style.display = "none";
-        // evolutionContainer31.style.display = "none";
-
-        // evolutionContainer12.style.display = "none";
-        // evolutionContainer22.style.display = "none";
-        // evolutionContainer32.style.display = "none";
-
-        // evolutionContainer13.style.display = "block";
-        // evolutionContainer23.style.display = "block";
-        // evolutionContainer33.style.display = "block";
-
-        // evolutionContainer14.style.display = "none";
-        // evolutionContainer24.style.display = "none";
-        // evolutionContainer34.style.display = "none";
-    }else if (this.value === "4") {
-        // evolutionContainer11.style.display = "none";
-        // evolutionContainer21.style.display = "none";
-        // evolutionContainer31.style.display = "none";
-
-        // evolutionContainer12.style.display = "none";
-        // evolutionContainer22.style.display = "none";
-        // evolutionContainer32.style.display = "none";
-
-        // evolutionContainer13.style.display = "none";
-        // evolutionContainer23.style.display = "none";
-        // evolutionContainer33.style.display = "none";
-
-        // evolutionContainer14.style.display = "block";
-        // evolutionContainer24.style.display = "block";
-        // evolutionContainer34.style.display = "block";
-    }
+    const temperature = (parseFloat(this.value)!=1.5)?this.value:"1_5";
+    console.log(temperature)
+    glaciers.forEach(glacier => {
+        temperatures.forEach(temp => {
+            const containerId = `evolution_container_${glacier}_${temp}`;
+            console.log(containerId)
+            const container = document.getElementById(containerId);
+            container.style.display = (temperature === temp) ? "block" : "none";
+        });
+    });
 }
+
+
 
 // Ajouter des écouteurs d'événements sur les options de température
 temperatureOptions.forEach(option => {

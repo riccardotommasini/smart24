@@ -69,3 +69,32 @@ img{
       align-self: center;
       box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
+.focus
+{
+      border:#160f29 1px solid;
+      background:#52708d;
+      color: #160f29;
+      border-radius: 10px;
+      font-style: italic;
+      margin-bottom: 24px;
+      padding: 10px;
+      justify-content: center;
+      align-items: center;
+}
+
+.focus > .two-columns
+{
+      align-items: center;
+      justify-content: center;
+}
+
+footer{
+      background-color: #160f29;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+      grid-column: 2 / 3;
+}

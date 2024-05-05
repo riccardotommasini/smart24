@@ -77,21 +77,11 @@ nav ul label {
       border: 2px solid #160f29;
 }
 
-#evolution_container_11 {
+#evolution_container_mdg_1_5 {
       display: block;
-}
-
-#evolution_container_12,
-#evolution_container_13,
-#evolution_container_14,
-#evolution_container_21,
-#evolution_container_22,
-#evolution_container_23,
-#evolution_container_24,
-#evolution_container_31,
-#evolution_container_32,
-#evolution_container_33,
-#evolution_container_34{
+  }
+  
+[id^="evolution_container_"] {
       display: none;
 }
   
