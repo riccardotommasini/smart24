@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { logClient } from './utils';
+import { logClient, offsetToRange } from './utils';
 
-export type Message = Update | Declare | Error | RequestFile | File | Ack;
+export type Message = Update | Declare | Error | RequestFile | File | Ack | Cursor;
 
 export interface Update {
     action: "update"
@@ -19,23 +19,13 @@ export class TextModification {
         this.text = text;
     }
 
-    range(): vscode.Range {
-        const editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            throw new Error('No active text editor');
-        }
-        return new vscode.Range(
-            editor.document.positionAt(this.offset),
-            editor.document.positionAt(this.offset + this.delete)
-        );
-    }
-
     async write(): Promise<boolean> {
         const editor = vscode.window.activeTextEditor;
         if (editor) {
             //editor.selections = [...editor.selections, new vscode.Selection(0,0,0,1)]
             const success = await editor.edit((editBuilder: vscode.TextEditorEdit) => {
-                editBuilder.replace(this.range(), this.text);
+                const range = offsetToRange(editor, this.offset, this.delete);
+                editBuilder.replace(range, this.text);
             });
             if (!success) {
                 logClient.error("Unable to apply change", this)
@@ -69,8 +59,15 @@ export interface Ack {
     action: "ack"
 }
 
+export interface Cursor {
+    action: "cursor"
+    id: number
+    offset: number
+    range: number
+}
+
 export function isMessage(object: any): object is Message {
-    return ["update", "declare", "error", "request_file", "file", "ack"].includes(object.action);
+    return ["update", "declare", "error", "request_file", "file", "ack", "cursor"].includes(object.action);
 }
 
 export function matchMessage(message: Message): any {
@@ -80,7 +77,8 @@ export function matchMessage(message: Message): any {
         onError: (x: Error) => any,
         onRequestFile: (x: RequestFile) => any,
         onFile: (x: File) => any,
-        onAck: (x: Ack) => any
+        onAck: (x: Ack) => any,
+        onCursor: (x: Cursor) => any,
     ) => {
         switch (message.action) {
             case "update":
@@ -95,6 +93,8 @@ export function matchMessage(message: Message): any {
                 return onFile(message);
             case "ack":
                 return onAck(message);
+            case "cursor":
+                return onCursor(message);
         }
     }
 }

@@ -1,5 +1,3 @@
-use std::mem::offset_of;
-
 use operational_transform::OperationSeq;
 use smartshare::file::File;
 use smartshare::protocol::msg::{MessageServer, ModifRequest};

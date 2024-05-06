@@ -1,47 +1,48 @@
 import * as vscode from 'vscode';
-import { logClient, logServer } from './utils';
+import { logClient, logServer, offsetToRange } from './utils';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
-import { Ack, Declare, File, Message, RequestFile, TextModification, Update, isMessage, matchMessage } from './message';
+import { Ack, Cursor, Declare, File, Message, RequestFile, TextModification, Update, isMessage, matchMessage } from './message';
 
 let waitingAcks = 0;
 let clientProc: ChildProcessWithoutNullStreams | undefined;
 let serverProc: ChildProcessWithoutNullStreams | undefined;
-let disposable: vscode.Disposable | undefined;
+let changeDocumentDisposable: vscode.Disposable;
+let changeSelectionsDisposable: vscode.Disposable;
 let statusBarItem: vscode.StatusBarItem;
 let init = true;
 let ignoreNextEvent = false;
 let decoration: vscode.TextEditorDecorationType;
+let cursorsDecorations: Map<number, vscode.Disposable> = new Map<number, vscode.Disposable>();
 
 const EXE_PATH = __dirname + '/../../../../smartshare/target/debug/';
 const DEFAULT_ADDR = "127.0.0.1";
 const DEFAULT_PORT = "4903";
+const CURSOR_COLORS = ["Salmon", "YellowGreen", "SteelBlue", "MediumOrchid", "DarkOrange", "Aqua"];
 
 function procWrite(proc: ChildProcessWithoutNullStreams, message: Message): void {
     logClient.debug("Send message", JSON.stringify(message));
     proc.stdin.write(JSON.stringify(message) + '\n');
 }
 
-function setCursor(color: string, position: vscode.Position) {
+function setCursor(clientId: number, range: vscode.Range) {
     const editor = vscode.window.activeTextEditor;
-    console.log("set cursor 2");
     if (!editor) {
         return;
     }
-    const range = new vscode.Range(position, position);
-    if (decoration) {
-        decoration.dispose();
-    }
+    const prevDecoration = cursorsDecorations.get(clientId);
     decoration = vscode.window.createTextEditorDecorationType({
         borderWidth: "0 2px 0 0",
         borderStyle: "solid",
-        borderColor: color,
+        borderColor: CURSOR_COLORS[clientId % CURSOR_COLORS.length],
+        backgroundColor: new vscode.ThemeColor("editor.selectionBackground"),
     });
-    editor.setDecorations(decoration, [range])
+    cursorsDecorations.set(clientId, decoration);
+    prevDecoration?.dispose()
+    editor.setDecorations(decoration, [range]);
 }
 
 async function applyChange(change: TextModification): Promise<boolean> {
     ignoreNextEvent = true;
-    setCursor("red", change.range().end);
     return await change.write();
 }
 
@@ -115,11 +116,17 @@ function handleMessage(data: Message) {
             } else {
                 waitingAcks--;
             }
+        },
+        (cursor: Cursor) => {
+            if (!editor) {
+                return;
+            }
+            setCursor(cursor.id, offsetToRange(editor, cursor.offset, cursor.range));
         }
     );
 }
 
-function changeDocumentHandler(event: vscode.TextDocumentChangeEvent): any {
+function changeDocumentHandler(event: vscode.TextDocumentChangeEvent): void {
 
     if (event.document.uri.path.startsWith("extension-output")) {
         return;
@@ -149,6 +156,24 @@ function changeDocumentHandler(event: vscode.TextDocumentChangeEvent): any {
     procWrite(clientProc, message);
     waitingAcks++;
 }
+
+function changeSelectionsHandler(event: vscode.TextEditorSelectionChangeEvent): void {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor || !clientProc) {
+        return;
+    }
+    const selection = event.selections[0];
+    const offset = event.textEditor.document.offsetAt(selection.active);
+    const range = event.textEditor.document.offsetAt(selection.anchor) - offset;
+    const message: Cursor = {
+        id: 0,
+        action: "cursor",
+        offset: offset,
+        range: range,
+    }
+    procWrite(clientProc, message);
+}
+
 
 function startClient(addr: string) {
 
@@ -185,7 +210,11 @@ function startClient(addr: string) {
 
     client.on('close', (code: number, signal: string) => {
         client.removeAllListeners();
-        disposable?.dispose();
+        changeDocumentDisposable?.dispose();
+        changeSelectionsDisposable?.dispose();
+        cursorsDecorations.forEach((decoration, _) => {
+            decoration.dispose();
+        })
         if (signal == "SIGTERM") {
             vscode.window.showInformationMessage("Disconnected from SmartShare session");
         } else {
@@ -195,7 +224,8 @@ function startClient(addr: string) {
         clientProc = undefined;
     });
 
-    disposable = vscode.workspace.onDidChangeTextDocument(changeDocumentHandler);
+    changeDocumentDisposable = vscode.workspace.onDidChangeTextDocument(changeDocumentHandler);
+    changeSelectionsDisposable = vscode.window.onDidChangeTextEditorSelection(changeSelectionsHandler);
 }
 
 
