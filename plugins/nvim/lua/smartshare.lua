@@ -8,12 +8,20 @@ local initialized = false
 local ack_waiting = 0
 local is_attached = false
 
+function line_col_to_byte_offset(line, col)
+    local line_start_offset = vim.api.nvim_buf_get_offset(buf, line)
+
+    local byte_offset = line_start_offset + col
+
+    return byte_offset
+end
+
 function M.get_line_column_from_byte_offset(byte_offset)
     local line = vim.fn.byte2line(byte_offset + 1) - 1
     if line < 0 then
         return 0, 0
     end
-    local line_start = vim.api.nvim_buf_get_offset(0, line)
+    local line_start = vim.api.nvim_buf_get_offset(buf, line)
     local col = byte_offset - line_start
     return line, col
 end
@@ -34,6 +42,7 @@ function connect(addr)
             for _, json_object in ipairs(data) do
                 if json_object ~= nil and json_object ~= '' then
                     local message = vim.json.decode(json_object)
+                    print("recv: ", vim.inspect(message))
 
                     if message.action == "update" and ack_waiting == 0 then
                         for _, change in ipairs(message.changes) do
@@ -67,6 +76,12 @@ function connect(addr)
                     if message.action == "ack" then
                         ack_waiting = ack_waiting - 1
                     end
+
+                    if message.action == "cursor" then
+                        for _, cursor in ipairs(message.cursors) do
+                            set_cursor(message.id, cursor.cursor, cursor.anchor)
+                        end
+                    end
                 end
             end
         end,
@@ -97,13 +112,6 @@ function attach()
             new_column,
             new_byte_len
         )
-            --[[
-            local extmark_opts =
-            { priority = 10, end_col = 6, hl_group = "TermCursor" }
-
-            vim.api.nvim_buf_set_extmark(buf, ns, 1, 5, extmark_opts)
-            ]]
-
             if is_user_input == false then
                 is_user_input = true
                 return
@@ -150,12 +158,25 @@ function attach()
 
             ack_waiting = ack_waiting + 1
             send_message(message)
+
+            --  local cursor_message = {
+            --      action = "cursor",
+            --      cursors = {
+            --          {
+            --              cursor = byte_offset,
+            --              anchor = 1,
+            --          }
+            --      }
+            --  }
+
+            --  send_message(cursor_message)
         end
     })
     is_attached = true
 end
 
 function send_message(message)
+    print("send: ", vim.inspect(message))
     local json = vim.json.encode(message)
     vim.fn.chansend(handle, json .. "\n")
 end
@@ -174,5 +195,61 @@ vim.api.nvim_create_user_command("SmartShareConnect", function(cmd)
         attach()
     end
 end, {})
+
+function set_cursor(id, offset, anchor)
+    local start_row, start_col = M.get_line_column_from_byte_offset(offset)
+    local end_row, end_col = M.get_line_column_from_byte_offset(offset + anchor)
+    local hl = vim.api.nvim_get_hl(0, { name = "SmartShareCursor" .. id })
+    if next(hl) == nil then
+        local r = string.format("%x", math.random(0, 255))
+        local g = string.format("%x", math.random(0, 255))
+        local b = string.format("%x", math.random(0, 255))
+        hl = vim.api.nvim_set_hl(0, "SmartShareCursor" .. id, { bg = "#" .. r .. g .. b })
+    end
+
+    local extmark_opts = {
+        id = id,
+        priority = 10,
+        end_row = end_row,
+        end_col = end_col,
+        hl_group = "SmartShareCursor" ..
+            id
+    }
+    vim.api.nvim_buf_set_extmark(buf, ns, start_row, start_col, extmark_opts)
+end
+
+function get_selection_offset()
+    local sel_pos = vim.fn.getpos('v')
+    print(vim.inspect(sel_pos))
+
+    local offset = line_col_to_byte_offset(sel_pos[2], sel_pos[3])
+
+    return offset
+end
+
+vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+    pattern = { "*" },
+    callback = function()
+        if initialized then
+            local cursor = vim.api.nvim_win_get_cursor(0)
+            print(vim.inspect(cursor))
+            local offset = math.max(0, line_col_to_byte_offset(cursor[1] - 1, cursor[2]))
+            print(vim.inspect(offset))
+
+            local cursor_message = {
+                action = "cursor",
+                cursors = {
+                    {
+                        cursor = offset,
+                        -- anchor = get_selection_offset() - offset,
+                        anchor = 1,
+                    }
+                }
+            }
+
+            send_message(cursor_message)
+        end
+    end
+})
 
 return M
