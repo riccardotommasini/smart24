@@ -10,6 +10,7 @@ let disposable: vscode.Disposable | undefined;
 let statusBarItem: vscode.StatusBarItem;
 let init = true;
 let ignoreNextEvent = false;
+let decoration: vscode.TextEditorDecorationType;
 
 const EXE_PATH = __dirname + '/../../../../smartshare/target/debug/';
 const DEFAULT_ADDR = "127.0.0.1";
@@ -27,8 +28,11 @@ function setCursor(color: string, position: vscode.Position) {
         return;
     }
     const range = new vscode.Range(position, position);
-    const decoration = vscode.window.createTextEditorDecorationType({
-        borderWidth: "0 1px 0 0",
+    if (decoration) {
+        decoration.dispose();
+    }
+    decoration = vscode.window.createTextEditorDecorationType({
+        borderWidth: "0 2px 0 0",
         borderStyle: "solid",
         borderColor: color,
     });
