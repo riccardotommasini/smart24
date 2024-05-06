@@ -23,7 +23,7 @@ pub enum MessageIde {
     RequestFile,
     File { file: String },
     Ack,
-    Cursor { id: usize, offset: u64, range: u64 },
+    Cursor { id: Option<usize>, offset: u64, range: u64 },
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]

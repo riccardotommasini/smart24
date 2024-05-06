@@ -258,7 +258,7 @@ impl Client {
 
     async fn on_server_cursor_move(&mut self, id: usize, offset: u64, range: u64) -> Result<()> {
         self.ide
-            .send(MessageIde::Cursor { id, offset, range })
+            .send(MessageIde::Cursor { id:Some(id), offset, range })
             .await;
         Ok(())
     }
