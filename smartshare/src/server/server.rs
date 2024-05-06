@@ -146,7 +146,7 @@ impl Server {
         self.file = Some(file);
     }
 
-    async fn on_cursor_move(&mut self, source_id: usize, offset: u64) {
+    async fn on_cursor_move(&mut self, source_id: usize, offset: u64, range: u64) {
         for client in self
             .clients
             .iter()
@@ -156,6 +156,7 @@ impl Server {
                 .send(MessageServer::Cursor {
                     id: source_id,
                     offset,
+                    range,
                 })
                 .await;
         }
@@ -167,7 +168,9 @@ impl Server {
         match message {
             MessageServer::ServerUpdate(req) => self.on_update(source_id, req).await,
             MessageServer::File { file, version } => self.on_file(source_id, file, version).await,
-            MessageServer::Cursor { offset, .. } => self.on_cursor_move(source_id, offset).await,
+            MessageServer::Cursor { offset, range, .. } => {
+                self.on_cursor_move(source_id, offset, range).await
+            }
             _ => warn!("Received unexpected message type {:?}", message),
         }
     }
