@@ -12,7 +12,7 @@
   display: flex;
   column-gap: 2rem;
   justify-content: start; /* Aligne les éléments au centre horizontalement */
-  /*align-items: center; /* Aligne les éléments au centre verticalement */
+  align-items: center; /* Aligne les éléments au centre verticalement */
   flex-wrap: wrap; /* Permet aux éléments de passer à la ligne lorsque l'espace est insuffisant */
 }
 
@@ -57,4 +57,13 @@
 
 td{
   padding: 0 12px;
+}
+
+.tabcontent{
+  width: 50%;
+}
+
+.evolution{
+  display: flex;
+  margin:0 15%;
 }

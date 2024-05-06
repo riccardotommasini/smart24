@@ -9,7 +9,7 @@ font-weight: bold;
 
 h2 {
 font-size: 48px;
-margin: 96px 0 48px 0;
+margin: 48px 0 48px 0;
 font-weight: 650;
 }
 
@@ -49,6 +49,10 @@ font-weight: 150;
 font-style: italic;
 text-align : center;
 margin: 1rem 0;
+}
+
+blockquote{
+      font-style: italic;
 }
 
 @media only screen and (max-width: 1200px) {
