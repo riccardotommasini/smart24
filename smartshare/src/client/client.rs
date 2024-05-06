@@ -3,7 +3,7 @@ use operational_transform::OperationSeq;
 use smartshare::{
     file::File,
     protocol::msg::{
-        modif_to_operation_seq, to_ide_changes, CursorInfo, Format, MessageIde, MessageServer,
+        modif_to_operation_seq, to_ide_changes, CursorsInfo, Format, MessageIde, MessageServer,
         ModifRequest, TextModification,
     },
 };
@@ -244,7 +244,7 @@ impl Client {
         }
     }
 
-    async fn on_ide_cursor_move(&mut self, mut cursor_info: CursorInfo) -> Result<()> {
+    async fn on_ide_cursor_move(&mut self, mut cursor_info: CursorsInfo) -> Result<()> {
         if matches!(self.format.as_ref().unwrap(), Format::Bytes) {
             let file = self.file.as_mut().ok_or_else(|| anyhow!("File not set"))?;
             file.byte_to_char_cursor(&mut cursor_info);
@@ -253,7 +253,7 @@ impl Client {
         Ok(())
     }
 
-    async fn on_server_cursor_move(&mut self, mut cursor_info: CursorInfo) -> Result<()> {
+    async fn on_server_cursor_move(&mut self, mut cursor_info: CursorsInfo) -> Result<()> {
         if matches!(self.format.as_ref().unwrap(), Format::Bytes) {
             let file = self.file.as_mut().ok_or_else(|| anyhow!("File not set"))?;
             file.char_to_byte_cursor(&mut cursor_info);

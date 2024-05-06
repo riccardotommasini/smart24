@@ -1,6 +1,6 @@
 use operational_transform::OperationSeq;
 use smartshare::file::File;
-use smartshare::protocol::msg::{CursorInfo, MessageServer, ModifRequest};
+use smartshare::protocol::msg::{CursorsInfo, MessageServer, ModifRequest};
 use tokio::sync::mpsc;
 use tracing::{error, info, trace, warn};
 
@@ -144,7 +144,7 @@ impl Server {
         self.file = Some(file);
     }
 
-    async fn on_cursor_move(&mut self, source_id: usize, mut cursor_info: CursorInfo) {
+    async fn on_cursor_move(&mut self, source_id: usize, mut cursor_info: CursorsInfo) {
         cursor_info.id = Some(source_id);
         for client in self
             .clients
