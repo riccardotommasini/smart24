@@ -1,15 +1,16 @@
+use anyhow::{anyhow, bail, Result};
 use operational_transform::OperationSeq;
 use smartshare::{
     file::File,
     protocol::msg::{
-        modif_to_operation_seq, modifs_to_operation_seq, to_ide_changes, Format, MessageIde,
+        modif_to_operation_seq, to_ide_changes, Format, MessageIde,
         MessageServer, ModifRequest, TextModification,
     },
 };
 
 use crate::ide::Ide;
 use crate::server::Server;
-use tracing::{info, warn};
+use tracing::warn;
 
 pub struct Client {
     server_state: OperationSeq,
@@ -44,7 +45,7 @@ impl Client {
         }
     }
 
-    async fn on_ack(&mut self) {
+    async fn on_ack(&mut self) -> Result<()> {
         self.rev_num += 1;
         self.server_state = self.server_state.compose(&self.server_sent_delta).unwrap();
         self.server_sent_delta = OperationSeq::default();
@@ -53,6 +54,8 @@ impl Client {
         if !self.server_unsent_delta.is_noop() {
             self.submit_server_change().await;
         }
+
+        Ok(())
     }
 
     async fn submit_server_change(&mut self) {
@@ -69,11 +72,7 @@ impl Client {
             .retain(self.server_sent_delta.target_len() as u64);
     }
 
-    async fn on_server_error(&mut self, err: String) {
-        self.ide.send(MessageIde::Error { error: err }).await;
-    }
-
-    async fn on_server_change(&mut self, modif: &ModifRequest) {
+    async fn on_server_change(&mut self, modif: &ModifRequest) -> Result<()> {
         self.rev_num += 1;
         if self.rev_num != modif.rev_num {
             todo!("handle desynchronisation");
@@ -94,30 +93,14 @@ impl Client {
 
         self.ide_unsent_delta = self.ide_unsent_delta.compose(&ide_delta).unwrap();
         if self.ide_sent_delta.is_noop() {
-            self.submit_ide_change().await;
+            self.submit_ide_change().await?;
         }
+
+        Ok(())
     }
 
-    async fn submit_ide_change(&mut self) {
-        let Some(format) = &self.format else {
-            let _ = self
-                .ide
-                .send(MessageIde::Error {
-                    error: "Error: Offset format was not set by IDE".into(),
-                })
-                .await;
-            return;
-        };
-
-        let Some(file) = &mut self.file else {
-            let _ = self
-                .ide
-                .send(MessageIde::Error {
-                    error: "Error: Unknown file".into(),
-                })
-                .await;
-            return;
-        };
+    async fn submit_ide_change(&mut self) -> Result<()> {
+        let file = self.file.as_mut().ok_or_else(|| anyhow!("File not set"))?;
 
         let mut ide_modifs = to_ide_changes(&self.ide_unsent_delta);
 
@@ -140,13 +123,16 @@ impl Client {
         self.ide_sent_delta = std::mem::take(&mut self.ide_unsent_delta);
         self.ide_unsent_delta
             .retain(self.ide_sent_delta.target_len() as u64);
+
+        Ok(())
     }
 
-    async fn on_request_file(&mut self) {
-        let _ = self.ide.send(MessageIde::RequestFile).await;
+    async fn on_request_file(&mut self) -> Result<()> {
+        self.ide.send(MessageIde::RequestFile).await;
+        Ok(())
     }
 
-    async fn on_receive_file(&mut self, file_str: String, version: usize) {
+    async fn on_receive_file(&mut self, file_str: String, version: usize) -> Result<()> {
         let file = File::new(&file_str);
         self.server_state.retain(file.len_chars() as u64);
         self.server_sent_delta.retain(file.len_chars() as u64);
@@ -156,9 +142,11 @@ impl Client {
         self.ide.send(MessageIde::File { file: file_str }).await;
         self.rev_num = version;
         self.file = Some(file);
+
+        Ok(())
     }
 
-    async fn on_ide_file(&mut self, file_str: String) {
+    async fn on_ide_file(&mut self, file_str: String) -> Result<()> {
         self.rev_num = 0;
         let file = File::new(&file_str);
         self.server_state.retain(file.len_chars() as u64);
@@ -174,28 +162,13 @@ impl Client {
                 version: 0,
             })
             .await;
+
+        Ok(())
     }
 
-    async fn on_ide_change(&mut self, mut changes: Vec<TextModification>) {
-        let Some(format) = &mut self.format else {
-            let _ = self
-                .ide
-                .send(MessageIde::Error {
-                    error: "Error: Offset format was not set by IDE".into(),
-                })
-                .await;
-            return;
-        };
-
-        let Some(file) = &mut self.file else {
-            let _ = self
-                .ide
-                .send(MessageIde::Error {
-                    error: "Error: Unknown file".into(),
-                })
-                .await;
-            return;
-        };
+    async fn on_ide_change(&mut self, mut changes: Vec<TextModification>) -> Result<()> {
+        let format = self.format.as_ref().ok_or_else(|| anyhow!("Format not set"))?;
+        let file = self.file.as_mut().ok_or_else(|| anyhow!("File not set"))?;
 
         let ide_seq = {
             let mut seq = OperationSeq::default();
@@ -205,25 +178,13 @@ impl Client {
                 if let Format::Bytes = format {
                     file.byte_to_char(&mut *change);
                 }
-                let delta = match modif_to_operation_seq(change, &(file.len_chars() as u64)) {
-                    Ok(seq) => seq,
-                    Err(err) => {
-                        self.ide
-                            .send(MessageIde::Error {
-                                error: err.to_string(),
-                            })
-                            .await;
-                        return;
-                    }
-                };
+                let delta = modif_to_operation_seq(change, &(file.len_chars() as u64))?;
                 file.apply(&delta).unwrap();
                 seq = seq.compose(&delta).unwrap();
             }
 
             seq
         };
-
-        info!("{:?}", ide_seq);
 
         let (updated_ide_change, new_ide_sent_delta) =
             ide_seq.transform(&self.ide_sent_delta).unwrap();
@@ -243,65 +204,72 @@ impl Client {
 
         if !self.ide_sent_delta.is_noop() {
             self.ide_unsent_delta = self.ide_sent_delta.compose(&self.ide_unsent_delta).unwrap();
-            self.submit_ide_change().await;
+            self.submit_ide_change().await?;
         }
 
         if self.server_sent_delta.is_noop() && !self.server_unsent_delta.is_noop() {
             self.submit_server_change().await;
         }
+
+        Ok(())
     }
 
-    async fn on_ide_format(&mut self, format: Format) {
+    async fn on_ide_format(&mut self, format: Format) -> Result<()> {
         self.format = Some(format);
+        Ok(())
     }
 
-    async fn on_ide_ack(&mut self) {
+    async fn on_ide_ack(&mut self) -> Result<()> {
         if self.ide_sent_delta.is_noop() {
-            self.ide
-                .send(MessageIde::Error {
-                    error: "ack not ok".to_owned(),
-                })
-                .await;
+            bail!("ack not ok");
         } else {
-            let Some(file) = &mut self.file else {
-                let _ = self
-                    .ide
-                    .send(MessageIde::Error {
-                        error: "Error: Unknown file".into(),
-                    })
-                    .await;
-                return;
-            };
+            let file = self.file.as_mut().ok_or_else(|| anyhow!("File is not set"))?;
 
             file.apply(&self.ide_sent_delta).unwrap();
             if !self.ide_unsent_delta.is_noop() {
-                self.submit_ide_change().await;
+                self.submit_ide_change().await?;
             } else {
                 let len = self.ide_sent_delta.target_len();
                 self.ide_sent_delta = OperationSeq::default();
                 self.ide_sent_delta.retain(len as u64);
             }
+
+            Ok(())
         }
     }
 
     pub async fn on_message_server(&mut self, message: MessageServer) {
-        match message {
+        let res = match message {
             MessageServer::ServerUpdate(modif) => self.on_server_change(&modif).await,
             MessageServer::Ack => self.on_ack().await,
-            MessageServer::Error { error: err } => self.on_server_error(err).await,
+            MessageServer::Error { error: err } => Err(anyhow!(err)),
             MessageServer::RequestFile => self.on_request_file().await,
             MessageServer::File { file, version } => self.on_receive_file(file, version).await,
+        };
+
+        if let Err(err) = res {
+            self.ide.send(MessageIde::Error {
+                error: err.to_string(),
+            }).await;
         }
     }
 
     pub async fn on_message_ide(&mut self, message_ide: MessageIde) {
-        match message_ide {
+        let res = match message_ide {
             MessageIde::Update { changes } => self.on_ide_change(changes).await,
             MessageIde::Declare(format) => self.on_ide_format(format).await,
             MessageIde::File { file } => self.on_ide_file(file).await,
-            MessageIde::RequestFile => warn!("IDE sent RequestFile"),
-            MessageIde::Error { .. } => warn!("IDE sent error"),
             MessageIde::Ack => self.on_ide_ack().await,
+            _ => {
+                warn!("IDE sent bad unexpected message: {:?}", message_ide);
+                Err(anyhow!("Unexpected message type: {:?}", message_ide))
+            }
+        };
+
+        if let Err(err) = res {
+            self.ide.send(MessageIde::Error {
+                error: err.to_string(),
+            }).await;
         }
     }
 }
