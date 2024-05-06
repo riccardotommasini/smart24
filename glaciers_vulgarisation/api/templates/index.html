@@ -67,40 +67,34 @@
   <div class="container">
     <main>
       <section id="section_1" class="section-container">
-        <p>Il n’est jamais facile de rédiger une accroche, notamment sur un site internet. Ce n’est pas un livre, un
-          mémoire, ou encore une thèse. Pourtant, celui-ci mérite son introduction autant que les supports précédemment
-          cités. Que diriez-vous d’une belle histoire, celle que l’on raconte aux jeunes enfants ? L’histoire que nous
-          allons vous raconter est destinée à vous, lecteur que vous soyez enfants, adolescents, adultes ou en encore à
-          la retraite, ouvrez grands vos yeux.
         <div class="illustration-container">
-          <img width="50%" src="{{ url_for('static', filename='images/melange.jpg') }}" alt="Un groupe de personnes de tout âge">
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/E-p6l9nioNI" title="Mulan - Comme un homme I Disney" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
-        </p>
+        <h3>Plongez dans l'histoire des géants de glace à travers le monde</h3>
         <table>
           <tr>
             <td>
-                <p>Savez-vous ce qui fascine les peuples au plus au point ? L’éternel.<p>
-                  <p>
-                    Aujourd’hui, j’aimerai vous présenter les champions dans ce domaine, inégalés depuis des générations : les
-                    glaciers. Les glaciers sont des êtres bien fascinant n’est-ce pas ?
-                  </p>
-                <p>N’avez-vous jamais rencontré l’un deux au détours d’une randonnée ?</p>
+                <p>
+                  Il était une fois, il y a 5 millions d'années, la naissance des premiers glaciers.
+                  Ces géants de glaces s'imposent dans les ères glaciaires, reculent dans les temps chauds.
+                </p>
+                <p>
+                  Les glaciers font partie des piliers de notre écosystème : régulateurs du climat, lieux de vie de certaines espèces ou bien encore messagers du passé.
+                </p>
+                <p>Avez-vous déjà rencontré l’un d'eux au détour d’une randonnée ?</p>
             </td>
             <td>
               <div class="illustration-container">
-                <legend>
-                  Nicolas Flamel (gravure romantique),1840, Frédéric
-                </legend>
-                <img width="50%" src="{{ url_for('static', filename='images/nicolas.jpg') }}" alt="Nicolas Flamel, Alchimiste" />
-                  <legend>Source :	Galerie historique des Célébrités Populaires</legend>
+                <img src="{{ url_for('static', filename='images/himalayas.jpg') }}" alt="Montagne de l'Himalaya" />
+                  <legend>Himalaya : Pixabay</legend>
               </div>
             </td>
           </tr>
           <tr>
             <td>
               <div class="illustration-container">
-                <img src="{{ url_for('static', filename='images/randonnee.jpg') }}" alt="Un randonneur réalisant le tour du Mont Blanc"/>
-                <legend>Tour du Mont Blanc</legend>
+                  <img src="{{ url_for('static', filename='images/randonnee.jpg') }}" alt="Un randonneur réalisant le tour du Mont Blanc"/>
+                  <legend>Tour du Mont Blanc</legend>
               </div>
             </td>
             <td>
@@ -194,22 +188,41 @@
           différents glaciers du monde et quelques informations qui les composent ?</p>
         <iframe src="/dash" width="100%" height="600"></iframe>
         <p>Par la suite nous allons nous pencher sur les cinq glaciers suivant :</p>
-        <div class="illustration-container">
-          <img src="{{ url_for('static', filename='images/lasneous.jpg') }}" alt="Illustration">
-          <legend>Las Neous (Espagne)</legend>
-        </div>
-        <div class="illustration-container">
-          <img src="{{ url_for('static', filename='images/mer_de_glace.jpg') }}" alt="Illustration">
-          <legend>La Mer de Glace (France)</legend>
-        </div>
-        <div class="illustration-container">
-          <img src="{{ url_for('static', filename='images/perito_moreno.jpg') }}" alt="Illustration">
-          <legend>Perito Moreno (Patagonie)</legend>
-        </div>
-        <div class="illustration-container">
-          <img src="{{ url_for('static', filename='images/ross.jpg') }}" alt="Illustration">
-          <legend>Ross (Antarctique)</legend>
-        </div>
+        <table>
+          <tr>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/lasneous.jpg') }}" alt="Illustration">
+                <legend>Las Neous (Espagne)</legend>
+              </div>
+            </td>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/mer_de_glace.jpg') }}" alt="Illustration">
+                <legend>La Mer de Glace (France)</legend>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/perito_moreno.jpg') }}" alt="Illustration">
+                <legend>Perito Moreno (Patagonie)</legend>
+              </div>
+            </td>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/ross.jpg') }}" alt="Illustration">
+                <legend>Ross (Antarctique)</legend>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+
+            </td>
+          </tr>
+        </table>
       </section>
       <section id="section_3" class="section-container">
         <h2>La rupture de l'équilibre</h2>
