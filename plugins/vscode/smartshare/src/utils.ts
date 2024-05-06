@@ -2,14 +2,6 @@ import * as vscode from "vscode";
 import { inspect } from "util";
 
 
-export function offsetToRange(editor: vscode.TextEditor, offset: number, length: number): vscode.Range {
-    return new vscode.Range(
-        editor.document.positionAt(offset),
-        editor.document.positionAt(offset + length)
-    );
-}
-
-
 // from rust-analyzer
 class RustLog {
     private enabled = true;

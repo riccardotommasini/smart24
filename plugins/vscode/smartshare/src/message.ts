@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { logClient, offsetToRange } from './utils';
+import { logClient } from './utils';
 
 export type Message = Update | Declare | Error | RequestFile | File | Ack | Cursors;
 
@@ -19,20 +19,18 @@ export class TextModification {
         this.text = text;
     }
 
-    async write(): Promise<boolean> {
-        const editor = vscode.window.activeTextEditor;
-        if (editor) {
-            //editor.selections = [...editor.selections, new vscode.Selection(0,0,0,1)]
-            const success = await editor.edit((editBuilder: vscode.TextEditorEdit) => {
-                const range = offsetToRange(editor, this.offset, this.delete);
-                editBuilder.replace(range, this.text);
-            });
-            if (!success) {
-                logClient.error("Unable to apply change", this)
-            }
-            return success;
+    async write(editor: vscode.TextEditor): Promise<boolean> {
+        const success = await editor.edit((editBuilder: vscode.TextEditorEdit) => {
+            const range = new vscode.Range(
+                editor.document.positionAt(this.offset),
+                editor.document.positionAt(this.offset + this.delete)
+            );
+            editBuilder.replace(range, this.text);
+        });
+        if (!success) {
+            logClient.error("Unable to apply change", this)
         }
-        return false;
+        return success;
     }
 }
 

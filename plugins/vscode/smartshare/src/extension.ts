@@ -1,11 +1,13 @@
 import * as vscode from 'vscode';
-import { logClient, logServer, offsetToRange } from './utils';
+import { logClient, logServer } from './utils';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import { Ack, Cursors, Cursor, Declare, File, Message, RequestFile, TextModification, Update, isMessage, matchMessage } from './message';
+import path from 'path';
 
 let waitingAcks = 0;
 let clientProc: ChildProcessWithoutNullStreams | undefined;
 let serverProc: ChildProcessWithoutNullStreams | undefined;
+let editor: vscode.TextEditor;
 let changeDocumentDisposable: vscode.Disposable;
 let changeSelectionsDisposable: vscode.Disposable;
 let statusBarItem: vscode.StatusBarItem;
@@ -26,10 +28,6 @@ function procWrite(proc: ChildProcessWithoutNullStreams, message: Message): void
 function updateCursors(cursors: Cursors) {
     let decorations: vscode.Disposable[] = [];
     for (let cursor of cursors.cursors) {
-        const editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            return;
-        }
         const range = new vscode.Range(editor.document.positionAt(cursor.cursor), editor.document.positionAt(cursor.anchor));
         let decoration = vscode.window.createTextEditorDecorationType({
             borderWidth: "0 2px 0 0",
@@ -48,7 +46,7 @@ function updateCursors(cursors: Cursors) {
 
 async function applyChange(change: TextModification): Promise<boolean> {
     ignoreNextEvent = true;
-    return await change.write();
+    return await change.write(editor);
 }
 
 function clientStdoutHandler(): (chunk: any) => void {
@@ -73,7 +71,6 @@ function clientStdoutHandler(): (chunk: any) => void {
 }
 
 function handleMessage(data: Message) {
-    const editor = vscode.window.activeTextEditor;
     matchMessage(data)(
         (update: Update) => {
             if (!waitingAcks) {
@@ -97,14 +94,14 @@ function handleMessage(data: Message) {
             logClient.error("From client: ", error)
         },
         (_: RequestFile) => {
-            if (!clientProc || !vscode.window.activeTextEditor) {
+            if (!clientProc) {
                 return;
             }
             vscode.window.showInformationMessage("Created a SmartShare session");
             statusBarItem.text = "Connected";
             procWrite(clientProc, {
                 action: "file",
-                file: vscode.window.activeTextEditor.document.getText()
+                file: editor.document.getText()
             })
             init = false;
         },
@@ -112,8 +109,8 @@ function handleMessage(data: Message) {
             vscode.window.showInformationMessage("Connected to the SmartShare session");
             statusBarItem.text = "Connected";
             ignoreNextEvent = false;
-            new TextModification(0, editor?.document.getText().length || 0, file.file).write()
-                .then(() => { init = false });
+            let change = new TextModification(0, editor.document.getText().length || 0, file.file);
+            change.write(editor).then(() => { init = false });
         },
         (_: Ack) => {
             if (!waitingAcks) {
@@ -123,9 +120,6 @@ function handleMessage(data: Message) {
             }
         },
         (cursors: Cursors) => {
-            if (!editor) {
-                return;
-            }
             updateCursors(cursors);
         }
     );
@@ -163,8 +157,7 @@ function changeDocumentHandler(event: vscode.TextDocumentChangeEvent): void {
 }
 
 function changeSelectionsHandler(event: vscode.TextEditorSelectionChangeEvent): void {
-    const editor = vscode.window.activeTextEditor;
-    if (!editor || !clientProc) {
+    if (!clientProc) {
         return;
     }
     let cursors: Cursor[] = [];
@@ -206,7 +199,6 @@ function startClient(addr: string) {
         client.stdout.setEncoding("utf8");
         const message: Declare = { action: "declare", offset_format: "chars" };
         procWrite(client, message);
-
     });
     
     client.stdout.on("data", clientStdoutHandler());
@@ -299,6 +291,12 @@ export async function activate(context: vscode.ExtensionContext) {
         if (!addr) {
             return;
         }
+        await vscode.commands.executeCommand('workbench.action.files.newUntitledFile');
+        if (!vscode.window.activeTextEditor) {
+            vscode.window.showErrorMessage("Failed to create a new file")
+            return;
+        }
+        editor = vscode.window.activeTextEditor;
         startClient(addr);
     }));
 
