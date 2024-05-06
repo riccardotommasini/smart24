@@ -11,8 +11,7 @@ let changeSelectionsDisposable: vscode.Disposable;
 let statusBarItem: vscode.StatusBarItem;
 let init = true;
 let ignoreNextEvent = false;
-let decoration: vscode.TextEditorDecorationType;
-let cursorsDecorations: Map<number, vscode.Disposable> = new Map<number, vscode.Disposable>();
+let cursorsDecorations: Map<number, vscode.Disposable[]> = new Map();
 
 const EXE_PATH = __dirname + '/../../../../smartshare/target/debug/';
 const DEFAULT_ADDR = "127.0.0.1";
@@ -24,22 +23,27 @@ function procWrite(proc: ChildProcessWithoutNullStreams, message: Message): void
     proc.stdin.write(JSON.stringify(message) + '\n');
 }
 
-function setCursor(clientId: number, cursor: Cursor) {
-    const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        return;
+function updateCursors(cursors: Cursors) {
+    let decorations: vscode.Disposable[] = [];
+    for (let cursor of cursors.cursors) {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return;
+        }
+        const range = new vscode.Range(editor.document.positionAt(cursor.cursor), editor.document.positionAt(cursor.anchor));
+        let decoration = vscode.window.createTextEditorDecorationType({
+            borderWidth: "0 2px 0 0",
+            borderStyle: "solid",
+            borderColor: CURSOR_COLORS[cursors.id % CURSOR_COLORS.length],
+            backgroundColor: new vscode.ThemeColor("editor.selectionBackground"),
+        });
+        decorations.push(decoration);
+        editor.setDecorations(decoration, [range]);
     }
-    const range = new vscode.Range(editor.document.positionAt(cursor.cursor), editor.document.positionAt(cursor.anchor));
-    const prevDecoration = cursorsDecorations.get(clientId);
-    decoration = vscode.window.createTextEditorDecorationType({
-        borderWidth: "0 2px 0 0",
-        borderStyle: "solid",
-        borderColor: CURSOR_COLORS[clientId % CURSOR_COLORS.length],
-        backgroundColor: new vscode.ThemeColor("editor.selectionBackground"),
+    cursorsDecorations.get(cursors.id)?.forEach((decoration) => {
+        decoration.dispose();
     });
-    cursorsDecorations.set(clientId, decoration);
-    prevDecoration?.dispose()
-    editor.setDecorations(decoration, [range]);
+    cursorsDecorations.set(cursors.id, decorations);
 }
 
 async function applyChange(change: TextModification): Promise<boolean> {
@@ -118,13 +122,11 @@ function handleMessage(data: Message) {
                 waitingAcks--;
             }
         },
-        (cursor: Cursors) => {
+        (cursors: Cursors) => {
             if (!editor) {
                 return;
             }
-            for (let cursorChange of cursor.cursors) {
-                setCursor(cursor.id, cursorChange);
-            }
+            updateCursors(cursors);
         }
     );
 }
@@ -218,9 +220,11 @@ function startClient(addr: string) {
         client.removeAllListeners();
         changeDocumentDisposable?.dispose();
         changeSelectionsDisposable?.dispose();
-        cursorsDecorations.forEach((decoration, _) => {
-            decoration.dispose();
-        })
+        for (let decorations of cursorsDecorations.values()) {
+            decorations.forEach((decoration) => {
+                decoration.dispose();
+            });
+        }
         if (signal == "SIGTERM") {
             vscode.window.showInformationMessage("Disconnected from SmartShare session");
         } else {
