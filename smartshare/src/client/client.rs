@@ -3,8 +3,8 @@ use operational_transform::OperationSeq;
 use smartshare::{
     file::File,
     protocol::msg::{
-        modif_to_operation_seq, to_ide_changes, Format, MessageIde,
-        MessageServer, ModifRequest, TextModification,
+        modif_to_operation_seq, to_ide_changes, Format, MessageIde, MessageServer, ModifRequest,
+        TextModification,
     },
 };
 
@@ -167,7 +167,10 @@ impl Client {
     }
 
     async fn on_ide_change(&mut self, mut changes: Vec<TextModification>) -> Result<()> {
-        let format = self.format.as_ref().ok_or_else(|| anyhow!("Format not set"))?;
+        let format = self
+            .format
+            .as_ref()
+            .ok_or_else(|| anyhow!("Format not set"))?;
         let file = self.file.as_mut().ok_or_else(|| anyhow!("File not set"))?;
 
         let ide_seq = {
@@ -223,7 +226,10 @@ impl Client {
         if self.ide_sent_delta.is_noop() {
             bail!("ack not ok");
         } else {
-            let file = self.file.as_mut().ok_or_else(|| anyhow!("File is not set"))?;
+            let file = self
+                .file
+                .as_mut()
+                .ok_or_else(|| anyhow!("File is not set"))?;
 
             file.apply(&self.ide_sent_delta).unwrap();
             if !self.ide_unsent_delta.is_noop() {
@@ -238,6 +244,21 @@ impl Client {
         }
     }
 
+    async fn on_ide_cursor_move(&mut self, offset: u64) -> Result<()> {
+        self.server
+            .send(MessageServer::Cursor {
+                id: self.client_id,
+                offset,
+            })
+            .await?;
+        Ok(())
+    }
+
+    async fn on_server_cursor_move(&mut self, id: usize, offset: u64) -> Result<()> {
+        self.ide.send(MessageIde::Cursor { id, offset }).await;
+        Ok(())
+    }
+
     pub async fn on_message_server(&mut self, message: MessageServer) {
         let res = match message {
             MessageServer::ServerUpdate(modif) => self.on_server_change(&modif).await,
@@ -245,12 +266,15 @@ impl Client {
             MessageServer::Error { error: err } => Err(anyhow!(err)),
             MessageServer::RequestFile => self.on_request_file().await,
             MessageServer::File { file, version } => self.on_receive_file(file, version).await,
+            MessageServer::Cursor { id, offset } => self.on_server_cursor_move(id, offset).await,
         };
 
         if let Err(err) = res {
-            self.ide.send(MessageIde::Error {
-                error: err.to_string(),
-            }).await;
+            self.ide
+                .send(MessageIde::Error {
+                    error: err.to_string(),
+                })
+                .await;
         }
     }
 
@@ -260,6 +284,7 @@ impl Client {
             MessageIde::Declare(format) => self.on_ide_format(format).await,
             MessageIde::File { file } => self.on_ide_file(file).await,
             MessageIde::Ack => self.on_ide_ack().await,
+            MessageIde::Cursor { offset, .. } => self.on_ide_cursor_move(offset).await,
             _ => {
                 warn!("IDE sent bad unexpected message: {:?}", message_ide);
                 Err(anyhow!("Unexpected message type: {:?}", message_ide))
@@ -267,9 +292,11 @@ impl Client {
         };
 
         if let Err(err) = res {
-            self.ide.send(MessageIde::Error {
-                error: err.to_string(),
-            }).await;
+            self.ide
+                .send(MessageIde::Error {
+                    error: err.to_string(),
+                })
+                .await;
         }
     }
 }

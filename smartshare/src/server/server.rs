@@ -1,3 +1,5 @@
+use std::mem::offset_of;
+
 use operational_transform::OperationSeq;
 use smartshare::file::File;
 use smartshare::protocol::msg::{MessageServer, ModifRequest};
@@ -75,7 +77,9 @@ impl Server {
             error!("Client {source_id} sent modifications before file was initialized");
             self.send_to_client(
                 source_id,
-                MessageServer::Error{error: "File not initialized".into()},
+                MessageServer::Error {
+                    error: "File not initialized".into(),
+                },
             )
             .await;
 
@@ -112,12 +116,24 @@ impl Server {
 
     async fn on_file(&mut self, source_id: usize, file: String, version: usize) {
         if version != 0 {
-            self.send_to_client(source_id, MessageServer::Error{error: "First version should be 0".into()}).await;
+            self.send_to_client(
+                source_id,
+                MessageServer::Error {
+                    error: "First version should be 0".into(),
+                },
+            )
+            .await;
             return;
         }
 
         if self.file.is_some() {
-            self.send_to_client(source_id, MessageServer::Error{error: "File is already initialized".into()}).await;
+            self.send_to_client(
+                source_id,
+                MessageServer::Error {
+                    error: "File is already initialized".into(),
+                },
+            )
+            .await;
             return;
         }
 
@@ -130,12 +146,28 @@ impl Server {
         self.file = Some(file);
     }
 
+    async fn on_cursor_move(&mut self, source_id: usize, offset: u64) {
+        for client in self
+            .clients
+            .iter()
+            .filter(|client| client.id() != source_id)
+        {
+            let _ = client
+                .send(MessageServer::Cursor {
+                    id: source_id,
+                    offset,
+                })
+                .await;
+        }
+    }
+
     async fn on_message(&mut self, source_id: usize, message: MessageServer) {
         trace!("User message: {:?}", message);
 
         match message {
             MessageServer::ServerUpdate(req) => self.on_update(source_id, req).await,
             MessageServer::File { file, version } => self.on_file(source_id, file, version).await,
+            MessageServer::Cursor { offset, .. } => self.on_cursor_move(source_id, offset).await,
             _ => warn!("Received unexpected message type {:?}", message),
         }
     }
