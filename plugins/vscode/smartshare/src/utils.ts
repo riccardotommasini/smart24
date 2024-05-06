@@ -39,7 +39,7 @@ class RustLog {
     }
 
     error(...msg: [unknown, ...unknown[]]): void {
-        a3debugger;
+        debugger;
         this.write("ERROR", ...msg);
         this.output.show(true);
     }

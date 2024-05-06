@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { logClient, offsetToRange } from './utils';
 
-export type Message = Update | Declare | Error | RequestFile | File | Ack | Cursor;
+export type Message = Update | Declare | Error | RequestFile | File | Ack | Cursors;
 
 export interface Update {
     action: "update"
@@ -59,11 +59,15 @@ export interface Ack {
     action: "ack"
 }
 
-export interface Cursor {
+export interface Cursors {
     action: "cursor"
     id: number
-    offset: number
-    range: number
+    cursors: Cursor[]
+}
+
+export interface Cursor {
+    cursor: number
+    anchor: number
 }
 
 export function isMessage(object: any): object is Message {
@@ -78,7 +82,7 @@ export function matchMessage(message: Message): any {
         onRequestFile: (x: RequestFile) => any,
         onFile: (x: File) => any,
         onAck: (x: Ack) => any,
-        onCursor: (x: Cursor) => any,
+        onCursor: (x: Cursors) => any,
     ) => {
         switch (message.action) {
             case "update":
