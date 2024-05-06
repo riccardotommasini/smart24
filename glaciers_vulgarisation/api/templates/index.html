@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vulgarisation sur la fonte des glaciers</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/carousel-header.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/content-elements.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/defilement-content.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/font.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/menu-elements.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/global-elements.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/select-glacier.css') }}">
+</head>
+
+<body>
+  <header>
+    <div class="carousel">
+      <h1>Les glaciers :</h1>
+      <h1>Evolution & Conséquences</h1>
+      <img src="{{ url_for('static', filename='images/gl2.jpg') }}" />
+      <img src="{{ url_for('static', filename='images/gl.avif') }}" />
+      <img
+        src="https://di262mgurvkjm.cloudfront.net/cf9051ed-452f-4449-a7f4-1e8942a9463a/Aiguilles_de_Chamonix_et_Mont-Blanc_105x35~24_xgaplus.jpg" />
+      <button class="prev" onclick="plusSlides(-1)">❮</button>
+      <button class="next" onclick="plusSlides(1)">❯</button>
+    </div>
+
+  </header>
+  <nav>
+    <ul>
+      <li><a href="#section_1">Introduction</a></li>
+      <li><a href="#section_2">Prologue</a></li>
+      <li><a href="#section_3">Partie I</a></li>
+      <li><a href="#section_4">Partie II</a></li>
+      <li><a href="#section_5">Partie III</a></li>
+      <li><a href="#section_6">Partie IV</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <main>
+      <section id="section_1" class="section-container">
+        <div class="illustration-container">
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/E-p6l9nioNI"
+            title="Mulan - Comme un homme I Disney" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <h3>Plongez dans l'histoire des géants de glace à travers le monde</h3>
+        <table>
+          <tr>
+            <td>
+              <p>
+                Il y a environ 5 millions d’années naquirent les premiers glaciers.
+                D’une surface comprise entre 2 stades de football et celle de la Suisse, ces géants des glaces traversent le temps et les âges pour nous conter le passé.
+              </p>
+              <p>
+                Les glaciers sont des piliers de notre écosystème : régulateurs du climat, acteurs du maintien de la biodiversité ou bien encore messagers du passé. 
+              </p>
+            </td>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/himalayas.jpg') }}" alt="Montagne de l'Himalaya" />
+                <legend>Himalaya : Pixabay</legend>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/randonnee.jpg') }}"
+                  alt="Un randonneur réalisant le tour du Mont Blanc" />
+                <legend>Tour du Mont Blanc</legend>
+              </div>
+            </td>
+            <td>
+              
+              <p>
+                Ils sont au cœur des plus beaux paysages, leur immensité nous impressionne et pourtant leur survie ne tient aujourd'hui qu'à un fil.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p>
+                Par temps froid, la neige s'accumule sur les glaciers ce qui permet d'augmenter leur taille et leur
+                volume.
+                Par temps chaud, les glaciers fondent et fournissent de l'eau douce aux animaux et aux plantes,
+                indispensable pour leur survie.
+                Faisant de ces géants un régulateur et une source de vie irremplaçable sur notre Terre.
+              </p>
+            </td>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/alpinisme.jpg') }}"
+                  alt="Deux alpinistes gravissant La Grave La Meije" />
+                <legend>Marche Glacière©Patrick Domeyne</legend>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <p>
+          Une branche de la science s’intéresse de près à ces gigantesques objets d’études. Cette branche se nomme la glaciologie. Les personnes qui travaillent dans ce domaine portent le nom de glaciologues. Il faut revenir en 18e siècle pour contempler ses premiers pas.
+          Le terme glacier fut imposé en 1779 par Horace Bénedict de Saussure, après que celui-ci est gravi le Mont Blanc pour le mesurer scientifiquement.
+        </p>
+        <div class="illustration-container">
+          <img width="50%" src="{{ url_for('static', filename='images/horace.jpeg') }}"
+            alt="Des horloges flottantes dans le ciel">
+          <legend>En août 1787, un an après les chamoniards Jacques Balmat et Michel-Gabriel Paccard,
+            le naturaliste genevois Horace Bénédict de Saussure, accompagné de 17 guides,
+            réussit l’ascension du Mont Blanc : c’est la naissance de l’alpinisme© Musée Alpin, ville de Chamonix Mont-Blanc</legend>
+        </div>
+        <p>
+          Depuis, beaucoup de choses ont changé. Nous ne sommes plus limités par les chevaux et les carioles pour nous déplacer. 
+          Il est plus facile d’échanger avec n’importe qui, plus besoin de messagers ou de pigeons voyageurs. La vie est devenue bien plus confortable mais à quel prix ? 
+          Il sera bientôt l’heure de passer à la caisse…
+        </p>
+      </section>
+      <hr>
+      <section id="section_2" class="section-container">
+        <h2>Prologue</h2>
+        <div class="two-columns">
+          <div class="left-part">
+            <p>
+              Le monde change. 
+            </p>
+            <p>
+              Depuis, la révolution industrielle, nous avons marqué le monde de notre empreinte comme jamais auparavant.
+              Nous avons abîmé, les sols, les espèces, les paysages, les océans, l’atmosphère.
+              Notre planète se réchauffe, le climat se dérègle, et nous allons vivre le retour de bâton.
+            </p>
+            <p>
+              Les océans se réchauffent, les pluies se veulent plus
+              diluviennes,
+              les hivers sont plus froids quand les étés deviennent caniculaires. Ce qui (nous) arrive n’est pas à
+              prendre
+              à la légère, faune, flore sont et seront de plus en plus impactés.
+            </p>
+          </div>
+          <div class="right-part">
+            <div id="faune-flore" class="focus">
+              <h4>Rappel : Faune & Flore</h4>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/faune_flore.png') }}"
+                  alt="Schéma représentant la faune et la flore">
+              </div>
+              La Faune = le Règne Animal
+              <br>
+              La Flore = le Règne Végétal
+          </div>
+        </div>
+        <p>
+          Le <a href="giec">GIEC</a> a publié le 20 mars 2023 son 6ème rapport d’évaluation concernant l’évolution du climat.
+          Fruit d’une collaboration internationale, ce nouveau rapport du GIEC synthétise les connaissances scientifiques acquises entre 2015 et 2021 sur le changement climatique, ses causes, ses impacts et les mesures possibles pour l’atténuer et s’y adapter.
+          <a href="https://www.ecologie.gouv.fr/publication-du-6e-rapport-synthese-du-giec#:~:text=La%20synthèse%20du%20sixième%20rapport,195%20pays%20membres%20du%20GIEC">Article</a> du ministère de l’écologie.
+          Que se passerait-il si la température globale de notre planète augmentait de 1.5 °C ? De 2°C ?
+          Ce sont des questions comme celle-ci que se sont posés les experts du groupe.
+        </p>
+        <div id="giec" class="focus">
+          <h4>Qu'est ce que le GIEC ?</h4>
+          <div class="two-columns">
+            <div class="left-part">
+              <p>Le Groupe d’experts intergouvernemental sur l’évolution du climat (GIEC) a été créé en 1988 en vue de
+                fournir des évaluations détaillées de l’état des connaissances scientifiques, techniques et
+                socio-économiques sur les changements climatiques, leurs causes, leurs répercussions potentielles et les
+                stratégies de parade.</p>
+            </div>
+            <div class="right-part">
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/giec.png') }}" alt="Logo du GIEC">
+                <legend>Logo français du GIEC</legend>
+              </div>
+            </div>
+          </div>
+          <span>Source : Site officiel du <a href="https://www.ipcc.ch/languages-2/francais/">GIEC</a></span>
+        </div>
+        <p>
+          Ensemble, nous allons voir quels impacts cela aurait sur les glaciers du monde.
+          Nous avons choisi de mettre à votre disposition un ensemble d’animations sur 5 glaciers précis afin d’apprécier leur différent comportements.
+          Perito Moreno, un glacier situé en Patagonie. Las Neous, un glacier situé dans les Pyrénées à la frontière franco-espagnole.
+          La Mer de glace, aux abords du Mont-Blanc. Ross Ice Shelf, une plateforme de glace en Antarctique de la taille de la France. Enfin Sturgel.
+        </p>
+        <table>
+          <tr>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/lasneous.jpg') }}" alt="Illustration">
+                <legend>Las Neous (Espagne)</legend>
+              </div>
+            </td>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/mer_de_glace.jpg') }}" alt="Illustration">
+                <legend>La Mer de Glace (France)</legend>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/perito_moreno.jpg') }}" alt="Illustration">
+                <legend>Perito Moreno (Patagonie)</legend>
+              </div>
+            </td>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/ross.jpg') }}" alt="Illustration">
+                <legend>Ross Ice Shelf (Antarctique)</legend>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+
+            </td>
+          </tr>
+        </table>
+        <p>Mais avant d’aller plus loin, pourquoi ne pas profiter de jouer un peu à découvrir les différents glaciers du monde ?</p>
+        <iframe src="/dash" width="100%" height="600"></iframe>
+      </section>
+      <hr>
+      <section id="section_3" class="section-container">
+        <h2>La rupture de l'équilibre</h2>
+        <p>
+          Les glaciers ne sont pas éternels.
+          Du moins, pas si nous continuons à agir comme nous le faisons.
+        </p>
+        <p>
+          Les glaciologues s’accordent sur une disparition de l’ensemble d’ici cinq
+          siècles.
+          À l’échelle du temps terrestre (la Terre est âgée de 4,543 milliards d’années) ce nombre est très peu élevée.
+          Traduction : C'est pour demain.
+        </p>
+        <div class="two-columns">
+          <div class="left-part">
+            <p>
+              Vous avez bien un nom ? un prénom ? Un âge ?
+              Le glacier a lui aussi des termes qui le caractérisent.
+              Son épaisseur, sa surface, son volume, sa température...
+              Ces propriétés utilisées correctement permettent d'analyser son évolution.
+            </p>
+          </div>
+          <div class="right-part">
+            <p>
+              Les glaciers vivent.
+              Tout au long de l’année, se suivent diverses périodes qui seront soit plus propices à l’accumulation
+              (précipitations, dépôt porté par le vent), soit plus propices à l'effet inverse.
+            </p>
+          </div>
+        </div>
+        <p>
+          L’altitude d'équilibre d’un glacier est la ligne d’altitude pour laquelle la balance massique du massique est nulle.
+       </p>
+        <div class="illustration-container">
+          <img width="60%" src="{{ url_for('static', filename='images/ela/ela.gif') }}" alt="Illustration">
+          <legend>L'altitude d'équilibre au sein d'un glacier©Anne Maussion, Atelier les Gros yeux</legend>
+        </div>
+        
+        <p>
+          Quelles évolutions pour les cinq glaciers présentés depuis 1901 ?
+          (Vous pouvez <a href="#post-ela">passer</a> le graphique)
+        </p>
+        <div class="tab">
+          <a class="tablinks" onclick="openTabELA(event, 'glacier-ela1')">Mer de Glace</a>
+          <a class="tablinks" onclick="openTabELA(event, 'glacier-ela2')">Las Neous</a>
+          <a class="tablinks" onclick="openTabELA(event, 'glacier-ela3')">Perito Moreno</a>
+          <a class="tablinks" onclick="openTabELA(event, 'glacier-ela4')">Ross</a>
+          <a class="tablinks" onclick="openTabELA(event, 'glacier-ela5')">Sturgel</a>
+        </div>
+        <div id="glacier-ela1" class="tabcontent-ela">
+          <div class="illustration-container">
+            <img src="{{ url_for('static', filename='images/ela/ela_mdg.png') }}" alt="Illustration">
+          </div>
+        </div>
+        <div id="glacier-ela2" class="tabcontent-ela">
+          <div class="illustration-container">
+            <img src="{{ url_for('static', filename='images/ela/ela_lasneous.png') }}" alt="Illustration">
+          </div>
+        </div>
+        <div id="glacier-ela3" class="tabcontent-ela">
+          <div class="illustration-container">
+            <img src="{{ url_for('static', filename='images/ela/ela_perito_moreno.png') }}" alt="Illustration">
+          </div>
+        </div>
+        <div id="glacier-ela4" class="tabcontent-ela">
+          <div class="illustration-container">
+            <img src="{{ url_for('static', filename='images/ela/ela_ross.png') }}" alt="Illustration">
+          </div>
+        </div>
+        <div id="glacier-ela5" class="tabcontent-ela">
+          <div class="illustration-container">
+            <img src="{{ url_for('static', filename='images/ela/ela_sturgel.png') }}" alt="Illustration">
+          </div>
+        </div>
+        <p id="post-ela">
+          Sur les cinq glaciers que nous avons choisis, la tendance est la même, la ligne d’équilibre
+          remonte, ce qui signifie une seule chose : ces glaciers reculent.
+        </p>
+        <blockquote>Si tu ne sais pas où tu vas, regarde d'où tu viens</blockquote>
+
+      </section>
+      <hr>
+      <section id="section_4" class="section-container">
+        <h2>Elle fond, la forme</h2>
+        <p>Et demain ? Naviguez !
+          Modifiez les années !
+          Modifiez les écarts de température !
+        </p>
+        <p>
+          Regardez les glaciers reculer...
+          Plus la couleur tend vers le bleu, plus l'épaisseur de glace est fine.
+        <p>
+        <div class="tab">
+          <a class="tablinks" onclick="openGlacier(event, 'glacier1')">Mer de Glace</a>
+          <a class="tablinks" onclick="openGlacier(event, 'glacier2')">Las Neous</a>
+          <a class="tablinks" onclick="openGlacier(event, 'glacier3')">Perito Moreno</a>
+          <a class="tablinks" onclick="openGlacier(event, 'glacier4')">Ross</a>
+          <a class="tablinks" onclick="openGlacier(event, 'glacier5')">Sturgel</a>
+        </div>
+        <div class="evolution">
+          <div class="options">
+            <label class="temperature-option">
+              <input type="radio" name="temperature" value="1.5" checked>
+              <span class="circle green"></span>
+              <h4>1.5°C</h4>
+            </label>
+            <label class="temperature-option">
+              <input type="radio" name="temperature" value="2">
+              <span class="circle yellow"></span>
+              <h4>2°C</h4>
+            </label>
+            <label class="temperature-option">
+              <input type="radio" name="temperature" value="3">
+              <span class="circle orange"></span>
+              <h4>3°C</h4>
+            </label>
+            <label class="temperature-option">
+              <input type="radio" name="temperature" value="4">
+              <span class="circle red"></span>
+              <h4>4°C</h4>
+            </label>
+          </div>
+          <div id="glacier1" class="tabcontent">
+            <div id="evolution_container_mdg_1_5" class="anim-container">
+              {% include 'mer_de_glace/evolution/evolution_mer_de_glace_1_5.html' %}
+              <legend>Evolution de la mer de glace de 2010 à 2100 (+1.5°C)</legend>
+            </div>
+            <div id="evolution_container_mdg_2" class="anim-container">
+              {% include 'mer_de_glace/evolution/evolution_mer_de_glace_2.html' %}
+              <legend>Evolution de la mer de glace de 2010 à 2100 (+2°C)</legend>
+            </div>
+            <div id="evolution_container_mdg_3" class="anim-container">
+              {% include 'mer_de_glace/evolution/evolution_mer_de_glace_3.html' %}
+              <legend>Evolution de la mer de glace de 2010 à 2100 (+3°C)</legend>
+            </div>
+            <div id="evolution_container_mdg_4" class="anim-container">
+              {% include 'mer_de_glace/evolution/evolution_mer_de_glace_4.html' %}
+              <legend>Evolution de la mer de glace de 2010 à 2100 (+4°C)</legend>
+            </div>
+          </div>
+          <div id="glacier2" class="tabcontent">
+            <div id="evolution_container_lasneous_1_5" class="anim-container">
+              {% include 'lasneous/evolution/evolution_lasneous_1_5.html' %}
+              <legend>Evolution de Las Neous de 2010 à 2100 (+1.5°C)</legend>
+            </div>
+            <div id="evolution_container_lasneous_2" class="anim-container">
+              {% include 'lasneous/evolution/evolution_lasneous_2.html' %}
+              <legend>Evolution de Las Neous de 2010 à 2100 (+2°C)</legend>
+            </div>
+            <div id="evolution_container_lasneous_3" class="anim-container">
+              {% include 'lasneous/evolution/evolution_lasneous_3.html' %}
+              <legend>Evolution de Las Neous de 2010 à 2100 (+3°C)</legend>
+            </div>
+            <div id="evolution_container_lasneous_4" class="anim-container">
+              {% include 'lasneous/evolution/evolution_lasneous_4.html' %}
+              <legend>Evolution de Las Neous de 2010 à 2100 (+4°C)</legend>
+            </div>
+          </div>
+          <div id="glacier3" class="tabcontent">
+            <div id="evolution_container_perito_moreno_1_5" class="anim-container">
+              {% include 'perito_moreno/evolution/evolution_perito_moreno_1_5.html' %}
+              <legend>Evolution de Perito Moreno de 2010 à 2100 (+1.5°C)</legend>
+            </div>
+            <div id="evolution_container_perito_moreno_2" class="anim-container">
+              {% include 'perito_moreno/evolution/evolution_perito_moreno_2.html' %}
+              <legend>Evolution de Perito Moreno de 2010 à 2100 (+2°C)</legend>
+            </div>
+            <div id="evolution_container_perito_moreno_3" class="anim-container">
+              {% include 'perito_moreno/evolution/evolution_perito_moreno_3.html' %}
+              <legend>Evolution de Perito Moreno de 2010 à 2100 (+3°C)</legend>
+            </div>
+            <div id="evolution_container_perito_moreno_4" class="anim-container">
+              {% include 'perito_moreno/evolution/evolution_perito_moreno_4.html' %}
+              <legend>Evolution de Perito Moreno de 2010 à 2100 (+4°C)</legend>
+            </div>
+          </div>
+          <div id="glacier4" class="tabcontent">
+            <div id="evolution_container_ross_1_5" class="anim-container">
+              {% include 'ross/evolution/evolution_ross_1_5.html' %}
+              <legend>Evolution de Ross de 2010 à 2100 (+1.5°C)</legend>
+            </div>
+            <div id="evolution_container_ross_2" class="anim-container">
+              {% include 'ross/evolution/evolution_ross_2.html' %}
+              <legend>Evolution de Ross de 2010 à 2100 (+2°C)</legend>
+            </div>
+            <div id="evolution_container_ross_3" class="anim-container">
+              {% include 'ross/evolution/evolution_ross_3.html' %}
+              <legend>Evolution de Ross de 2010 à 2100 (+3°C)</legend>
+            </div>
+            <div id="evolution_container_ross_4" class="anim-container">
+              {% include 'ross/evolution/evolution_ross_4.html' %}
+              <legend>Evolution de Ross de 2010 à 2100 (+4°C)</legend>
+            </div>
+          </div>
+          <div id="glacier5" class="tabcontent">
+            <div id="evolution_container_sturgel_1_5" class="anim-container">
+              {% include 'sturgel/evolution/evolution_sturgel_1_5.html' %}
+              <legend>Evolution de Sturgel de 2010 à 2100 (+1.5°C)</legend>
+            </div>
+            <div id="evolution_container_sturgel_2" class="anim-container">
+              {% include 'sturgel/evolution/evolution_sturgel_2.html' %}
+              <legend>Evolution de Sturgel de 2010 à 2100 (+2°C)</legend>
+            </div>
+            <div id="evolution_container_sturgel_3" class="anim-container">
+              {% include 'sturgel/evolution/evolution_sturgel_3.html' %}
+              <legend>Evolution de Sturgel de 2010 à 2100 (+3°C)</legend>
+            </div>
+            <div id="evolution_container_sturgel_4" class="anim-container">
+              {% include 'sturgel/evolution/evolution_sturgel_4.html' %}
+              <legend>Evolution de Sturgel de 2010 à 2100 (+4°C)</legend>
+            </div>
+          </div>
+      </div>
+      </section>
+      <hr>
+      <section id="section_5" class="section-container">
+        <h2>Comme un trou dans une baignoire</h2>
+        <p>
+          Nous avons vu que les variations de toute nature faisait partie du cycle de vie du glacier.
+          Hélas, les écarts sont de plus importants... Voyons cela ensemble sur une notion simple, le volume de
+          glace, soit l'espace pris par le glacier.
+        </p>
+        <div id="ssp" class="focus">
+          <h4>Cap sur les scénarios SSP</h4>
+          <p>
+            Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+            jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+            siècle, la mer de glace perdrait 80% de son volume.
+          </p>
+        </div>
+        <table>
+          <tr>
+            <td>
+              <div id="ssp-126" class="focus">
+                <h4>SSP 126</h4>
+                <p>
+                  Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.
+                </p>
+              </div>
+            </td>
+            <td>
+              <div class="tab">
+                <a class="tablinks" onclick="openSSP126(event, 'mdg-ssp-126')">MdG</a>
+                <a class="tablinks" onclick="openSSP126(event, 'lasneous-ssp-126')">L</a>
+                <a class="tablinks" onclick="openSSP126(event, 'perito-ssp-126')">PM</a>
+                <a class="tablinks" onclick="openSSP126(event, 'sturgel-ssp-126')">S</a>
+                <a class="tablinks" onclick="openSSP126(event, 'ross-ssp-126')">R</a>
+              </div>
+              <div id="mdg-ssp-126" class="tabcontent-ssp-126">
+                <div id="volume_container_1" class="anim-container">
+                  {% include 'mer_de_glace/volume/mdg_volume_scenario_1_ssp126.html' %}
+                  <legend>
+                    Evolution du volume de la mer de glace selon SSP126
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="lasneous-ssp-126" class="tabcontent-ssp-126">
+                <div id="volume_container_2" class="anim-container">
+                  {% include 'lasneous/volume/lasneous_volume_scenario_1_ssp126.html' %}
+                  <legend>
+                    Evolution du volume de Las Neous selon SSP126
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="perito-ssp-126" class="tabcontent-ssp-126">
+                <div id="volume_container_3" class="anim-container">
+                  {% include 'perito_moreno/volume/perito_moreno_volume_scenario_1_ssp126.html' %}
+                  <legend>
+                    Evolution du volume de Perito Moreno selon SSP126
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="sturgel-ssp-126" class="tabcontent-ssp-126">
+                <div id="volume_container_4" class="anim-container">
+                  {% include 'sturgel/volume/sturgel_volume_scenario_1_ssp126.html' %}
+                  <legend>
+                    Evolution du volume de Sturgel selon SSP126
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="ross-ssp-126" class="tabcontent-ssp-126">
+                <div id="volume_container_11" class="anim-container">
+                  {% include 'ross/volume/ross_volume_scenario_1_ssp126.html' %}
+                  <legend>
+                    Evolution du volume de Ross selon SSP126
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="tab">
+                <a class="tablinks" onclick="openSSP370(event, 'mdg-ssp-370')">MdG</a>
+                <a class="tablinks" onclick="openSSP370(event, 'lasneous-ssp-370')">L</a>
+                <a class="tablinks" onclick="openSSP370(event, 'perito-ssp-370')">PM</a>
+                <a class="tablinks" onclick="openSSP370(event, 'sturgel-ssp-370')">S</a>
+                <a class="tablinks" onclick="openSSP370(event, 'ross-ssp-370')">R</a>
+              </div>
+              <div id="mdg-ssp-370" class="tabcontent-ssp-370">
+                <div id="volume_container_1" class="anim-container">
+                  {% include 'mer_de_glace/volume/mdg_volume_scenario_2_ssp370.html' %}
+                  <legend>
+                    Evolution du volume de la mer de glace selon SSP370
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="lasneous-ssp-370" class="tabcontent-ssp-370">
+                <div id="volume_container_2" class="anim-container">
+                  {% include 'lasneous/volume/lasneous_volume_scenario_2_ssp370.html' %}
+                  <legend>
+                    Evolution du volume de Las Neous selon SSP370
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="perito-ssp-370" class="tabcontent-ssp-370">
+                <div id="volume_container_3" class="anim-container">
+                  {% include 'perito_moreno/volume/perito_moreno_volume_scenario_2_ssp370.html' %}
+                  <legend>
+                    Evolution du volume de Perito Moreno selon SSP370
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="sturgel-ssp-370" class="tabcontent-ssp-370">
+                <div id="volume_container_4" class="anim-container">
+                  {% include 'sturgel/volume/sturgel_volume_scenario_2_ssp370.html' %}
+                  <legend>
+                    Evolution du volume de Sturgel selon SSP126
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="ross-ssp-370" class="tabcontent-ssp-370">
+                <div class="anim-container">
+                  {% include 'ross/volume/ross_volume_scenario_2_ssp370.html' %}
+                  <legend>
+                    Evolution du volume de Ross selon SSP370
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div id="ssp-370" class="focus">
+                <h4>SSP370</h4>
+                <p>
+                  Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.
+                </p>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div id="ssp-585" class="focus">
+                <h4>SSP585</h4>
+                <p>
+                  Il est normal que le volume d’un glacier varie, c’est ce qui fait sa force, mais le delta ne devrait
+                  jamais être aussi important. Est-ce que vous saisissez ? Depuis le pic maximal enregistré, au 20e
+                  siècle, la mer de glace perdrait 80% de son volume.
+                </p>
+              </div>
+            </td>
+            <td>
+              <div class="tab">
+                <a class="tablinks" onclick="openSSP585(event, 'mdg-ssp-585')">MdG</a>
+                <a class="tablinks" onclick="openSSP585(event, 'lasneous-ssp-585')">L</a>
+                <a class="tablinks" onclick="openSSP585(event, 'perito-ssp-585')">PM</a>
+                <a class="tablinks" onclick="openSSP585(event, 'sturgel-ssp-585')">S</a>
+                <a class="tablinks" onclick="openSSP585(event, 'ross-ssp-585')">R</a>
+              </div>
+              <div id="mdg-ssp-585" class="tabcontent-ssp-585">
+                <div id="volume_container_1" class="anim-container">
+                  {% include 'mer_de_glace/volume/mdg_volume_scenario_3_ssp585.html' %}
+                  <legend>
+                    Evolution du volume de la mer de glace selon SSP585
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="lasneous-ssp-585" class="tabcontent-ssp-585">
+                <div id="volume_container_2" class="anim-container">
+                  {% include 'lasneous/volume/lasneous_volume_scenario_3_ssp585.html' %}
+                  <legend>
+                    Evolution du volume de Las Neous selon SSP585
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="perito-ssp-585" class="tabcontent-ssp-585">
+                <div id="volume_container_3" class="anim-container">
+                  {% include 'perito_moreno/volume/perito_moreno_volume_scenario_3_ssp585.html' %}
+                  <legend>
+                    Evolution du volume de Perito Moreno selon SSP585
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="sturgel-ssp-585" class="tabcontent-ssp-585">
+                <div id="volume_container_4" class="anim-container">
+                  {% include 'sturgel/volume/sturgel_volume_scenario_3_ssp585.html' %}
+                  <legend>
+                    Evolution du volume de Sturgel selon SSP585
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+              <div id="ross-ssp-585" class="tabcontent-ssp-585">
+                <div id="volume_container_5" class="anim-container">
+                  {% include 'ross/volume/ross_volume_scenario_3_ssp585.html' %}
+                  <legend>
+                    Evolution du volume de Ross selon SSP585
+                    <br>
+                    1979-2100
+                  </legend>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <p>La mer de Glace perd en moyenne par an ce qui à titre de comparaison représente piscines olympiques.</p>
+        <div class="illustration-container">
+          <img width="60%" src="{{ url_for('static', filename='images/piscine.jpg') }}" alt="Illustration">
+          <legend>© Getty - Xavier Laine / Contributeur</legend>
+        </div>
+      </section>
+      <hr>
+      <section id="section_6" class="section-container">
+        <h2>Un drame en deux actes</h2>
+        <div class="two-columns">
+          <div class="left-part">
+            <p>
+              La quantité perdue ne disparaît pas, l’occasion de ressortir la
+              citation de Lavoisier qui vous permettra de briller en société "Rien ne se perd, rien ne se crée, tout se
+              transforme".
+              La finalité est toujours la fonte (ou la sublimation), mais avant cela elle peut aussi s’être détachée, on
+              nomme cela
+              le vêlage.
+              Cette action est plutôt impressionnante notamment lorsqu’il y a création d’iceberg. Elle peut
+              provenir des couches supérieures ou bien inférieures.
+            </p>
+            <div class="illustration-container">
+              <img src="{{ url_for('static', filename='images/velage.jpg') }}" alt="Illustration">
+              <legend>Vêlage © Getty Images/iStockphoto.</legend>
+            </div>
+            <p>
+              Ces différents moyens d’éliminations présentent
+              chacune leur spécificités et problèmes. Le vêlage peut causer des problèmes lors de la chute de blocs, la
+              fonte de la couche inférieure crée de l’instabilité au sein du glacier, instabilité pouvant mener à des
+              glissements, des coulées… La fonte en tant que telle impacte le cours des ruisseaux notamment sur le
+              débit.
+            </p>
+          </div>
+          <div class="right-part">
+            <p>
+              Quand bien même la hauteur des rivières bordant les glaciers se veut de plus en plus réduite, le débit
+              n’en ai pas moins changé.
+            <div class="illustration-container">
+              <img src="{{ url_for('static', filename='images/crue.jpeg') }}" alt="Illustration">
+              <legend>Crue dans le sud-Est de la France ©Valery Hacher/AFP</legend>
+            </div>
+            </p>
+            <p>
+              Prenons, l’exemple du col de l’Iseran, dont la source du ruisseau donne la fameuse rivière
+              plus connue sous le nom de l’Isère.
+              Malgré une hauteur de plus en plus, minime, le débit se veut stable au fur et à mesure
+              des années.
+              Il ne faut pas s’égarer, omettre, la fonte des neiges et les diverses précipitations
+              seraient une grosse erreur.
+            </p>
+            <p>
+              En prenant en compte l’ensemble des paramètres cela démontre, une tendance
+              globale qui ne se veut point avantageuse. Mais le comble de cette triste histoire
+              reste à venir : le recul des glaciers accélère le recul des glaciers.
+            </p>
+          </div>
+        </div>
+        <p>
+          En fondant, la glace diminue
+          son effet albédo**, l’énergie absorbée est de plus en plus importante, ce qui contribue au réchauffement
+          global de celui-ci.
+        </p>
+        <div id="albedo" class="focus">
+          <h4>L'effet albédo</h4>
+          <div class="illustration-container">
+            <img src="{{ url_for('static', filename='images/albedo.jpg') }}" alt="Illustration">
+            <legend>Les principes de l'Effet Albédo ©Surfrider Foundation Europe</legend>
+          </div>
+        </div>
+
+        <p>
+          Mais cela ne sont que des impacts à court terme, quand est-il de ceux à long terme ?
+        </p>
+        <p>
+          Je vois ceux qui se souviennent de leur cours de primaire s’exciter dans le fond. Oui, vous avez raison, mais
+          marquons le une bonne fois pour toute.
+          L’eau issue des glaciers va dans la mer. Puis celle ci étant de plus importante, il y
+          a surplus.
+          Résultat : l’eau monte. Les glaciaires polaires, réprésentant la grande majorité des glacier, en sont en
+          grande partie responsable. Si tout les glaciers venaient à fondre, le
+          niveau de la mer augmenterait d’environ 8 m. Même si ce nombre peut paraître négligeable, nombreuses seraient
+          les zones submergées.
+          Par exemple, en France, une grande partie des littoraux se verraient frappés de plein fouet. À
+          l’échelle, mondiale, cela provoquerait des déplacements migratoires sans précédents.
+        </p>
+        <p>
+          Voilà une carte de l’Europe qui vous présente les zones qui seraient impactées.
+        <div id="niveau_mer_ssp126" class="anim-container">
+          {% include 'niveau_mer_ssp126.html' %}
+          <legend>Evolution du niveau de la Mer en Europe - SSP126</legend>
+        </div>
+        </p>
+        <p>
+          Mais ce problème n’est pas le seul, des problèmes bien plus insidieux pourrait arriver avec la fonte de
+          ceux-ci. L’accélération de l’effet de serre par le rejet de gaz emprisonnés (qui comme l’effet albédo va
+          accélérer de nouveau la fonte). La libération d’anciens organismes pouvant se révéler bénéfiques ou
+          terriblement léthaux...
+        </p>
+      </section>
+      <hr>
+      <section id="section_7" class="section-container">
+        <h2>Que retenir ?</h2>
+        <h3>
+          Soyez acteurs !
+        </h3>
+      </section>
+    </main>
+  </div>
+  <footer><span>Un site réalisé par : Léa Durand, Lina Borg, Kaiming Zhu & Billy Villeroy</span></footer>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="{{ url_for('static', filename='js/menu-action.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/select-glacier.js') }}"></script>
+</body>
+
+</html>

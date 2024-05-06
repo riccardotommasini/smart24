@@ -1,0 +1,40 @@
+/* Style des onglets */
+.tab {
+    overflow: hidden;
+    border: 1px solid #f7f7f2;
+    background-color: #52708d;
+    margin:12px;
+  }
+  
+  .tab a {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+  }
+  
+  .tab a:hover {
+    background-color: #a9c4de;
+  }
+  
+  /* Style des contenus des onglets */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+  }
+
+  #glacier-ela1, #glacier1, #mdg-ssp-126,#mdg-ssp-370,#mdg-ssp-585{
+    display: block;
+  }
+
+  [id^="glacier-ela"],
+  [id^="glacier"],
+  [id^="perito-ssp"],
+  [id^="sturgel-ssp"],
+  [id^="lasneous-ssp"],
+  [id^="ross-ssp"]{
+    display: none;
+  }

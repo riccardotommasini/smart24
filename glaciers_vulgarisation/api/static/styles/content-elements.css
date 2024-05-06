@@ -1,0 +1,69 @@
+
+
+.illustration-container {
+  margin: 2%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+
+.two-columns {
+  display: flex;
+  column-gap: 2rem;
+  justify-content: start; /* Aligne les éléments au centre horizontalement */
+  align-items: center; /* Aligne les éléments au centre verticalement */
+  flex-wrap: wrap; /* Permet aux éléments de passer à la ligne lorsque l'espace est insuffisant */
+}
+
+.left-part {
+  padding: 10px;
+  flex: 1; /* Fait en sorte que la partie gauche prenne tout l'espace disponible */
+}
+
+.right-part {
+  padding: 10px;
+  flex: 1; /* Fait en sorte que la partie droite prenne tout l'espace disponible */
+}
+
+.right-part img {
+  max-width: 100%; /* Assurez-vous que l'image ne dépasse pas la largeur de son conteneur */
+}
+
+
+@media only screen and (max-width: 768px) {
+  .divided-by-two {
+    flex-direction: column; /* Change la direction de la disposition en colonne sur les écrans plus petits */
+    align-items: stretch; /* Les éléments s'étirent pour remplir la largeur */
+  }
+
+  .left-part,
+  .right-part {
+    width: 100%; /* Les éléments prennent toute la largeur sur les écrans plus petits */
+  }
+}
+
+
+.illustration-container div {
+  transition: transform 2s;
+}
+
+.scale3d:hover {
+  transform: scale3d(1.5, 1.5, 2);
+}
+.translate3d:hover {
+  transform: scale3d(1.5, 1.5, 3) translate(-10%, -8%); 
+}
+
+td{
+  padding: 0 12px;
+}
+
+.tabcontent{
+  width: 50%;
+}
+
+.evolution{
+  display: flex;
+  margin:0 15%;
+}
