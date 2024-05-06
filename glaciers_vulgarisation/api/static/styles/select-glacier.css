@@ -26,25 +26,15 @@
     padding: 6px 12px;
   }
 
-  #glacier-ela1
-  {
+  #glacier-ela1, #glacier1, #mdg-ssp-126,#mdg-ssp-370,#mdg-ssp-585{
     display: block;
   }
 
-  #glacier1
-  {
-    display: block;
-  }
-
-  #mdg1{
-    display: block;
-  }
-
-  #volume-1{
-    display: block;
-  }
-  
-  
-  .volume-1-585{
-    display: block;
+  [id^="glacier-ela"],
+  [id^="glacier"],
+  [id^="perito-ssp"],
+  [id^="sturgel-ssp"],
+  [id^="lasneous-ssp"],
+  [id^="ross-ssp"]{
+    display: none;
   }

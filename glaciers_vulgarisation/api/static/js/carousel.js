@@ -1,4 +1,4 @@
-//-------- Caroussel d'image -----------------
+//-------- Carousel d'image -----------------
 var slideIndex = 0;
 showSlides();
 

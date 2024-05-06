@@ -227,38 +227,38 @@
         </div>
         <p>Regardons ensemble l’évolution de cet équilibre. (Vous pouvez <a href="#post-ela">passer</a> le graphique)</p>
         <div class="tab">
-          <a class="tablinks" onclick="openGlacier(event, 'glacier-ela1')">Mer de Glace</a>
-          <a class="tablinks" onclick="openGlacier(event, 'glacier-ela2')">Lasneous</a>
-          <a class="tablinks" onclick="openGlacier(event, 'glacier-ela3')">Perito Moreno</a>
-          <a class="tablinks" onclick="openGlacier(event, 'glacier-ela4')">Ross</a>
-          <a class="tablinks" onclick="openGlacier(event, 'glacier-ela5')">Sturgel</a>
+          <a class="tablinks" onclick="openTabELA(event, 'glacier-ela1')">Mer de Glace</a>
+          <a class="tablinks" onclick="openTabELA(event, 'glacier-ela2')">Las Neous</a>
+          <a class="tablinks" onclick="openTabELA(event, 'glacier-ela3')">Perito Moreno</a>
+          <a class="tablinks" onclick="openTabELA(event, 'glacier-ela4')">Ross</a>
+          <a class="tablinks" onclick="openTabELA(event, 'glacier-ela5')">Sturgel</a>
         </div>
-        <div id="glacier-ela1" class="tabcontent">
+        <div id="glacier-ela1" class="tabcontent-ela">
           <div class="illustration-container">
             <img src="{{ url_for('static', filename='images/ela/ela_mdg.png') }}" alt="Illustration">
           </div>
         </div>
-        <div id="glacier-ela2" class="tabcontent">
+        <div id="glacier-ela2" class="tabcontent-ela">
           <div class="illustration-container">
             <img src="{{ url_for('static', filename='images/ela/ela_lasneous.png') }}" alt="Illustration">
           </div>
         </div>
-        <div id="glacier-ela3" class="tabcontent">
+        <div id="glacier-ela3" class="tabcontent-ela">
           <div class="illustration-container">
             <img src="{{ url_for('static', filename='images/ela/ela_perito_moreno.png') }}" alt="Illustration">
           </div>
         </div>
-        <div id="glacier-ela4" class="tabcontent">
+        <div id="glacier-ela4" class="tabcontent-ela">
           <div class="illustration-container">
             <img src="{{ url_for('static', filename='images/ela/ela_ross.png') }}" alt="Illustration">
           </div>
         </div>
-        <div id="glacier-ela5" class="tabcontent">
+        <div id="glacier-ela5" class="tabcontent-ela">
           <div class="illustration-container">
             <img src="{{ url_for('static', filename='images/ela/ela_sturgel.png') }}" alt="Illustration">
           </div>
         </div>
-        <p id="post-ela">Sur les cinq glaciers que nous avons choisis, la tendance est la même, la ligne d’équilibre remonte, ce qui signifie une seule chose : ces glaciers reculent</p>
+        <p id="post-ela">Sur les cinq glaciers que nous avons choisis, la tendance est la même, la ligne d’équilibre remonte, ce qui signifie une seule chose : ces glaciers reculent.</p>
       </section>
       <section id="section_4" class="section-container">
         <h2>Elle fond, la forme</h2>
@@ -267,7 +267,7 @@
 
         <div class="tab">
           <a class="tablinks" onclick="openGlacier(event, 'glacier1')">Mer de Glace</a>
-          <a class="tablinks" onclick="openGlacier(event, 'glacier2')">Lasneous</a>
+          <a class="tablinks" onclick="openGlacier(event, 'glacier2')">Las Neous</a>
           <a class="tablinks" onclick="openGlacier(event, 'glacier3')">Perito Moreno</a>
           <a class="tablinks" onclick="openGlacier(event, 'glacier4')">Ross</a>
           <a class="tablinks" onclick="openGlacier(event, 'glacier5')">Sturgel</a>
@@ -293,19 +293,19 @@
         <div id="glacier2" class="tabcontent">
           <div id="evolution_container_lasneous_1_5" class="anim-container">
             {% include 'lasneous/evolution/evolution_lasneous_1_5.html' %}
-            <legend>Evolution de Lasneous de 2010 à 2100 (+1.5°C)</legend>
+            <legend>Evolution de Las Neous de 2010 à 2100 (+1.5°C)</legend>
           </div>
           <div id="evolution_container_lasneous_2" class="anim-container">
             {% include 'lasneous/evolution/evolution_lasneous_2.html' %}
-            <legend>Evolution de Lasneous de 2010 à 2100 (+2°C)</legend>
+            <legend>Evolution de Las Neous de 2010 à 2100 (+2°C)</legend>
           </div>
           <div id="evolution_container_lasneous_3" class="anim-container">
             {% include 'lasneous/evolution/evolution_lasneous_3.html' %}
-            <legend>Evolution de Lasneous de 2010 à 2100 (+3°C)</legend>
+            <legend>Evolution de Las Neous de 2010 à 2100 (+3°C)</legend>
           </div>
           <div id="evolution_container_lasneous_4" class="anim-container">
             {% include 'lasneous/evolution/evolution_lasneous_4.html' %}
-            <legend>Evolution de Lasneous de 2010 à 2100 (+4°C)</legend>
+            <legend>Evolution de Las Neous de 2010 à 2100 (+4°C)</legend>
           </div>
         </div>
         <div id="glacier3" class="tabcontent">
@@ -391,13 +391,13 @@
             </td>
             <td>
               <div class="tab">
-                <a class="tablinks" onclick="openGlacier(event, 'mdg1')">MdG</a>
-                <a class="tablinks" onclick="openGlacier(event, 'lasneous1')">L</a>
-                <a class="tablinks" onclick="openGlacier(event, 'perito1')">PM</a>
-                <a class="tablinks" onclick="openGlacier(event, 'sturgel1')">S</a>
-                <a class="tablinks" onclick="openGlacier(event, 'ross1')">R</a>
+                <a class="tablinks" onclick="openSSP126(event, 'mdg-ssp-126')">MdG</a>
+                <a class="tablinks" onclick="openSSP126(event, 'lasneous-ssp-126')">L</a>
+                <a class="tablinks" onclick="openSSP126(event, 'perito-ssp-126')">PM</a>
+                <a class="tablinks" onclick="openSSP126(event, 'sturgel-ssp-126')">S</a>
+                <a class="tablinks" onclick="openSSP126(event, 'ross-ssp-126')">R</a>
               </div>
-              <div id="mdg1" class="tabcontent">
+              <div id="mdg-ssp-126" class="tabcontent-ssp-126">
                 <div id="volume_container_1" class="anim-container">
                 {% include 'mer_de_glace/volume/mdg_volume_scenario_1_ssp126.html' %}
                 <legend>
@@ -407,27 +407,27 @@
                 </legend>
                 </div>
               </div>
-              <div id="lasneous1" class="tabcontent">
+              <div id="lasneous-ssp-126" class="tabcontent-ssp-126">
                 <div id="volume_container_2" class="anim-container">
                   {% include 'lasneous/volume/lasneous_volume_scenario_1_ssp126.html' %}
                   <legend>
-                    Evolution du volume de Lasneous de glace selon SSP126
+                    Evolution du volume de Las Neous selon SSP126
                     <br> 
                     1979-2100
                   </legend>
                 </div>
               </div>
-              <div id="perito1" class="tabcontent">
+              <div id="perito-ssp-126" class="tabcontent-ssp-126">
                 <div id="volume_container_3" class="anim-container">
                     {% include 'perito_moreno/volume/perito_moreno_volume_scenario_1_ssp126.html' %}
                     <legend>
-                      Evolution du volume de Perito Moreno de glace selon SSP126
+                      Evolution du volume de Perito Moreno selon SSP126
                       <br> 
                       1979-2100
                     </legend>
                 </div>
               </div>
-              <div id="sturgel1" class="tabcontent">
+              <div id="sturgel-ssp-126" class="tabcontent-ssp-126">
                 <div id="volume_container_4" class="anim-container">
                   {% include 'sturgel/volume/sturgel_volume_scenario_1_ssp126.html' %}
                   <legend>
@@ -437,7 +437,7 @@
                   </legend>
                 </div>
               </div>
-              <div id="ross1" class="tabcontent">
+              <div id="ross-ssp-126" class="tabcontent-ssp-126">
                 <div id="volume_container_11" class="anim-container">
                   {% include 'ross/volume/ross_volume_scenario_1_ssp126.html' %}
                   <legend>
@@ -452,13 +452,13 @@
           <tr>
             <td>
               <div class="tab">
-                <a class="tablinks" onclick="openGlacier(event, 'volume-1')">MdG</a>
-                <a class="tablinks" onclick="openGlacier(event, 'volume-2')">L</a>
-                <a class="tablinks" onclick="openGlacier(event, 'volume-3')">PM</a>
-                <a class="tablinks" onclick="openGlacier(event, 'volume-4')">S</a>
-                <a class="tablinks" onclick="openGlacier(event, 'volume-5')">R</a>
+                <a class="tablinks" onclick="openSSP370(event, 'mdg-ssp-370')">MdG</a>
+                <a class="tablinks" onclick="openSSP370(event, 'lasneous-ssp-370')">L</a>
+                <a class="tablinks" onclick="openSSP370(event, 'perito-ssp-370')">PM</a>
+                <a class="tablinks" onclick="openSSP370(event, 'sturgel-ssp-370')">S</a>
+                <a class="tablinks" onclick="openSSP370(event, 'ross-ssp-370')">R</a>
               </div>
-              <div id="volume-1" class="tabcontent">
+              <div id="mdg-ssp-370" class="tabcontent-ssp-370">
                 <div id="volume_container_1" class="anim-container">
                   {% include 'mer_de_glace/volume/mdg_volume_scenario_2_ssp370.html' %}
                   <legend>
@@ -468,27 +468,27 @@
                   </legend>
                 </div>
               </div>
-              <div id="volume-2" class="tabcontent">
+              <div id="lasneous-ssp-370" class="tabcontent-ssp-370">
                 <div id="volume_container_2" class="anim-container">
                   {% include 'lasneous/volume/lasneous_volume_scenario_2_ssp370.html' %}
                   <legend>
-                    Evolution du volume de Lasneous de glace selon SSP370
+                    Evolution du volume de Las Neous selon SSP370
                     <br> 
                     1979-2100
                   </legend>
                 </div>
               </div>
-              <div id="volume-3" class="tabcontent">
+              <div id="perito-ssp-370" class="tabcontent-ssp-370">
                 <div id="volume_container_3" class="anim-container">
                     {% include 'perito_moreno/volume/perito_moreno_volume_scenario_2_ssp370.html' %}
                     <legend>
-                      Evolution du volume de Perito Moreno de glace selon SSP370
+                      Evolution du volume de Perito Moreno selon SSP370
                       <br> 
                       1979-2100
                     </legend>
                 </div>
               </div>
-              <div id="volume-4" class="tabcontent">
+              <div id="sturgel-ssp-370" class="tabcontent-ssp-370">
                 <div id="volume_container_4" class="anim-container">
                   {% include 'sturgel/volume/sturgel_volume_scenario_2_ssp370.html' %}
                   <legend>
@@ -498,8 +498,8 @@
                   </legend>
                 </div>
               </div>
-              <div id="volume-5" class="tabcontent">
-                <div id="volume_container_11" class="anim-container">
+              <div id="ross-ssp-370" class="tabcontent-ssp-370">
+                <div class="anim-container">
                   {% include 'ross/volume/ross_volume_scenario_2_ssp370.html' %}
                   <legend>
                     Evolution du volume de Ross selon SSP370
@@ -533,13 +533,13 @@
             </td>
             <td>
               <div class="tab">
-                <a class="tablinks" onclick="openGlacier(event, 'volume-1-585')">MdG</a>
-                <a class="tablinks" onclick="openGlacier(event, 'volume-2-585')">L</a>
-                <a class="tablinks" onclick="openGlacier(event, 'volume-3-585')">PM</a>
-                <a class="tablinks" onclick="openGlacier(event, 'volume-4-585')">S</a>
-                <a class="tablinks" onclick="openGlacier(event, 'volume-5-585')">R</a>
+                <a class="tablinks" onclick="openSSP585(event, 'mdg-ssp-585')">MdG</a>
+                <a class="tablinks" onclick="openSSP585(event, 'lasneous-ssp-585')">L</a>
+                <a class="tablinks" onclick="openSSP585(event, 'perito-ssp-585')">PM</a>
+                <a class="tablinks" onclick="openSSP585(event, 'sturgel-ssp-585')">S</a>
+                <a class="tablinks" onclick="openSSP585(event, 'ross-ssp-585')">R</a>
               </div>
-              <div id="volume-1-585" class="tab-content">
+              <div id="mdg-ssp-585" class="tabcontent-ssp-585">
                 <div id="volume_container_1" class="anim-container">
                   {% include 'mer_de_glace/volume/mdg_volume_scenario_3_ssp585.html' %}
                   <legend>
@@ -549,27 +549,27 @@
                   </legend>
                 </div>
               </div>
-              <div id="volume-2-585" class="tabcontent">
+              <div id="lasneous-ssp-585" class="tabcontent-ssp-585">
                 <div id="volume_container_2" class="anim-container">
                   {% include 'lasneous/volume/lasneous_volume_scenario_3_ssp585.html' %}
                   <legend>
-                    Evolution du volume de Las Neous de glace selon SSP585
+                    Evolution du volume de Las Neous selon SSP585
                     <br> 
                     1979-2100
                   </legend>
                 </div>
               </div>
-              <div id="volume-3-585" class="tabcontent">
+              <div id="perito-ssp-585" class="tabcontent-ssp-585">
                 <div id="volume_container_3" class="anim-container">
                     {% include 'perito_moreno/volume/perito_moreno_volume_scenario_3_ssp585.html' %}
                     <legend>
-                      Evolution du volume de Perito Moreno de glace selon SSP585
+                      Evolution du volume de Perito Moreno selon SSP585
                       <br> 
                       1979-2100
                     </legend>
                 </div>
               </div>
-              <div id="volume-4-585" class="tabcontent">
+              <div id="sturgel-ssp-585" class="tabcontent-ssp-585">
                 <div id="volume_container_4" class="anim-container">
                   {% include 'sturgel/volume/sturgel_volume_scenario_3_ssp585.html' %}
                   <legend>
@@ -579,7 +579,7 @@
                   </legend>
                 </div>
               </div>
-              <div id="volume-5-585" class="tabcontent">
+              <div id="ross-ssp-585" class="tabcontent-ssp-585">
                 <div id="volume_container_5" class="anim-container">
                   {% include 'ross/volume/ross_volume_scenario_3_ssp585.html' %}
                   <legend>
@@ -702,7 +702,6 @@
   <footer><span>Un site réalisé par : Léa Durand, Lina Borg, Kaiming Zhu & Billy Villeroy</span></footer> 
   <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-  <script src="{{ url_for('static', filename='js/scroll-slide-content.js') }}"></script>
   <script src="{{ url_for('static', filename='js/menu-action.js') }}"></script>
   <script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
   <script src="{{ url_for('static', filename='js/select-glacier.js') }}"></script>

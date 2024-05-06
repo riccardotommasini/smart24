@@ -8,11 +8,9 @@ const temperatures = ["1_5", "2", "3", "4"];
 // Fonction pour afficher l'animation correspondante à l'option sélectionnée
 function afficherAnimation() {
     const temperature = (parseFloat(this.value)!=1.5)?this.value:"1_5";
-    console.log(temperature)
     glaciers.forEach(glacier => {
         temperatures.forEach(temp => {
             const containerId = `evolution_container_${glacier}_${temp}`;
-            console.log(containerId)
             const container = document.getElementById(containerId);
             container.style.display = (temperature === temp) ? "block" : "none";
         });
