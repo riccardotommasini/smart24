@@ -3,9 +3,8 @@ use std::fmt::Display;
 use anyhow::ensure;
 use operational_transform::{Operation, OperationSeq};
 use ropey::Rope;
-use tracing::info;
 
-use crate::protocol::msg::TextModification;
+use crate::protocol::msg::{CursorInfo, TextModification};
 
 #[derive(Clone)]
 pub struct File {
@@ -49,7 +48,7 @@ impl File {
         self.content.len_chars()
     }
 
-    pub fn byte_to_char(&self, modif: &mut TextModification) {
+    pub fn byte_to_char_modif(&self, modif: &mut TextModification) {
         modif.delete = self
             .content
             .byte_slice(modif.offset as usize..modif.offset as usize + modif.delete as usize)
@@ -58,12 +57,36 @@ impl File {
         modif.offset = self.content.byte_slice(..modif.offset as usize).len_chars() as u64;
     }
 
-    pub fn char_to_byte(&self, modif: &mut TextModification) {
+    pub fn char_to_byte_modif(&self, modif: &mut TextModification) {
         modif.delete = self
             .content
             .slice(modif.offset as usize..modif.offset as usize + modif.delete as usize)
             .len_bytes() as u64;
         modif.offset = self.content.slice(..modif.offset as usize).len_bytes() as u64;
+    }
+
+    pub fn byte_to_char_cursor(&self, cursor_info: &mut CursorInfo) {
+        cursor_info.cursor = self
+            .content
+            .byte_slice(..cursor_info.cursor as usize)
+            .len_chars() as u64;
+
+        cursor_info.anchor = self
+            .content
+            .byte_slice(..cursor_info.anchor as usize)
+            .len_chars() as u64;
+    }
+
+    pub fn char_to_byte_cursor(&self, cursor_info: &mut CursorInfo) {
+        cursor_info.cursor = self
+            .content
+            .slice(..cursor_info.cursor as usize)
+            .len_bytes() as u64;
+
+        cursor_info.anchor = self
+            .content
+            .slice(..cursor_info.anchor as usize)
+            .len_bytes() as u64;
     }
 }
 

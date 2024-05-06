@@ -11,7 +11,7 @@ pub enum MessageServer {
     Error { error: String },
     RequestFile,
     File { file: String, version: usize },
-    Cursor { id: usize, offset: u64, range: u64 },
+    Cursor(CursorInfo),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -23,7 +23,14 @@ pub enum MessageIde {
     RequestFile,
     File { file: String },
     Ack,
-    Cursor { id: Option<usize>, offset: u64, range: u64 },
+    Cursor(CursorInfo),
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct CursorInfo {
+    pub id: Option<usize>,
+    pub cursor: u64,
+    pub anchor: u64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]

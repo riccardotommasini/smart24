@@ -3,8 +3,8 @@ use operational_transform::OperationSeq;
 use smartshare::{
     file::File,
     protocol::msg::{
-        modif_to_operation_seq, to_ide_changes, Format, MessageIde, MessageServer, ModifRequest,
-        TextModification,
+        modif_to_operation_seq, to_ide_changes, CursorInfo, Format, MessageIde, MessageServer,
+        ModifRequest, TextModification,
     },
 };
 
@@ -109,7 +109,7 @@ impl Client {
             for ide_modif in ide_modifs.iter_mut() {
                 let delta = modif_to_operation_seq(ide_modif, &(file.len_chars() as u64)).unwrap();
 
-                file.char_to_byte(&mut *ide_modif);
+                file.char_to_byte_modif(&mut *ide_modif);
 
                 file.apply(&delta).unwrap();
             }
@@ -179,7 +179,7 @@ impl Client {
 
             for change in &mut changes {
                 if let Format::Bytes = format {
-                    file.byte_to_char(&mut *change);
+                    file.byte_to_char_modif(&mut *change);
                 }
                 let delta = modif_to_operation_seq(change, &(file.len_chars() as u64))?;
                 file.apply(&delta).unwrap();
@@ -244,22 +244,21 @@ impl Client {
         }
     }
 
-    async fn on_ide_cursor_move(&mut self, offset: u64, range: u64) -> Result<()> {
-        let _ = self
-            .server
-            .send(MessageServer::Cursor {
-                id: self.client_id,
-                offset,
-                range,
-            })
-            .await;
+    async fn on_ide_cursor_move(&mut self, mut cursor_info: CursorInfo) -> Result<()> {
+        if matches!(self.format.as_ref().unwrap(), Format::Bytes) {
+            let file = self.file.as_mut().ok_or_else(|| anyhow!("File not set"))?;
+            file.byte_to_char_cursor(&mut cursor_info);
+        }
+        let _ = self.server.send(MessageServer::Cursor(cursor_info)).await;
         Ok(())
     }
 
-    async fn on_server_cursor_move(&mut self, id: usize, offset: u64, range: u64) -> Result<()> {
-        self.ide
-            .send(MessageIde::Cursor { id:Some(id), offset, range })
-            .await;
+    async fn on_server_cursor_move(&mut self, mut cursor_info: CursorInfo) -> Result<()> {
+        if matches!(self.format.as_ref().unwrap(), Format::Bytes) {
+            let file = self.file.as_mut().ok_or_else(|| anyhow!("File not set"))?;
+            file.char_to_byte_cursor(&mut cursor_info);
+        }
+        self.ide.send(MessageIde::Cursor(cursor_info)).await;
         Ok(())
     }
 
@@ -270,9 +269,7 @@ impl Client {
             MessageServer::Error { error: err } => Err(anyhow!(err)),
             MessageServer::RequestFile => self.on_request_file().await,
             MessageServer::File { file, version } => self.on_receive_file(file, version).await,
-            MessageServer::Cursor { id, offset, range } => {
-                self.on_server_cursor_move(id, offset, range).await
-            }
+            MessageServer::Cursor(cursor_info) => self.on_server_cursor_move(cursor_info).await,
         };
 
         if let Err(err) = res {
@@ -290,9 +287,7 @@ impl Client {
             MessageIde::Declare(format) => self.on_ide_format(format).await,
             MessageIde::File { file } => self.on_ide_file(file).await,
             MessageIde::Ack => self.on_ide_ack().await,
-            MessageIde::Cursor { offset, range, .. } => {
-                self.on_ide_cursor_move(offset, range).await
-            }
+            MessageIde::Cursor(cursor_info) => self.on_ide_cursor_move(cursor_info).await,
             _ => {
                 warn!("IDE sent bad unexpected message: {:?}", message_ide);
                 Err(anyhow!("Unexpected message type: {:?}", message_ide))

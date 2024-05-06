@@ -1,6 +1,6 @@
 use operational_transform::OperationSeq;
 use smartshare::file::File;
-use smartshare::protocol::msg::{MessageServer, ModifRequest};
+use smartshare::protocol::msg::{CursorInfo, MessageServer, ModifRequest};
 use tokio::sync::mpsc;
 use tracing::{error, info, trace, warn};
 
@@ -144,18 +144,15 @@ impl Server {
         self.file = Some(file);
     }
 
-    async fn on_cursor_move(&mut self, source_id: usize, offset: u64, range: u64) {
+    async fn on_cursor_move(&mut self, source_id: usize, mut cursor_info: CursorInfo) {
+        cursor_info.id = Some(source_id);
         for client in self
             .clients
             .iter()
             .filter(|client| client.id() != source_id)
         {
             let _ = client
-                .send(MessageServer::Cursor {
-                    id: source_id,
-                    offset,
-                    range,
-                })
+                .send(MessageServer::Cursor(cursor_info.clone()))
                 .await;
         }
     }
@@ -166,9 +163,7 @@ impl Server {
         match message {
             MessageServer::ServerUpdate(req) => self.on_update(source_id, req).await,
             MessageServer::File { file, version } => self.on_file(source_id, file, version).await,
-            MessageServer::Cursor { offset, range, .. } => {
-                self.on_cursor_move(source_id, offset, range).await
-            }
+            MessageServer::Cursor(cursor_info) => self.on_cursor_move(source_id, cursor_info).await,
             _ => warn!("Received unexpected message type {:?}", message),
         }
     }
