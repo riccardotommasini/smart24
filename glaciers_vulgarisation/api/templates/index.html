@@ -76,45 +76,57 @@
           <img width="50%" src="{{ url_for('static', filename='images/melange.jpg') }}" alt="Un groupe de personnes de tout âge">
         </div>
         </p>
-        <div class="two-columns">
-
-          <div class="left-part">
-            <div>
-              <p>Savez-vous ce qui fascine les peuples au plus au point ? L’éternel.<p>
-              <p>
-                Aujourd’hui, j’aimerai vous présenter les champions dans ce domaine, inégalés depuis des générations : les
-                glaciers. Les glaciers sont des êtres bien fascinant n’est-ce pas ?
-              </p>
-              <p>N’avez-vous jamais rencontré l’un deux au détours d’une randonnée ?</p>
-              <br>
-            </div>
-            <div class="illustration-container">
-              <img src="{{ url_for('static', filename='images/randonnee.jpg') }}" />
-              <legend>©</legend>
-            </div>
-            <p>
-              Si cela peut révéler de telles choses dans le cœur des "néophytes", alors quand est-il des spécialistes de
-              la
-              question ? Il va s’en dire que ces monolithes glacés sont des objets d’études de premiers choix.
-            </p>
-          </div>
-          <div class="right-part">
-            <div class="illustration-container">
-              <img width="50%" src="{{ url_for('static', filename='images/nicolas.jpg') }}" />
-              <legend>Nicolas Flammel(1???-1???)<br>Alchimiste</legend>
-            </div>
-            <p>
-              N’y a-t-il pas quelques choses d’aventureux, d’inexplicable dans le parcours et la découverte du dos de
-              ces
-              géants de ces glaces ? Les alpinistes et autres professionnels confirmés de l’assemblée se reconnaîtront.
+        <table>
+          <tr>
+            <td>
+                <p>Savez-vous ce qui fascine les peuples au plus au point ? L’éternel.<p>
+                  <p>
+                    Aujourd’hui, j’aimerai vous présenter les champions dans ce domaine, inégalés depuis des générations : les
+                    glaciers. Les glaciers sont des êtres bien fascinant n’est-ce pas ?
+                  </p>
+                <p>N’avez-vous jamais rencontré l’un deux au détours d’une randonnée ?</p>
+            </td>
+            <td>
               <div class="illustration-container">
-                <img src="{{ url_for('static', filename='images/alpinisme.jpg') }}" />
-                <legend>©</legend>
+                <legend>
+                  Nicolas Flamel (gravure romantique),1840, Frédéric
+                </legend>
+                <img width="50%" src="{{ url_for('static', filename='images/nicolas.jpg') }}" alt="Nicolas Flamel, Alchimiste" />
+                  <legend>Source :	Galerie historique des Célébrités Populaires</legend>
               </div>
-            </p>
-          </div>
-        </div>
-        
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/randonnee.jpg') }}" alt="Un randonneur réalisant le tour du Mont Blanc"/>
+                <legend>Tour du Mont Blanc</legend>
+              </div>
+            </td>
+            <td>
+              <p>
+                N’y a-t-il pas quelques choses d’aventureux, d’inexplicable dans le parcours et la découverte du dos de
+                ces
+                géants de ces glaces ? Les alpinistes et autres professionnels confirmés de l’assemblée se reconnaîtront.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p>
+                Si cela peut révéler de telles choses dans le cœur des "néophytes", alors quand est-il des spécialistes de
+                la
+                question ? Il va s’en dire que ces monolithes glacés sont des objets d’études de premiers choix.
+              </p>
+            </td>
+            <td>
+              <div class="illustration-container">
+                <img src="{{ url_for('static', filename='images/alpinisme.jpg') }}" alt="Deux alpinistes gravissant La Grave La Meije" />
+                <legend>Marche Glacière©Patrick Domeyne</legend>
+              </div>
+            </td>
+          </tr>
+        </table>
         <p>Quel rapport avec l'éternel ?</p>
         <p>
           Disons que c’est ce fait qui change toute la donne. Et pourquoi me diriez-vous ? Les glaciers vivent…. Pas
@@ -126,8 +138,8 @@
           ne
           dépendra que de nous (espèce humaine) et nos choix.
         <div class="illustration-container">
-          <img width="50%" src="{{ url_for('static', filename='images/futur.avif') }}" alt="Illustration">
-          <legend>©</legend>
+          <img width="50%" src="{{ url_for('static', filename='images/futur.avif') }}" alt="Des horloges flottantes dans le ciel">
+          <legend>Demain nous appartient</legend>
         </div>
         </p>
       </section>
@@ -168,7 +180,7 @@
               </div>
               <div class="right-part">
                 <div class="illustration-container">
-                  <img src="{{ url_for('static', filename='images/giec.png') }}" alt="Illustration">
+                  <img src="{{ url_for('static', filename='images/giec.png') }}" alt="Logo du GIEC">
                   <legend>Logo français du GIEC</legend>
                 </div>
               </div>
@@ -222,8 +234,8 @@
           </div>
         </div>
         <div class="illustration-container">
-          <img src="{{ url_for('static', filename='images/ela.png') }}" alt="Illustration">
-          <legend>Schéma de la ligne de l'altitude d'équilibre d'un glacier©</legend>  
+          <img src="{{ url_for('static', filename='images/ela/ela.gif') }}" alt="Illustration">
+          <legend>L'altitude d'équilibre au sein d'un glacier©Anne Maussion, Atelier les Gros yeux</legend>  
         </div>
         <p>Regardons ensemble l’évolution de cet équilibre. (Vous pouvez <a href="#post-ela">passer</a> le graphique)</p>
         <div class="tab">
@@ -595,7 +607,7 @@
           <p>La mer de Glace perd en moyenne par an ce qui à titre de comparaison représente piscines olympiques.</p>
           <div class="illustration-container">
             <img width="60%" src="{{ url_for('static', filename='images/piscine.jpg') }}" alt="Illustration">
-            <legend>add a legend</legend>
+            <legend>© Getty - Xavier Laine / Contributeur</legend>
           </div>
       </section>
       <section id="section_6" class="section-container">
@@ -613,7 +625,7 @@
             </p>
             <div class="illustration-container">
               <img src="{{ url_for('static', filename='images/velage.jpg') }}" alt="Illustration">
-              <legend>©</legend>
+              <legend>Vêlage © Getty Images/iStockphoto.</legend>
             </div>
             <p>
               Ces différents moyens d’éliminations présentent
@@ -629,7 +641,7 @@
               n’en ai pas moins changé.
               <div class="illustration-container">
                 <img src="{{ url_for('static', filename='images/crue.jpeg') }}" alt="Illustration">
-                <legend>©</legend>
+                <legend>Crue dans le sud-Est de la France ©Valery Hacher/AFP</legend>
               </div>
             </p>
             <p>
@@ -654,13 +666,10 @@
         </p>
         <div id="albedo" class="focus">
           <h4>L'effet albédo</h4>
-          <p>
-           L'effet albédo est
-          </p>
-        </div>
-        <div class="illustration-container">
-          <img src="{{ url_for('static', filename='images/ela_increase.png') }}" alt="Illustration">
-          <legend>©</legend>
+          <div class="illustration-container">
+            <img src="{{ url_for('static', filename='images/albedo.jpg') }}" alt="Illustration">
+            <legend>Les principes de l'Effet Albédo ©Surfrider Foundation Europe</legend>
+          </div>
         </div>
 
         <p>
@@ -678,11 +687,11 @@
           l’échelle, mondiale, cela provoquerait des déplacements migratoires sans précédents.
         </p>
         <p>
-          Voilà une carte de l’Europe qui vous présente les zones qui seraient impactés.
-        <div class="illustration-container">
-          <img src="{{ url_for('static', filename='images/europe.png') }}" alt="Illustration">
-          <legend>add a legend</legend>
-        </div>
+          Voilà une carte de l’Europe qui vous présente les zones qui seraient impactées.
+          <div id="niveau_mer_ssp126" class="anim-container">
+            {% include 'niveau_mer_ssp126.html' %}
+            <legend>Evolution du niveau de la Mer en Europe - SSP126</legend>
+          </div>
         </p>
         <p>
           Mais ce problème n’est pas le seul, des problèmes bien plus insidieux pourrait arriver avec la fonte de
