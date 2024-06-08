@@ -1,0 +1,6 @@
+[submodule "Backend"]
+	path = backend
+	url = git@github.com:chloe172/smart24-back.git
+[submodule "Frontend"]
+	path = frontend
+	url = git@github.com:chloe172/smart24-front.git
